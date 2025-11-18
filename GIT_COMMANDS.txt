@@ -1,0 +1,167 @@
+═══════════════════════════════════════════════════════════════════
+  📝 COMMANDES GIT - COPIER-COLLER
+═══════════════════════════════════════════════════════════════════
+
+⚠️  IMPORTANT : Remplacer VOTRE-USERNAME par votre username GitHub !
+
+═══════════════════════════════════════════════════════════════════
+  🆕 PREMIÈRE FOIS - Créer le repo et pousser le code
+═══════════════════════════════════════════════════════════════════
+
+# Ouvrir PowerShell dans le dossier du projet :
+cd "C:\Users\cherc\Downloads\my-politest\my-politest"
+
+# Initialiser Git
+git init
+
+# Ajouter tous les fichiers
+git add .
+
+# Premier commit
+git commit -m "Initial commit: Polarity Quiz v1.0.0"
+
+# Renommer la branche en main
+git branch -M main
+
+# Ajouter le remote (⚠️ REMPLACER VOTRE-USERNAME)
+git remote add origin https://github.com/VOTRE-USERNAME/polarity-quiz.git
+
+# Pousser sur GitHub
+git push -u origin main
+
+═══════════════════════════════════════════════════════════════════
+  🔄 MISES À JOUR - Après modifications du code
+═══════════════════════════════════════════════════════════════════
+
+# 1. Voir ce qui a changé
+git status
+
+# 2. Ajouter tous les fichiers modifiés
+git add .
+
+# 3. Commiter avec un message descriptif
+git commit -m "Votre message ici"
+
+# Exemples de messages :
+# git commit -m "Fix: Correction bug partage Twitter"
+# git commit -m "Feature: Ajout mode sombre"
+# git commit -m "Update: Nouvelles questions ajoutées"
+# git commit -m "Design: Amélioration page d'accueil"
+
+# 4. Pousser sur GitHub (Vercel rebuild auto !)
+git push
+
+═══════════════════════════════════════════════════════════════════
+  📊 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════
+
+# Voir l'historique des commits
+git log --oneline
+
+# Voir les différences avant de commiter
+git diff
+
+# Annuler les modifications non commitées
+git checkout .
+
+# Annuler le dernier commit (garde les modifications)
+git reset --soft HEAD~1
+
+# Annuler le dernier commit (supprime les modifications)
+git reset --hard HEAD~1
+
+# Voir les branches
+git branch
+
+# Créer une nouvelle branche
+git checkout -b nom-de-branche
+
+# Changer de branche
+git checkout main
+
+# Mettre à jour depuis GitHub
+git pull
+
+# Voir les remotes configurés
+git remote -v
+
+═══════════════════════════════════════════════════════════════════
+  🏷️ TAGS - Pour versionner vos releases
+═══════════════════════════════════════════════════════════════════
+
+# Créer un tag pour une version
+git tag -a v1.0.0 -m "Version 1.0.0 - Release initiale"
+
+# Pousser le tag sur GitHub
+git push origin v1.0.0
+
+# Pousser tous les tags
+git push --tags
+
+# Voir tous les tags
+git tag
+
+═══════════════════════════════════════════════════════════════════
+  🔧 CONFIGURATION
+═══════════════════════════════════════════════════════════════════
+
+# Configurer votre nom (première fois)
+git config --global user.name "Votre Nom"
+
+# Configurer votre email (première fois)
+git config --global user.email "votre.email@example.com"
+
+# Voir la configuration
+git config --list
+
+═══════════════════════════════════════════════════════════════════
+  🚨 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════
+
+# "Permission denied" ou problème d'authentification
+# → Créer un Personal Access Token sur GitHub :
+#   https://github.com/settings/tokens
+#   Cocher "repo" → Generate → Copier le token
+#   Utiliser le token comme mot de passe
+
+# Changer de HTTPS vers SSH (ou inverse)
+git remote set-url origin https://github.com/VOTRE-USERNAME/polarity-quiz.git
+
+# Forcer le push (⚠️ ATTENTION : écrase l'historique distant)
+git push --force
+
+# Cloner un repo existant
+git clone https://github.com/VOTRE-USERNAME/polarity-quiz.git
+
+═══════════════════════════════════════════════════════════════════
+  📦 WORKFLOW COMPLET - Exemple
+═══════════════════════════════════════════════════════════════════
+
+# 1. Modifier le code dans VSCode
+
+# 2. Voir ce qui a changé
+git status
+
+# 3. Ajouter les fichiers
+git add .
+
+# 4. Commiter
+git commit -m "Feature: Ajout du mode sombre"
+
+# 5. Pousser sur GitHub
+git push
+
+# 6. Vercel rebuild automatiquement en ~1 minute
+# 7. Votre site est mis à jour ! 🎉
+
+═══════════════════════════════════════════════════════════════════
+  🔗 LIENS UTILES
+═══════════════════════════════════════════════════════════════════
+
+GitHub repo        : https://github.com/VOTRE-USERNAME/polarity-quiz
+Créer un PAT       : https://github.com/settings/tokens
+Télécharger Git    : https://git-scm.com/download/win
+Documentation Git  : https://git-scm.com/doc
+Vercel Dashboard   : https://vercel.com/dashboard
+
+═══════════════════════════════════════════════════════════════════

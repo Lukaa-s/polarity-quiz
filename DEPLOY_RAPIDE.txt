@@ -1,0 +1,117 @@
+═══════════════════════════════════════════════════════════════════
+  🚀 DÉPLOIEMENT RAPIDE - POLARITY QUIZ
+═══════════════════════════════════════════════════════════════════
+
+⏱️  Temps total : 10 minutes
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 1 : CRÉER LE REPO GITHUB (2 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Aller sur : https://github.com/new
+
+2. Remplir :
+   Nom : polarity-quiz
+   Public ✅
+   ❌ NE PAS cocher "Add README"
+
+3. Cliquer "Create repository"
+
+4. Noter l'URL : https://github.com/VOTRE-USERNAME/polarity-quiz
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 2 : POUSSER LE CODE (3 min)
+═══════════════════════════════════════════════════════════════════
+
+Ouvrir PowerShell et copier-coller :
+
+cd "C:\Users\cherc\Downloads\my-politest\my-politest"
+git init
+git add .
+git commit -m "Initial commit: Polarity Quiz v1.0.0"
+git branch -M main
+git remote add origin https://github.com/VOTRE-USERNAME/polarity-quiz.git
+git push -u origin main
+
+⚠️  Remplacer VOTRE-USERNAME par votre username GitHub !
+
+Si demande de login :
+  - Username : votre username GitHub
+  - Password : Personal Access Token (créer sur github.com/settings/tokens)
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 3 : VÉRIFIER (30 sec)
+═══════════════════════════════════════════════════════════════════
+
+Aller sur : https://github.com/VOTRE-USERNAME/polarity-quiz
+
+Vous devriez voir tous vos fichiers ! ✅
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 4 : DÉPLOYER SUR VERCEL (2 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Aller sur : https://vercel.com/new
+
+2. Se connecter avec GitHub
+
+3. Chercher "polarity-quiz" → Cliquer "Import"
+
+4. Tout est auto-détecté ✅ → Cliquer "Deploy"
+
+5. Attendre 1-2 minutes ⏳
+
+6. ✅ C'EST EN LIGNE !
+
+URL : https://polarity-quiz-XXXXX.vercel.app
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 5 : CONFIGURER GOATCOUNTER (2 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Créer compte : https://www.goatcounter.com/signup
+   Code : polarityquiz
+   Email : polarityquiz@gmail.com
+
+2. Modifier index.html ligne 11 :
+   <script data-goatcounter="https://polarityquiz.goatcounter.com/count"
+
+3. Commiter et pousser :
+   git add index.html
+   git commit -m "Configure GoatCounter"
+   git push
+
+4. Vercel rebuild automatiquement ! ✅
+
+═══════════════════════════════════════════════════════════════════
+  ÉTAPE 6 : TESTER (1 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Aller sur votre site Vercel
+
+2. Faire le test
+
+3. Attendre 30 secondes
+
+4. Vérifier GoatCounter : https://polarityquiz.goatcounter.com
+
+5. Vous voyez la visite ? ✅ PARFAIT !
+
+═══════════════════════════════════════════════════════════════════
+  🎊 C'EST TERMINÉ !
+═══════════════════════════════════════════════════════════════════
+
+Vos liens :
+  🌐 Site web    : https://polarity-quiz-XXXXX.vercel.app
+  📊 Analytics   : https://polarityquiz.goatcounter.com
+  💻 GitHub      : https://github.com/VOTRE-USERNAME/polarity-quiz
+  ⚡ Vercel      : https://vercel.com/dashboard
+
+Workflow de mise à jour :
+  1. Modifier le code
+  2. git add . && git commit -m "message" && git push
+  3. Vercel rebuild auto en ~1 minute ! 🚀
+
+═══════════════════════════════════════════════════════════════════
+
+Pour plus de détails, voir GITHUB_SETUP.md

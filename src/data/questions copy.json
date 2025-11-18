@@ -1,0 +1,745 @@
+[
+  {
+    "id": "q1",
+    "text": "Une entreprise devrait appartenir à ceux qui y travaillent, et non à des propriétaires extérieurs.",
+    "axis": "Modèle de propriété",
+    "leftPole": "Collectivisme",
+    "rightPole": "Propriétarisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Certains estiment que ceux qui produisent la richesse d’une entreprise devraient en être aussi les propriétaires, comme dans les coopératives, plutôt que de dépendre d’actionnaires extérieurs."
+  },
+  {
+    "id": "q2",
+    "text": "Il est acceptable que certains possèdent plusieurs logements tant qu'ils respectent la loi.",
+    "axis": "Modèle de propriété",
+    "leftPole": "Collectivisme",
+    "rightPole": "Propriétarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette position considère que la propriété privée, même multipliée, reste légitime si elle s'exerce dans le cadre légal, comme pour l'investissement locatif."
+  },
+  {
+    "id": "q3",
+    "text": "La propriété privée est indispensable pour garantir l’autonomie et la responsabilité des individus.",
+    "axis": "Modèle de propriété",
+    "leftPole": "Collectivisme",
+    "rightPole": "Propriétarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Pour certains, posséder un bien permet d’être maître de ses choix et pousse à en prendre soin, ce qui favoriserait la liberté individuelle et la stabilité."
+  },
+  {
+    "id": "q4",
+    "text": "Dans certaines situations, il est juste d’exproprier un propriétaire au nom de l’intérêt commun.",
+    "axis": "Modèle de propriété",
+    "leftPole": "Collectivisme",
+    "rightPole": "Propriétarisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Il arrive que l’État ou une collectivité prenne un bien privé, avec compensation, pour un projet jugé plus utile à tous, comme une école ou un hôpital."
+  },
+  {
+    "id": "q5",
+    "text": "Le respect absolu de la propriété privée est la base d’une société libre et prospère.",
+    "axis": "Modèle de propriété",
+    "leftPole": "Collectivisme",
+    "rightPole": "Propriétarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Selon cette idée, garantir à chacun le droit de posséder et de transmettre ses biens serait essentiel pour protéger les libertés individuelles et encourager l’investissement."
+  },
+  {
+    "id": "q6",
+    "text": "La concurrence entre entreprises est le meilleur moyen de garantir des prix justes pour les consommateurs.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "L’idée ici est que, si plusieurs entreprises se disputent les clients, elles seront poussées à baisser leurs prix et à améliorer leurs services sans qu’il soit nécessaire d’intervenir."
+  },
+  {
+    "id": "q7",
+    "text": "L’État devrait pouvoir bloquer les prix de certains produits de première nécessité en cas de crise.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cela revient à autoriser l’État à imposer un plafond temporaire sur les prix de biens essentiels, comme l’électricité ou les aliments de base, pour protéger les ménages."
+  },
+  {
+    "id": "q8",
+    "text": "Cela devrait être des entreprises privées qui assurent des services comme la santé ou l’éducation.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains pensent que confier ces services à des acteurs privés permettrait plus d'efficacité, de choix et d'innovation que lorsque l’État les gère directement."
+  },
+  {
+    "id": "q9",
+    "text": "La liberté d'entreprendre doit primer, même si cela crée des inégalités.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette affirmation défend l’idée que chacun doit pouvoir créer et gérer son activité sans trop de contraintes, même si cela mène à des écarts de richesse."
+  },
+  {
+    "id": "q10",
+    "text": "Quand une entreprise devient trop puissante, l’État doit pouvoir la scinder ou la contrôler.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "L’idée ici est qu’un État peut intervenir pour éviter qu’une seule entreprise domine un secteur entier, ce qui pourrait nuire à la concurrence ou à l’intérêt général."
+  },
+  {
+    "id": "q11",
+    "text": "L’État devrait investir directement dans des secteurs comme l’énergie ou l’agriculture pour garantir l’intérêt général.",
+    "axis": "Rôle de l’État dans l’économie",
+    "leftPole": "Interventionnisme",
+    "rightPole": "Libéralisme économique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Certains estiment que des domaines stratégiques, comme produire de l’énergie ou nourrir la population, sont trop importants pour être laissés au seul marché privé."
+  },
+  {
+    "id": "q12",
+    "text": "Personne ne devient milliardaire sans exploiter d’autres personnes, d’une manière ou d’une autre.",
+    "axis": "Finalité de l’activité économique",
+    "leftPole": "Anticapitalisme",
+    "rightPole": "Capitalisme entrepreneurial",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette affirmation part du principe que de très grandes fortunes s’appuient forcément sur le travail d’autres mal rémunérés ou sur des systèmes inégalitaires."
+  },
+  {
+    "id": "q13",
+    "text": "Si une personne gagne honnêtement beaucoup d’argent, il n’y a pas de raison morale de limiter sa richesse.",
+    "axis": "Finalité de l’activité économique",
+    "leftPole": "Anticapitalisme",
+    "rightPole": "Capitalisme entrepreneurial",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Selon cette idée, il est légitime de s’enrichir tant que cela se fait sans fraude ni exploitation directe, comme par l’innovation ou le travail acharné."
+  },
+  {
+    "id": "q14",
+    "text": "La recherche du profit pousse naturellement à l’innovation et au progrès.",
+    "axis": "Finalité de l’activité économique",
+    "leftPole": "Anticapitalisme",
+    "rightPole": "Capitalisme entrepreneurial",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains défendent que le désir de gagner de l’argent motive les gens à créer de nouvelles idées, technologies ou services utiles."
+  },
+  {
+    "id": "q15",
+    "text": "Il est sain qu’une personne ayant pris des risques puisse s’enrichir beaucoup si son projet réussit.",
+    "axis": "Finalité de l’activité économique",
+    "leftPole": "Anticapitalisme",
+    "rightPole": "Capitalisme entrepreneurial",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette vision valorise l’entrepreneuriat : prendre des risques financiers et organisationnels est vu comme méritant une forte récompense si cela fonctionne."
+  },
+  {
+    "id": "q16",
+    "text": "Le but d’une entreprise ne devrait pas être de faire du profit, mais de répondre à des besoins humains.",
+    "axis": "Finalité de l’activité économique",
+    "leftPole": "Anticapitalisme",
+    "rightPole": "Capitalisme entrepreneurial",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Ici, on considère que l’activité économique devrait viser l’utilité sociale plutôt que le gain financier, comme dans les entreprises à but non lucratif ou solidaires."
+  },
+  {
+    "id": "q17",
+    "text": "Il serait bénéfique pour la société que les gens travaillent beaucoup moins, quitte à produire moins.",
+    "axis": "Sens et fonction du travail",
+    "leftPole": "Anti-productivisme",
+    "rightPole": "Travaillisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée défend qu’en réduisant le temps de travail, on aurait plus de temps libre, moins de stress, et une vie plus équilibrée, même si cela implique une baisse de production."
+  },
+  {
+    "id": "q18",
+    "text": "Le revenu d’une personne devrait dépendre directement de son utilité sociale, pas de son poste ou de ses diplômes.",
+    "axis": "Sens et fonction du travail",
+    "leftPole": "Anti-productivisme",
+    "rightPole": "Travaillisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cela revient à dire que le salaire devrait refléter ce que le travail apporte réellement à la société, et non uniquement le statut ou les qualifications formelles."
+  },
+  {
+    "id": "q19",
+    "text": "Même pénible, un travail peut être une source de fierté et de respect de soi",
+    "axis": "Sens et fonction du travail",
+    "leftPole": "Anti-productivisme",
+    "rightPole": "Travaillisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment que fournir un effort, même dans des tâches difficiles, peut donner une forme de dignité et renforcer l’estime de soi."
+  },
+  {
+    "id": "q20",
+    "text": "Le mérite se mesure dans l’effort, pas dans les résultats économiques.",
+    "axis": "Sens et fonction du travail",
+    "leftPole": "Anti-productivisme",
+    "rightPole": "Travaillisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette affirmation valorise l’engagement personnel et le travail accompli, même s’il ne rapporte pas beaucoup d’argent ou de succès visible."
+  },
+  {
+    "id": "q21",
+    "text": "Le travail est ce qui donne un sens à la vie.",
+    "axis": "Sens et fonction du travail",
+    "leftPole": "Anti-productivisme",
+    "rightPole": "Travaillisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Beaucoup considèrent que travailler permet de se sentir utile, de se structurer au quotidien, et de construire quelque chose au-delà de soi-même."
+  },
+  {
+    "id": "q22",
+    "text": "Une autorité n’est légitime que si elle peut être remise en question et remplacée à tout moment.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée défend qu’aucun pouvoir ne doit être considéré comme définitif, et que la légitimité repose sur la possibilité de contester et de changer ceux qui commandent."
+  },
+  {
+    "id": "q23",
+    "text": "Face à une pandémie ou à une guerre, un État centralisé est indispensable pour coordonner la société.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Dans les situations de crise, certains estiment qu’une autorité forte permet de réagir plus vite, d’imposer des règles communes et d’éviter le chaos."
+  },
+  {
+    "id": "q24",
+    "text": "Il est dangereux de confier trop de pouvoir à un seul individu ou à un petit groupe.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Concentrer le pouvoir entre quelques mains est vu ici comme un risque d’abus, de corruption ou de décisions arbitraires sans contrôle démocratique."
+  },
+  {
+    "id": "q25",
+    "text": "Les lois sont plus efficaces quand elles sont appliquées strictement, même si elles ne sont pas parfaites.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue affirme que la cohésion sociale repose sur des règles claires, respectées par tous, même si certaines lois sont discutables."
+  },
+  {
+    "id": "q26",
+    "text": "Un collectif qui refuse toute forme de direction finit par se bloquer ou se diviser.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "L’idée est qu’un groupe a besoin d’une forme de coordination ou de leadership, même temporaire, pour éviter les conflits internes ou l’inefficacité."
+  },
+  {
+    "id": "q27",
+    "text": "Il faut apprendre dès l’école à obéir à des règles communes, même quand on n’est pas d’accord.",
+    "axis": "Organisation du pouvoir",
+    "leftPole": "Anarchisme",
+    "rightPole": "Étatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment que le respect de l’autorité commence tôt, et que la discipline scolaire aide à construire des citoyens respectueux des lois et des autres."
+  },
+  {
+    "id": "q28",
+    "text": "Il est normal qu’un élu prenne des décisions sans consulter la population à chaque fois.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue considère qu’un représentant élu doit pouvoir exercer son mandat librement, sans devoir valider chaque décision auprès du public."
+  },
+  {
+    "id": "q29",
+    "text": "Les citoyens devraient pouvoir voter directement toutes les lois importantes.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée défend l’usage régulier de référendums ou de consultations populaires pour faire participer directement les citoyens aux décisions majeures."
+  },
+  {
+    "id": "q30",
+    "text": "Lorsqu’une majorité claire se dégage dans l’opinion publique, les élus devraient être obligés de la suivre.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Ici, on affirme que la volonté populaire exprimée par les sondages, pétitions ou mobilisations devrait avoir une force contraignante pour les élus."
+  },
+  {
+    "id": "q31",
+    "text": "Un vote tous les cinq ans ne suffit pas à faire vivre la démocratie.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette affirmation critique les systèmes où les citoyens n’ont qu’un rôle ponctuel, et plaide pour des formes de participation plus régulières ou continues."
+  },
+  {
+    "id": "q32",
+    "text": "Trop de participation populaire donne du pouvoir à ceux qui crient le plus fort, pas à ceux qui représentent la majorité.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette critique souligne que les plus mobilisés ne sont pas toujours représentatifs de l’ensemble de la population, ce qui peut biaiser les décisions."
+  },
+  {
+    "id": "q33",
+    "text": "Il vaut mieux confier le pouvoir à une minorité compétente qu’à une majorité ignorante.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Selon cette vision, des experts ou des représentants mieux informés seraient plus aptes à prendre de bonnes décisions que la population dans son ensemble."
+  },
+  {
+    "id": "q34",
+    "text": "Un bon dirigeant doit parfois ignorer l’avis de la population, car la plupart des gens choisissent en pensant à leur confort immédiat, pas à l’intérêt général sur le long terme.",
+    "axis": "Forme de démocratie",
+    "leftPole": "Participationnisme",
+    "rightPole": "Parlementarisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette affirmation considère que les décisions politiques nécessitent parfois du courage et de la vision, même si elles vont à l’encontre de l’opinion majoritaire."
+  },
+  {
+    "id": "q35",
+    "text": "Les grandes avancées sociales sont souvent venues de luttes illégales ou violentes.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Certains rappellent que des droits importants (comme le droit de vote, les congés payés, etc.) ont été obtenus après des grèves, des révoltes ou des actions en dehors du cadre légal."
+  },
+  {
+    "id": "q36",
+    "text": "Le système actuel est trop enraciné pour être réformé : il faut le déconstruire en profondeur.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée considère que certaines injustices ou inégalités sont structurelles, et qu’il est illusoire de les corriger sans changer le système dans son ensemble."
+  },
+  {
+    "id": "q37",
+    "text": "Même lent, un changement obtenu légalement est plus durable qu’une rupture brutale.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue valorise les progrès réalisés dans le cadre des lois existantes, en estimant qu’ils sont plus stables et mieux acceptés par la société."
+  },
+  {
+    "id": "q38",
+    "text": "La transformation sociale passe avant tout par l’éducation, pas par la confrontation.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "L’idée ici est que les mentalités évoluent en profondeur grâce à l’éducation, au dialogue et à la culture, plutôt qu’à la violence ou aux conflits."
+  },
+  {
+    "id": "q39",
+    "text": "Une société n’a pas besoin de révolution : elle a besoin d’ordre et de discipline.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Selon cette vision, les ruptures brutales déstabilisent la société, et il vaut mieux renforcer la stabilité pour améliorer les choses petit à petit."
+  },
+  {
+    "id": "q40",
+    "text": "Le système actuel est irrécupérable : il faut en sortir complètement et repartir de zéro.",
+    "axis": "Rapport au changement social",
+    "leftPole": "Révolutionnisme",
+    "rightPole": "Réformisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette position radicale considère que les institutions actuelles sont trop injustes ou corrompues pour être réparées, et qu’il faut construire autre chose à la place."
+  },
+  {
+    "id": "q41",
+    "text": "Trop vouloir tolérer ou comprendre finit par excuser des comportements nuisibles à la cohésion sociale.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment que la tolérance excessive peut conduire à banaliser des comportements qui affaiblissent le respect de normes communes."
+  },
+  {
+    "id": "q42",
+    "text": "Les normes et les repères traditionnels ont été construits sur des siècles : les abandonner brusquement désoriente la société.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette idée défend que les traditions jouent un rôle de stabilité sociale et qu’un changement trop rapide peut créer de la confusion ou du malaise collectif."
+  },
+  {
+    "id": "q43",
+    "text": "Un enfant a besoin d’un père et d’une mère : l’égalité parentale ne devrait pas effacer les rôles traditionnels.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette affirmation repose sur l’idée que les repères familiaux classiques sont importants pour le développement de l’enfant, même si d’autres modèles existent."
+  },
+  {
+    "id": "q44",
+    "text": "Interdire les discriminations, ce n’est pas assez : il faut rendre visibles et célébrer les différences.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Certains estiment qu’il ne suffit pas d’être neutre : il faut activement valoriser la diversité pour combattre les inégalités et favoriser l’inclusion."
+  },
+  {
+    "id": "q45",
+    "text": "Ce n’est pas “aller trop loin” que de remettre en question des normes établies si elles excluent des gens.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Selon cette idée, même des règles anciennes peuvent être injustes ou discriminantes, et doivent pouvoir être modifiées si elles ne conviennent plus à tous."
+  },
+  {
+    "id": "q46",
+    "text": "Les normes de genre sont des constructions sociales : on a tout à gagner à les remettre en cause.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette affirmation considère que les rôles associés au masculin et au féminin ne sont pas naturels, mais imposés par la société, et qu’ils peuvent évoluer."
+  },
+  {
+    "id": "q47",
+    "text": "Il est injuste de favoriser la diversité si cela se fait au détriment du mérite et des compétences.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue défend que les décisions doivent se fonder sur les qualifications et les efforts, et non sur l’origine ou l’identité."
+  },
+  {
+    "id": "q48",
+    "text": "Le respect de l’autorité, de la famille et du devoir devrait redevenir des valeurs centrales.",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains pensent que la société a perdu ses repères, et que ces valeurs traditionnelles sont essentielles pour restaurer la cohésion et la responsabilité."
+  },
+  {
+    "id": "q49",
+    "text": "Les frontières sont une fiction politique : ce sont les droits humains qui devraient compter avant tout.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée considère que la nationalité ne devrait pas déterminer les droits fondamentaux, et que l’humanité passe avant les États."
+  },
+  {
+    "id": "q50",
+    "text": "Les migrants ne fuient pas toujours la guerre ou la misère : beaucoup profitent d’un système trop laxiste.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue met en doute certains motifs de migration et défend une politique plus stricte pour éviter les abus du système d’accueil."
+  },
+  {
+    "id": "q51",
+    "text": "Il faut limiter les accords internationaux qui affaiblissent la volonté populaire d’un pays.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment que les traités ou institutions supranationales peuvent imposer des règles contraires aux choix démocratiques d’un peuple."
+  },
+  {
+    "id": "q52",
+    "text": "La priorité d’un État doit être de défendre les intérêts de ses citoyens, pas de régler les problèmes du monde.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette position considère que l’État a une responsabilité avant tout envers sa population, et que ses ressources doivent aller en priorité à ses habitants."
+  },
+  {
+    "id": "q53",
+    "text": "La souveraineté est souvent un prétexte pour refuser la solidarité avec les peuples opprimés.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Ce point de vue critique l’usage de la souveraineté pour se désengager des responsabilités globales, comme l’accueil de réfugiés ou la lutte contre les dictatures."
+  },
+  {
+    "id": "q54",
+    "text": "Certains enjeux mondiaux (comme le climat, les pandémies ou les risques liés à l’intelligence artificielle) sont trop critiques pour être laissés à la seule souveraineté des États : une autorité internationale devrait pouvoir imposer des décisions.",
+    "axis": "Échelle de souveraineté",
+    "leftPole": "Internationalisme",
+    "rightPole": "Souverainisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée défend que face à certains défis planétaires, une coordination mondiale contraignante est nécessaire, même si cela limite l’indépendance des États."
+  },
+  {
+    "id": "q55",
+    "text": "L’État ne devrait en aucun cas financer ou promouvoir une religion, même sous prétexte de culture.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Ce point de vue défend une stricte séparation entre religion et institutions publiques, même pour des fêtes, bâtiments ou traditions à caractère religieux."
+  },
+  {
+    "id": "q56",
+    "text": "Il est dangereux que les lois s’inspirent directement d’interdits religieux.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée considère que les lois doivent reposer sur des principes universels et rationnels, pas sur des dogmes propres à une religion."
+  },
+  {
+    "id": "q57",
+    "text": "Une société sans spiritualité finit par remplacer la foi par des idéologies creuses.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment que la religion apporte un sens profond que ni la science ni la politique ne peuvent offrir, et que son absence laisse un vide."
+  },
+  {
+    "id": "q58",
+    "text": "Il faut se méfier des religions : elles freinent les droits des femmes, des LGBT+ et les avancées scientifiques.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette critique repose sur l’idée que certaines traditions religieuses perpétuent des normes inégalitaires ou contraires aux droits modernes."
+  },
+  {
+    "id": "q59",
+    "text": "La décadence actuelle vient du rejet de Dieu et de la disparition de toute morale religieuse.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue considère que la perte de repères religieux a affaibli la morale collective et contribué au désordre social ou moral."
+  },
+  {
+    "id": "q60",
+    "text": "Même dans un État laïque, les religions peuvent jouer un rôle positif en structurant le lien social et en donnant du sens à la vie de nombreux citoyens.",
+    "axis": "Place du religieux dans la vie publique",
+    "leftPole": "Laïcisme",
+    "rightPole": "Spiritualisme politique",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette position reconnaît que les religions, sans être imposées, peuvent avoir une influence bénéfique sur la solidarité, les valeurs ou la quête de sens."
+  },
+  {
+    "id": "q61",
+    "text": "Il faut des peines plus sévères pour restaurer l’autorité de la justice.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Certains estiment qu’une justice trop indulgente perd sa crédibilité, et que la sévérité est nécessaire pour dissuader et faire respecter la loi."
+  },
+  {
+    "id": "q62",
+    "text": "Le sentiment d’impunité est l’une des causes majeures de la violence.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette idée suggère que si les peines sont rares ou légères, cela pousse certains à penser qu’ils peuvent enfreindre la loi sans conséquence."
+  },
+  {
+    "id": "q63",
+    "text": "Certains crimes devraient être punis sans possibilité de remise de peine.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette position défend l’idée que certains actes sont si graves qu’ils méritent une peine irréductible, pour protéger la société ou marquer leur gravité."
+  },
+  {
+    "id": "q64",
+    "text": "Un procès peut être juste même sans condamner sévèrement, s’il répare les liens et les blessures.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Dans une logique restaurative, on considère que le rôle de la justice peut être de reconstruire une relation ou d’apaiser les souffrances, au-delà de la punition."
+  },
+  {
+    "id": "q65",
+    "text": "Un système judiciaire qui ne réinsère pas échoue dans sa mission.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette vision considère que la prévention de la récidive et le retour à la vie normale du condamné devraient être au cœur de toute peine."
+  },
+  {
+    "id": "q66",
+    "text": "Un violeur récidiviste ne mérite pas qu’on parle de “réinsertion”, il doit être enfermé à vie.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue considère que certains actes révèlent une dangerosité irréversible, et que la priorité doit aller à la sécurité des autres."
+  },
+  {
+    "id": "q67",
+    "text": "La prison fabrique autant de monstres qu’elle en enferme.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette critique vise l’effet destructeur de l’enfermement, en soulignant que des conditions inhumaines ou violentes peuvent aggraver les comportements."
+  },
+  {
+    "id": "q68",
+    "text": "Les sanctions alternatives (travail d’intérêt général, thérapie, indemnisation) devraient être la norme.",
+    "axis": "Objectif du système judiciaire",
+    "leftPole": "Justicialisme réparateur",
+    "rightPole": "Pénalisme répressif",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Ce point de vue considère que les peines peuvent être utiles sans passer par la prison, en réparant les dommages causés ou en accompagnant les personnes."
+  },
+  {
+    "id": "q69",
+    "text": "Il faudra accepter de renoncer à certains conforts modernes si on veut éviter l’effondrement écologique.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Cette idée considère que préserver la planète impose de changer nos habitudes, même si cela signifie consommer ou se déplacer moins."
+  },
+  {
+    "id": "q70",
+    "text": "Interdire ou ralentir l’innovation au nom de l’écologie est un suicide économique.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue affirme que le progrès technique est nécessaire pour résoudre les crises écologiques, et qu’il ne faut pas freiner la recherche ou l’industrie."
+  },
+  {
+    "id": "q71",
+    "text": "Le capitalisme vert est une illusion : on ne peut pas sauver la planète avec le système qui l’a détruite.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "left",
+    "weight": 1,
+    "explanation": "Certains estiment que les solutions écologiques proposées par les entreprises ou les gouvernements n’en changent pas assez les logiques destructrices."
+  },
+  {
+    "id": "q72",
+    "text": "L’éco-anxiété est surtout un luxe de gens qui n’ont pas d’autres problèmes réels.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Cette opinion considère que les préoccupations environnementales sont parfois exagérées ou détachées des réalités économiques et sociales concrètes."
+  },
+  {
+    "id": "q73",
+    "text": "L’écologie punitive fracture la société et renforce le rejet populaire des politiques vertes.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce point de vue critique les mesures écologiques perçues comme injustes, coûteuses ou contraignantes, qui peuvent creuser les inégalités ou provoquer des oppositions."
+  },
+  {
+    "id": "q74",
+    "text": "Le progrès a toujours permis de résoudre nos crises. L’écologie n’échappera pas à cette règle.",
+    "axis": "Modèle écologique",
+    "leftPole": "Écologisme radical",
+    "rightPole": "Productivisme",
+    "favoredPole": "right",
+    "weight": 1,
+    "explanation": "Ce raisonnement parie sur l’innovation et la capacité humaine à s’adapter, comme cela a été le cas avec d’autres défis dans l’histoire."
+  }
+]
+
+
+
