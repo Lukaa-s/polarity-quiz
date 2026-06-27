@@ -11,29 +11,27 @@ export type QuestionProps = {
   total: number;
 };
 
-// Échelle divergente accord → désaccord. Verts/rouges = sémantique, conservés.
-// Neutre central en gris papier chaud (et non bleuté) pour ne pas évoquer "droite".
+// Échelle divergente accord → désaccord. Tons assourdis (terreux, papier) pour
+// rester éditorial. Neutre central en stone chaud, jamais bleuté.
 const BTN_BG = [
-  "#2E7D32", // +++ vert soutenu
-  "#4F9D52", // ++ vert
-  "#A7CFA2", // + vert clair
+  "#3F6F47", // +++ vert profond mat
+  "#6E9A6E", // ++ vert moyen mat
+  "#AEC4A6", // + vert pâle
   "#D8D2C4", // 0 neutre, stone (papier)
-  "#E8B7AE", // - rose terni
-  "#D9594F", // -- rouge
-  "#C62828", // --- rouge soutenu
+  "#D8B3A8", // - terracotta pâle
+  "#B5685E", // -- brique mat
+  "#9C3B33", // --- rouge brique profond
 ] as const;
 
 const BTN_TEXT = [
-  "#F6F3EC", // sur vert foncé
-  "#F6F3EC",
-  "#23201A", // sur vert clair → encre
+  "#F6F3EC", // sur vert profond
+  "#23201A", // sur vert moyen → encre
+  "#23201A", // sur vert pâle → encre
   "#23201A", // neutre → encre
-  "#23201A", // sur rose terni → encre
-  "#F6F3EC", // sur rouge moyen
-  "#F6F3EC", // sur rouge foncé
+  "#23201A", // sur terracotta pâle → encre
+  "#F6F3EC", // sur brique
+  "#F6F3EC", // sur rouge brique
 ] as const;
-
-// Emojis retirés des boutons de réponse
 
 export default function QuestionEnhanced({
   question,
@@ -86,15 +84,8 @@ export default function QuestionEnhanced({
       className="w-full px-3 sm:px-4 lg:px-6 py-4"
     >
       <div className="mx-auto w-full max-w-2xl md:max-w-3xl">
-        {/* Écho du spectre : motif de marque */}
-        <div
-          className="h-1 w-full rounded-full overflow-hidden mb-5"
-          style={{ background: "linear-gradient(90deg, #C62828 0%, #D8D2C4 50%, #1565C0 100%)" }}
-          aria-hidden="true"
-        />
-
         {/* En-tête : index éditorial + reprise */}
-        <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="flex items-center justify-between gap-3 mb-6">
           <div className="flex items-baseline gap-2.5">
             <span className="font-display text-2xl sm:text-3xl font-semibold text-ink tabular-nums leading-none">
               Q.{String(currentIndex + 1).padStart(2, "0")}
@@ -110,22 +101,12 @@ export default function QuestionEnhanced({
           </button>
         </div>
 
-        {/* Barre de progression visuelle */}
-        <div className="mb-7 h-1 rounded-full bg-rule overflow-hidden">
-          <motion.div
-            className="h-full bg-ink"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          />
-        </div>
-
-        {/* Énoncé */}
+        {/* Énoncé (grotesque, pas de serif sur les questions) */}
         <motion.h2
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-2xl sm:text-3xl lg:text-[2.5rem] font-semibold leading-[1.12] tracking-tight mb-7 text-ink [text-wrap:balance]"
+          className="font-body text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug mb-8 text-ink [text-wrap:balance]"
         >
           {question.text}
         </motion.h2>
@@ -139,13 +120,13 @@ export default function QuestionEnhanced({
               <motion.button
                 key={idx}
                 initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: isDimmed ? 0.4 : 1, y: 0 }}
-                transition={{ duration: 0.25, delay: 0.04 * idx, ease: [0.16, 1, 0.3, 1] }}
+                animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
+                transition={{ duration: 0.22, delay: selectedIdx === null ? 0.035 * idx : 0, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => handleAnswer(idx)}
                 disabled={selectedIdx !== null}
-                className={`relative w-full text-left rounded-[4px] min-h-14 px-4 py-3 font-medium transition-[box-shadow,transform] duration-150
-                  ${isSelected ? "ring-2 ring-ink ring-offset-2 ring-offset-paper2" : "hover:translate-x-0.5"}
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper2
+                className={`group relative flex w-full items-center justify-between gap-3 text-left rounded-[5px] min-h-14 px-4 py-3 font-medium transition-[filter,box-shadow] duration-150
+                  ${isSelected ? "ring-2 ring-inset ring-ink" : "hover:brightness-[0.96]"}
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink
                 `}
                 style={{
                   backgroundColor: BTN_BG[idx],
@@ -153,6 +134,18 @@ export default function QuestionEnhanced({
                 }}
               >
                 <span>{label}</span>
+                {isSelected && (
+                  <motion.svg
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-5 w-5 shrink-0"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </motion.svg>
+                )}
               </motion.button>
             );
           })}
@@ -161,12 +154,12 @@ export default function QuestionEnhanced({
         {/* Ancres de l'échelle */}
         <div className="flex items-center justify-between text-[0.7rem] sm:text-xs uppercase tracking-[0.15em] text-ink2 mb-6 px-1">
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full" style={{ background: "#2E7D32" }} aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full" style={{ background: "#3F6F47" }} aria-hidden="true" />
             D'accord
           </span>
           <span className="inline-flex items-center gap-1.5">
             Pas d'accord
-            <span className="h-2 w-2 rounded-full" style={{ background: "#C62828" }} aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full" style={{ background: "#9C3B33" }} aria-hidden="true" />
           </span>
         </div>
 

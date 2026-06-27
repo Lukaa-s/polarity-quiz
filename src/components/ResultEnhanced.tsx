@@ -78,6 +78,47 @@ const LEFT_COLOR = "#C62828";
 const RIGHT_COLOR = "#1565C0";
 const USER_COLOR = "#23201A"; // Encre, "Vous" : proéminent mais neutre (aucun camp)
 
+// Palette catégorielle mate pour le radar : ni rouge ni bleu purs (réservés aux pôles).
+const RADAR_PALETTE = ["#9A6A00", "#2F6F6A", "#7A4A6B", "#566573"]; // ocre, sarcelle, prune, ardoise
+const MAX_COMPARE = 4;
+
+// Initiales encre (monogramme), sans bulle colorée.
+function profileInitials(name: string): string {
+  return name
+    .replace(/\(.*?\)/g, "")
+    .trim()
+    .split(/\s+/)
+    .map((n) => n[0] ?? "")
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+// Indicateur de positionnement gauche↔droite : la couleur y est signifiante.
+function LeanIndicator({ value, showLabels = false }: { value: number; showLabels?: boolean }) {
+  const pos = Math.max(0, Math.min(100, value));
+  return (
+    <div className="w-full">
+      <div
+        className="relative h-1.5 rounded-full"
+        style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
+      >
+        <span
+          className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper ring-2 ring-ink shadow-sm"
+          style={{ left: `${pos}%` }}
+          aria-hidden="true"
+        />
+      </div>
+      {showLabels && (
+        <div className="mt-1.5 flex justify-between text-[0.65rem] uppercase tracking-[0.15em] text-ink2">
+          <span>Gauche</span>
+          <span>Droite</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ResultEnhanced({
   poleScores,
   questions,
@@ -138,7 +179,11 @@ export default function ResultEnhanced({
   // Toggle profile dans la sélection
   const toggleProfile = (id: string) => {
     setSelectedProfiles((prev) =>
-      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((p) => p !== id)
+        : prev.length >= MAX_COMPARE
+        ? prev
+        : [...prev, id]
     );
   };
 
@@ -455,11 +500,33 @@ export default function ResultEnhanced({
     selectedProfiles.forEach((id, idx) => {
       const profile = [...referenceProfiles, ...savedProfiles].find((p) => p.id === id);
       if (profile) {
-        colors[profile.name] = profile.color ?? `hsl(${(idx * 360) / selectedProfiles.length}, 70%, 60%)`;
+        colors[profile.name] = RADAR_PALETTE[idx % RADAR_PALETTE.length];
       }
     });
     return colors;
   }, [selectedProfiles, savedProfiles, explorerMode]);
+
+  // Penchant global gauche↔droite de chaque profil de référence (0 = gauche, 100 = droite).
+  const profileLean = useMemo(() => {
+    const map: Record<string, number> = {};
+    referenceProfiles.forEach((p) => {
+      const s = calculatePoleScores(p.answers, questions);
+      let l = 0;
+      let r = 0;
+      Object.values(s).forEach((v) => {
+        l += v.left;
+        r += v.right;
+      });
+      map[p.id] = l + r > 0 ? (r / (l + r)) * 100 : 50;
+    });
+    return map;
+  }, [questions]);
+
+  // Profils de référence triés de gauche à droite (effet « hémicycle »).
+  const profilesByLean = useMemo(
+    () => [...referenceProfiles].sort((a, b) => (profileLean[a.id] ?? 50) - (profileLean[b.id] ?? 50)),
+    [profileLean]
+  );
 
   const tabs = explorerMode
     ? [
@@ -802,52 +869,78 @@ export default function ResultEnhanced({
       {/* ────────────── Onglet : Diagramme + Comparateur ────────────── */}
       {activeTab === "diagram" && (
         <div className="animate-fadeIn space-y-6">
-          <h3 className="text-2xl sm:text-3xl text-center text-ink font-semibold">
-            Comparateur de profils
-          </h3>
+          <div>
+            <h3 className="font-display text-2xl sm:text-3xl text-ink font-semibold">
+              Comparateur de profils
+            </h3>
+            <p className="text-sm text-ink2 mt-1">
+              Choisissez jusqu'à {MAX_COMPARE} figures à superposer sur le diagramme.
+            </p>
+          </div>
 
           {/* Sélection des profils de référence */}
-          <div className="bg-ink/5 rounded-xl p-4 border border-ink/10">
-            <h4 className="text-sm font-semibold text-ink mb-3 flex items-center gap-2 uppercase tracking-wide">
-              <UserGroupIcon className="w-5 h-5" />
-              Figures politiques
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {(explorerMode ? referenceProfiles : sortedReferenceProfiles).map((profile) => (
-                <button
-                  key={profile.id}
-                  onClick={() => toggleProfile(profile.id)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
-                    selectedProfiles.includes(profile.id)
-                      ? "bg-ink/20 border-ink/40 text-ink scale-105"
-                      : "bg-ink/5 border-ink/10 text-ink/70 hover:bg-paper3 hover:text-ink"
-                  }`}
-                  style={{
-                    borderColor: selectedProfiles.includes(profile.id) ? profile.color : undefined,
-                  }}
-                >
-                  {profile.name}
-                  {!explorerMode && 'distance' in profile && (
-                    <span className="ml-2 text-xs opacity-70">
-                      ({Math.round(100 - profile.distance)}/100)
-                    </span>
-                  )}
-                </button>
-              ))}
+          <div className="rounded-xl border border-rule bg-paper2 overflow-hidden">
+            <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-rule">
+              <h4 className="flex items-center gap-2 text-xs font-semibold text-ink2 uppercase tracking-[0.15em]">
+                <UserGroupIcon className="w-4 h-4" />
+                Figures politiques
+              </h4>
+              <span className="text-xs text-ink2 tabular-nums">{selectedProfiles.length}/{MAX_COMPARE}</span>
             </div>
+            <ul className="max-h-72 overflow-y-auto scrollbar-thin divide-y divide-rule">
+              {(explorerMode ? profilesByLean : sortedReferenceProfiles).map((profile) => {
+                const selected = selectedProfiles.includes(profile.id);
+                const atCap = selectedProfiles.length >= MAX_COMPARE;
+                const swatch = selected
+                  ? RADAR_PALETTE[selectedProfiles.indexOf(profile.id) % RADAR_PALETTE.length]
+                  : null;
+                return (
+                  <li key={profile.id}>
+                    <button
+                      onClick={() => toggleProfile(profile.id)}
+                      disabled={!selected && atCap}
+                      className="group flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-paper3 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink"
+                    >
+                      <span
+                        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border ${
+                          selected ? "bg-ink border-ink" : "border-ink2"
+                        }`}
+                      >
+                        {selected && (
+                          <svg className="h-3 w-3 text-paper" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">
+                        {profile.name}
+                      </span>
+                      {!explorerMode && "distance" in profile && (
+                        <span className="shrink-0 text-xs text-ink2 tabular-nums">
+                          {Math.round(100 - (profile as { distance: number }).distance)}/100
+                        </span>
+                      )}
+                      {swatch && (
+                        <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: swatch }} aria-hidden="true" />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
 
           {/* Profils sauvegardés */}
           {savedProfiles.length > 0 && (
-            <div className="bg-ink/5 rounded-xl p-4 border border-ink/10">
-              <h4 className="text-sm font-semibold text-ink mb-3 uppercase tracking-wide">
+            <div className="bg-paper2 rounded-xl p-4 border border-rule">
+              <h4 className="text-xs font-semibold text-ink2 mb-3 uppercase tracking-[0.15em]">
                 Vos profils sauvegardés
               </h4>
               <div className="space-y-2">
                 {savedProfiles.map((profile) => (
                   <div
                     key={profile.id}
-                    className="flex items-center justify-between bg-ink/5 rounded-lg p-2 border border-ink/10"
+                    className="flex items-center justify-between bg-paper rounded-lg p-2 border border-rule"
                   >
                     <button
                       onClick={() => toggleProfile(profile.id)}
@@ -875,7 +968,7 @@ export default function ResultEnhanced({
           )}
 
           {/* Graphique radar */}
-          <div className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-ink/5 rounded-xl border border-ink/10 p-4">
+          <div className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-paper2 rounded-xl border border-rule p-4">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 data={multiRadarData}
@@ -901,6 +994,7 @@ export default function ResultEnhanced({
                     fill={USER_COLOR}
                     fillOpacity={0.18}
                     strokeWidth={3}
+                    isAnimationActive={false}
                   />
                 )}
 
@@ -917,8 +1011,9 @@ export default function ResultEnhanced({
                       dataKey={profile.name}
                       stroke={profileColors[profile.name]}
                       fill={profileColors[profile.name]}
-                      fillOpacity={0.2}
+                      fillOpacity={0.18}
                       strokeWidth={2}
+                      isAnimationActive={false}
                     />
                   );
                 })}
@@ -945,63 +1040,46 @@ export default function ResultEnhanced({
         <div className="animate-fadeIn space-y-6">
           {!selectedPoliticalProfile ? (
             <>
-              {/* Grille de sélection des profils */}
+              {/* En-tête de l'annuaire */}
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-ink">
-                  Sélectionnez une figure politique
+                <h3 className="font-display text-2xl sm:text-3xl font-semibold text-ink">
+                  Annuaire des figures politiques
                 </h3>
-                <p className="text-ink/70 text-sm mb-6">
-                  Cliquez sur un profil pour voir ses positions détaillées, ses axes et ses badges
+                <p className="text-ink2 text-sm mt-1">
+                  Classées de gauche à droite. Choisissez une figure pour voir ses positions, axes et badges.
                 </p>
+                <div className="mt-4 max-w-md">
+                  <LeanIndicator value={50} showLabels />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {referenceProfiles.map((profile, idx) => (
+              {/* Annuaire éditorial */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-rule border border-rule rounded-md overflow-hidden">
+                {profilesByLean.map((profile, idx) => (
                   <button
                     key={profile.id}
                     onClick={() => setSelectedPoliticalProfile(profile.id)}
-                    className="group relative text-left rounded-2xl border border-ink/15 p-5 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink/50"
-                    style={{
-                      background: `linear-gradient(135deg, ${profile.color}22, ${profile.color}08)`,
-                      animationDelay: `${idx * 50}ms`,
-                    }}
+                    className="group flex items-center gap-4 bg-paper px-4 py-3.5 text-left transition hover:bg-paper3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink"
                   >
-                    <div className="flex items-start gap-4 mb-3">
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-paper shadow-md"
-                        style={{ backgroundColor: profile.color }}
-                      >
-                        {profile.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .slice(0, 2)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-ink mb-1 truncate">
+                    <span className="font-display text-sm font-semibold text-ink2 tabular-nums w-6 shrink-0 pt-0.5">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-baseline justify-between gap-3">
+                        <span className="font-display text-base sm:text-lg font-semibold text-ink truncate">
                           {profile.name}
-                        </h3>
-                        <p className="text-xs text-ink/70 line-clamp-2">
-                          {profile.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-4">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: profile.color }}
-                      />
-                      <span className="text-xs text-ink/60">Voir le profil détaillé →</span>
-                    </div>
-
-                    <div
-                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      style={{
-                        background:
-                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)",
-                      }}
-                    />
+                        </span>
+                        <span className="hidden sm:inline shrink-0 text-sm text-ink2 group-hover:text-ink transition">
+                          Voir →
+                        </span>
+                      </span>
+                      <span className="block text-xs sm:text-sm text-ink2 line-clamp-1 mb-2.5">
+                        {profile.description}
+                      </span>
+                      <span className="block max-w-[16rem]">
+                        <LeanIndicator value={profileLean[profile.id] ?? 50} />
+                      </span>
+                    </span>
                   </button>
                 ))}
               </div>
@@ -1022,33 +1100,24 @@ export default function ResultEnhanced({
                     {/* Bouton retour */}
                     <button
                       onClick={() => setSelectedPoliticalProfile(null)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm rounded-full border border-ink/15 bg-ink/5 text-ink/95 hover:bg-paper3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
+                      className="btn-outline inline-flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
                     >
                       ← Retour à la liste
                     </button>
 
-                    {/* Carte d'en-tête */}
-                    <div
-                      className="rounded-2xl border border-ink/15 p-6 shadow-xl"
-                      style={{
-                        background: `linear-gradient(135deg, ${profile.color}33, ${profile.color}11)`,
-                      }}
-                    >
+                    {/* Carte d'en-tête (papier/encre, monogramme sobre) */}
+                    <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
                       <div className="flex items-start gap-4">
-                        <div
-                          className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-paper shadow-lg"
-                          style={{ backgroundColor: profile.color }}
-                        >
-                          {profile.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)}
+                        <div className="flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-md border border-rule bg-paper3 font-display text-xl sm:text-2xl font-semibold text-ink">
+                          {profileInitials(profile.name)}
                         </div>
-                        <div className="flex-1">
-                          <h2 className="text-2xl font-bold text-ink mb-1">{profile.name}</h2>
-                          <p className="text-ink/80 text-sm">{profile.description}</p>
+                        <div className="flex-1 min-w-0">
+                          <h2 className="font-display text-2xl font-semibold text-ink mb-1">{profile.name}</h2>
+                          <p className="text-ink2 text-sm">{profile.description}</p>
                         </div>
+                      </div>
+                      <div className="mt-5 max-w-md">
+                        <LeanIndicator value={profileLean[profile.id] ?? 50} showLabels />
                       </div>
                     </div>
 
@@ -1068,24 +1137,18 @@ export default function ResultEnhanced({
                           return (
                             <div key={axisInfo.axis} className="space-y-2">
                               <div className="flex justify-between items-baseline text-xs sm:text-sm">
-                                <span className="text-ink/80">{axisInfo.left.label}</span>
-                                <span className="text-ink/80">{axisInfo.right.label}</span>
+                                <span className="text-ink2">{axisInfo.left.label}</span>
+                                <span className="text-ink2">{axisInfo.right.label}</span>
                               </div>
 
-                              <div className="relative h-8 rounded-full overflow-hidden bg-ink/10 border border-ink/15">
+                              <div className="relative h-8 rounded-[5px] overflow-hidden bg-paper3 border border-rule">
                                 <div
                                   className="absolute left-0 top-0 h-full transition-all duration-500"
-                                  style={{
-                                    width: `${leftPct}%`,
-                                    background: "linear-gradient(90deg, #C62828, #EF5350)",
-                                  }}
+                                  style={{ width: `${leftPct}%`, background: LEFT_COLOR }}
                                 />
                                 <div
                                   className="absolute right-0 top-0 h-full transition-all duration-500"
-                                  style={{
-                                    width: `${rightPct}%`,
-                                    background: "linear-gradient(270deg, #1565C0, #42A5F5)",
-                                  }}
+                                  style={{ width: `${rightPct}%`, background: RIGHT_COLOR }}
                                 />
                                 <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-semibold">
                                   <span
@@ -1105,7 +1168,7 @@ export default function ResultEnhanced({
                                 </div>
                               </div>
 
-                              <div className="text-center text-xs text-ink/60">{axisInfo.axis}</div>
+                              <div className="text-center text-xs text-ink2">{axisInfo.axis}</div>
                             </div>
                           );
                         })}

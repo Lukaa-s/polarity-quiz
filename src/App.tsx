@@ -163,11 +163,18 @@ const App: React.FC = () => {
         <div className="flex-1 flex items-start justify-center">
           <div className="w-full card text-ink p-4 sm:p-6 md:p-8 max-w-screen-sm sm:max-w-2xl md:max-w-3xl lg:max-w-5xl space-y-4 sm:space-y-6">
             {/* Header avec retour */}
-            <div className="flex items-center justify-between gap-3">
-              <h1 className="text-2xl sm:text-3xl font-semibold">Exploration des profils politiques</h1>
+            <div className="flex items-start justify-between gap-3 border-b border-rule pb-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-ink2 font-semibold mb-1">
+                  Polarity Quiz
+                </p>
+                <h1 className="font-display text-2xl sm:text-3xl font-semibold leading-tight">
+                  Explorateur de profils
+                </h1>
+              </div>
               <button
                 onClick={() => setExplorerMode(false)}
-                className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink"
+                className="btn-outline shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink"
               >
                 ← Retour
               </button>
@@ -227,26 +234,32 @@ const App: React.FC = () => {
               Où vous situez-vous&nbsp;?
             </h1>
 
+            {/* Spectre : instrument signature, pleine largeur */}
+            <div className="space-y-3 pt-1">
+              <div
+                className="relative h-5 sm:h-6 w-full rounded-full overflow-hidden ring-1 ring-rule"
+                style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
+                aria-hidden="true"
+              >
+                {Array.from({ length: 11 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={`absolute top-0 h-full ${i === 5 ? "w-0.5 bg-paper/80" : "w-px bg-paper/35"}`}
+                    style={{ left: `${i * 10}%` }}
+                  />
+                ))}
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span className="text-sm sm:text-base font-semibold" style={{ color: LEFT_COLOR }}>Gauche</span>
+                <span className="text-[0.65rem] sm:text-xs uppercase tracking-[0.2em] text-ink2">Centre</span>
+                <span className="text-sm sm:text-base font-semibold" style={{ color: RIGHT_COLOR }}>Droite</span>
+              </div>
+            </div>
+
             {/* Chapô */}
             <p className="text-lg sm:text-xl text-ink2 max-w-2xl leading-relaxed">
               Répondez à une série d'affirmations concrètes pour situer vos convictions, axe par axe. À la fin, vous obtenez un profil clair, nuancé et facilement partageable.
             </p>
-
-            {/* Spectre : motif signature */}
-            <div className="max-w-2xl space-y-2 pt-1">
-              <div
-                className="relative h-3 sm:h-3.5 w-full rounded-full overflow-hidden ring-1 ring-rule"
-                style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
-                aria-hidden="true"
-              >
-                <span className="absolute left-1/2 top-0 h-full w-px bg-paper/70" />
-              </div>
-              <div className="flex justify-between text-xs sm:text-sm font-semibold">
-                <span style={{ color: LEFT_COLOR }}>Gauche</span>
-                <span className="text-ink2">Centre</span>
-                <span style={{ color: RIGHT_COLOR }}>Droite</span>
-              </div>
-            </div>
 
             {/* Repères chiffrés */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:text-base text-ink2 font-medium">
@@ -362,8 +375,8 @@ const App: React.FC = () => {
         <div className="w-full card text-ink p-4 sm:p-6 md:p-8 max-w-screen-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
           {/* Barre de progression sticky (cachée si on consulte des résultats partagés) */}
           {!isViewingSharedResults && (
-            <div className="sticky top-0 z-10 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 pt-1 bg-paper2/90 backdrop-blur-sm">
-              <div className="h-1 rounded-full bg-rule overflow-hidden">
+            <div className="sticky top-0 z-10 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 pt-0.5 pb-2 bg-paper2">
+              <div className="h-px bg-rule overflow-hidden">
                 <div
                   className="h-full bg-ink transition-[width] duration-500 ease-out"
                   style={{
