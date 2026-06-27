@@ -1,0 +1,43 @@
+/* Hallmark · theme: custom "Scrutin" (éditorial civique)
+ * paper-band: light · display: high-contrast-serif · accent-hue: dual red/blue (functional poles)
+ * Design tokens — source of truth for the Polarity Quiz visual system.
+ * Red = gauche, Blue = droite : couleurs fonctionnelles, jamais décoratives.
+ * CTA neutre = encre (ni rouge ni bleu) pour ne suggérer aucun camp.
+ */
+:root {
+  /* ── Couleurs ── */
+  --color-paper:   oklch(97% 0.006 85);   /* #F6F3EC — crème chaud, fond global */
+  --color-paper-2: oklch(94% 0.008 85);   /* #EDE9DE — panneaux / cartes */
+  --color-paper-3: oklch(90% 0.010 85);   /* #E3DDCE — hover / inset */
+  --color-ink:     oklch(24% 0.012 60);   /* #23201A — encre quasi-noir, texte + CTA */
+  --color-ink-2:   oklch(46% 0.012 60);   /* #5E594F — texte secondaire */
+  --color-rule:    oklch(86% 0.008 75);   /* #D8D2C4 — filet / bordure hairline */
+  --color-left:    #C62828;               /* GAUCHE — pôle rouge (fonctionnel) */
+  --color-right:   #1565C0;               /* DROITE — pôle bleu (fonctionnel) */
+  --color-focus:   oklch(24% 0.012 60);   /* anneau de focus = encre (neutre) */
+
+  /* ── Typographie ── */
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Libre Franklin", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* ── Espacement (4-pt) ── */
+  --space-3xs: 0.25rem; --space-2xs: 0.5rem;  --space-xs: 0.75rem;
+  --space-sm:  1rem;    --space-md:  1.5rem;   --space-lg: 2rem;
+  --space-xl:  3rem;    --space-2xl: 4.5rem;   --space-3xl: 7rem;
+
+  /* ── Échelle typographique ── */
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-md: 1.125rem;
+  --text-lg: 1.375rem; --text-xl: 1.75rem;  --text-2xl: 2.25rem;
+  --text-display-s: clamp(2.5rem, 6vw, 3.75rem);
+  --text-display:   clamp(3rem, 9vw, 5.5rem);
+
+  /* ── Mouvement ── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-short:   200ms;
+  --dur-mid:     320ms;
+
+  /* ── Rayons / filets ── */
+  --radius-card: 6px; --radius-input: 4px; --radius-pill: 999px;
+  --rule-hair: 1px;
+}

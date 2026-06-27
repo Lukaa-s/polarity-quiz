@@ -16,7 +16,7 @@ import { ideologicalAxes } from "../data/axisexplaination";
 import type { Badge } from "../data/badges";
 import { evaluateBadges } from "../utils/badges";
 import { referenceProfiles } from "../data/referenceProfiles";
-import { TrashIcon, XMarkIcon, UserGroupIcon, TrophyIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon } from "@heroicons/react/24/solid";
+import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon } from "@heroicons/react/24/solid";
 import html2canvas from "html2canvas";
 import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI } from "../utils/shareResults";
 import { trackShare } from "../utils/analytics";
@@ -42,8 +42,8 @@ const RadarTooltip: React.FC<RadarTooltipProps> = ({
   const meta = axisLabelMap.get(String(label)) ?? { left: "Gauche", right: "Droite" };
 
   return (
-    <div className="rounded-xl border border-white/15 bg-gray-900/95 px-4 py-3 text-sm text-white backdrop-blur-sm shadow-xl">
-      <div className="mb-2 font-semibold text-white border-b border-white/10 pb-1">{label}</div>
+    <div className="rounded-[4px] border border-ink/15 bg-paper px-4 py-3 text-sm text-ink shadow-xl">
+      <div className="mb-2 font-semibold text-ink border-b border-rule pb-1">{label}</div>
       {payload.map((entry, idx) => {
         const pctLeft = Math.round(Number(entry.value ?? 0));
         const pctRight = 100 - pctLeft;
@@ -53,7 +53,7 @@ const RadarTooltip: React.FC<RadarTooltipProps> = ({
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: entry.stroke }}
             />
-            <span className="text-white/90 text-xs">
+            <span className="text-ink/90 text-xs">
               {entry.name}: {meta.left} {pctLeft}% — {meta.right} {pctRight}%
             </span>
           </div>
@@ -76,7 +76,7 @@ export type ResultProps = {
 
 const LEFT_COLOR = "#C62828";
 const RIGHT_COLOR = "#1565C0";
-const USER_COLOR = "#FFB300"; // Or pour l'utilisateur
+const USER_COLOR = "#23201A"; // Encre — "Vous" : proéminent mais neutre (aucun camp)
 
 export default function ResultEnhanced({
   poleScores,
@@ -192,7 +192,7 @@ export default function ResultEnhanced({
       });
 
       const canvas = await html2canvas(element, {
-        backgroundColor: "#10284f",
+        backgroundColor: "#F6F3EC",
         scale: 2,
         logging: false, // Désactiver le logging
         useCORS: true,
@@ -463,33 +463,32 @@ export default function ResultEnhanced({
 
   const tabs = explorerMode
     ? [
-        { key: "profiles", label: "Profils politiques", icon: "👤" },
-        { key: "diagram", label: "Comparateur", icon: "📈" },
-        { key: "explained", label: "Explications", icon: "💡" },
+        { key: "profiles", label: "Profils politiques" },
+        { key: "diagram", label: "Comparateur" },
+        { key: "explained", label: "Explications" },
       ]
     : [
-        { key: "results", label: "Résultats", icon: "📊" },
-        { key: "diagram", label: "Comparateur", icon: "📈" },
-        { key: "explained", label: "Explications", icon: "💡" },
+        { key: "results", label: "Résultats" },
+        { key: "diagram", label: "Comparateur" },
+        { key: "explained", label: "Explications" },
       ];
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-6 font-body">
       {/* Onglets */}
-      <div className="border-b border-white/15">
-        <div className="flex gap-1 overflow-x-auto no-scrollbar -mb-px">
+      <div className="border-b border-rule">
+        <div className="flex gap-6 overflow-x-auto no-scrollbar -mb-px">
           {tabs.map((t) => (
             <button
               key={t.key}
               onClick={() => setActiveTab(t.key as any)}
-              className={`inline-flex items-center gap-2 px-4 py-3 text-sm sm:text-base font-semibold whitespace-nowrap border-b-2 transition-all rounded-t-lg
+              className={`inline-flex items-center px-0.5 py-3 text-sm sm:text-base font-semibold whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded-sm
                 ${
                   activeTab === t.key
-                    ? "border-white text-white bg-white/10 scale-105"
-                    : "border-transparent text-white/70 hover:text-white bg-transparent hover:bg-white/5"
+                    ? "border-ink text-ink"
+                    : "border-transparent text-ink2 hover:text-ink hover:border-rule"
                 }`}
             >
-              <span>{t.icon}</span>
               {t.label}
             </button>
           ))}
@@ -500,52 +499,51 @@ export default function ResultEnhanced({
       {activeTab === "results" && (
         <div className={disableAnimations ? 'pb-8' : 'animate-fadeIn pb-8'} id="results-card">
           <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-            <h2 className="text-2xl sm:text-4xl text-white">Vos résultats</h2>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-ink">Vos résultats</h2>
             <div className="flex gap-2 relative">
               {/* Bouton Télécharger */}
               <button
                 onClick={handleExportImage}
                 disabled={isExporting}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white rounded-lg transition shadow-lg disabled:opacity-50"
+                className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ArrowDownTrayIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">{isExporting ? "Export..." : "Télécharger"}</span>
-                <span className="sm:hidden">{isExporting ? "..." : "📥"}</span>
+                <span className="hidden sm:inline">{isExporting ? "Export…" : "Télécharger"}</span>
               </button>
 
               {/* Bouton Partager */}
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg transition shadow-lg"
+                className="btn-ink flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ShareIcon className="w-5 h-5" />
                 <span className="hidden sm:inline">Partager</span>
-                <span className="sm:hidden">🔗</span>
+                <span className="sm:hidden">Partager</span>
               </button>
 
               {/* Menu de partage (dropdown) */}
               {showShareMenu && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-xl shadow-xl overflow-hidden z-50">
-                  <div className="p-3 border-b border-white/10">
-                    <p className="text-sm font-semibold text-white">Partager mes résultats</p>
+                <div className="absolute top-full right-0 mt-2 w-64 bg-paper/95 backdrop-blur-sm border border-ink/20 rounded-xl shadow-xl overflow-hidden z-50">
+                  <div className="p-3 border-b border-ink/10">
+                    <p className="text-sm font-semibold text-ink">Partager mes résultats</p>
                   </div>
 
                   {/* Copier le lien */}
                   <button
                     onClick={handleCopyLink}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left"
                   >
                     {linkCopied ? (
                       <>
-                        <CheckIcon className="w-5 h-5 text-green-400" />
-                        <span className="text-sm text-green-400">Lien copié !</span>
+                        <CheckIcon className="w-5 h-5 text-green-700" />
+                        <span className="text-sm text-green-700">Lien copié !</span>
                       </>
                     ) : (
                       <>
-                        <ShareIcon className="w-5 h-5 text-white/80" />
+                        <ShareIcon className="w-5 h-5 text-ink/80" />
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-white">Copier le lien</p>
-                          <p className="text-xs text-white/60">Partager directement</p>
+                          <p className="text-sm font-medium text-ink">Copier le lien</p>
+                          <p className="text-xs text-ink/60">Partager directement</p>
                         </div>
                       </>
                     )}
@@ -554,77 +552,77 @@ export default function ResultEnhanced({
                   {/* Twitter/X */}
                   <button
                     onClick={handleShareTwitter}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left border-t border-white/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
                   >
-                    <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-white">Twitter / X</p>
-                      <p className="text-xs text-white/60">Tweeter mes résultats</p>
+                      <p className="text-sm font-medium text-ink">Twitter / X</p>
+                      <p className="text-xs text-ink/60">Tweeter mes résultats</p>
                     </div>
                   </button>
 
                   {/* WhatsApp */}
                   <button
                     onClick={handleShareWhatsApp}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left border-t border-white/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
                   >
-                    <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-white">WhatsApp</p>
-                      <p className="text-xs text-white/60">Envoyer sur WhatsApp</p>
+                      <p className="text-sm font-medium text-ink">WhatsApp</p>
+                      <p className="text-xs text-ink/60">Envoyer sur WhatsApp</p>
                     </div>
                   </button>
 
                   {/* Discord */}
                   <button
                     onClick={handleShareDiscord}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left border-t border-white/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
                   >
-                    <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-white">Discord</p>
-                      <p className="text-xs text-white/60">Copier pour Discord</p>
+                      <p className="text-sm font-medium text-ink">Discord</p>
+                      <p className="text-xs text-ink/60">Copier pour Discord</p>
                     </div>
                   </button>
 
                   {/* Facebook */}
                   <button
                     onClick={handleShareFacebook}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left border-t border-white/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
                   >
-                    <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-white">Facebook</p>
-                      <p className="text-xs text-white/60">Partager sur Facebook</p>
+                      <p className="text-sm font-medium text-ink">Facebook</p>
+                      <p className="text-xs text-ink/60">Partager sur Facebook</p>
                     </div>
                   </button>
 
                   {/* Partage natif (SMS, Telegram, etc.) */}
                   <button
                     onClick={handleShareNative}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition text-left border-t border-white/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
                   >
-                    <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-ink/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-white">Partager...</p>
-                      <p className="text-xs text-white/60">SMS, Telegram, etc.</p>
+                      <p className="text-sm font-medium text-ink">Partager...</p>
+                      <p className="text-xs text-ink/60">SMS, Telegram, etc.</p>
                     </div>
                   </button>
 
                   {/* Bouton fermer */}
                   <button
                     onClick={() => setShowShareMenu(false)}
-                    className="w-full px-4 py-2 text-sm text-white/60 hover:text-white transition border-t border-white/10"
+                    className="w-full px-4 py-2 text-sm text-ink/60 hover:text-ink transition border-t border-ink/10"
                   >
                     Fermer
                   </button>
@@ -634,38 +632,37 @@ export default function ResultEnhanced({
           </div>
 
           {/* Top 3 des personnalités les plus proches */}
-          <div className="mb-8 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl p-5 border border-yellow-500/20">
-            <div className="flex items-center gap-2 mb-4">
-              <TrophyIcon className="w-6 h-6 text-yellow-400" />
-              <h3 className="text-lg sm:text-xl font-bold text-white">
-                Vos 3 personnalités les plus proches
-              </h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="mb-8 bg-paper2 rounded-md p-5 border border-rule">
+            <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
+              Vos 3 personnalités les plus proches
+            </h3>
+            <div className="rule mb-4 mt-3" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-rule border border-rule rounded-md overflow-hidden">
               {sortedReferenceProfiles.slice(0, 3).map((profile, idx) => {
                 const similarity = Math.round(100 - profile.distance);
-                const medals = ["🥇", "🥈", "🥉"];
                 const compatibilityLabel = getCompatibilityLabel(similarity);
                 return (
                   <div
                     key={profile.id}
-                    className="bg-white/10 backdrop-blur rounded-lg p-4 border border-white/20 hover:bg-white/15 transition-all group relative"
+                    className="bg-paper p-4 group relative"
                     style={{
                       animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.15}s both`,
                     }}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-3xl">{medals[idx]}</span>
-                      <div className="flex-1">
-                        <div className="font-semibold text-white mb-1">
+                      <span className="font-display text-3xl leading-none text-ink2 tabular-nums w-7 shrink-0">
+                        {idx + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-ink mb-1">
                           {profile.name}
                         </div>
-                        <div className="text-xs text-white/70 mb-2 leading-normal">
+                        <div className="text-xs text-ink2 mb-2 leading-normal">
                           {profile.description}
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1.5 bg-rule rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
                                 style={{
@@ -674,18 +671,18 @@ export default function ResultEnhanced({
                                 }}
                               />
                             </div>
-                            <span className="text-sm font-bold text-white whitespace-nowrap">
+                            <span className="text-sm font-bold text-ink tabular-nums whitespace-nowrap">
                               {similarity}/100
                             </span>
                           </div>
-                          <div className="text-xs font-medium text-white/80 italic leading-normal">
+                          <div className="text-xs font-medium text-ink2 leading-normal">
                             {compatibilityLabel}
                           </div>
                         </div>
                       </div>
                     </div>
                     {/* Tooltip explicative au survol (desktop uniquement) */}
-                    <div className="hidden sm:block absolute -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-gray-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-lg border border-white/20 z-10">
+                    <div className="hidden sm:block absolute -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-paper text-ink text-xs rounded-[4px] px-3 py-2 whitespace-nowrap shadow-lg border border-ink/15 z-10">
                       Ce score reflète la compatibilité de vos positions politiques.
                       <br />
                       Ce n'est pas une mesure scientifique exacte.
@@ -709,19 +706,17 @@ export default function ResultEnhanced({
             return (
               <div
                 key={axis}
-                className={`space-y-2 px-3 sm:px-4 py-3 rounded-xl mb-3 sm:mb-4 border border-white/10 transition-all hover:border-white/20 hover:shadow-lg ${
-                  idx % 2 === 0 ? "bg-white/5" : "bg-white/10"
-                }`}
+                className="space-y-2 py-3 mb-2 border-b border-rule last:border-b-0"
                 style={{
                   animation: disableAnimations ? 'none' : `slideIn 0.3s ease-out ${idx * 0.05}s both`,
                 }}
               >
-                <div className="flex justify-between text-sm sm:text-base font-semibold text-white/90">
+                <div className="flex justify-between text-sm sm:text-base font-semibold text-ink">
                   <span className="truncate pr-2">{labels.left}</span>
                   <span className="truncate pl-2">{labels.right}</span>
                 </div>
 
-                <div className="relative w-full h-7 sm:h-8 rounded-lg overflow-hidden border border-white/15 bg-white/5 shadow-inner">
+                <div className="relative w-full h-7 sm:h-8 rounded-[4px] overflow-hidden border border-rule">
                   <div
                     className="grid h-full transition-all duration-500"
                     style={{
@@ -729,13 +724,13 @@ export default function ResultEnhanced({
                     }}
                   >
                     <div
-                      className="flex items-center px-2 text-xs sm:text-sm font-bold text-white transition-all"
+                      className="flex items-center px-2 text-xs sm:text-sm font-bold text-paper tabular-nums transition-all"
                       style={{ backgroundColor: LEFT_COLOR }}
                     >
                       {pctLeft > 10 && `${pctLeft}%`}
                     </div>
                     <div
-                      className="flex items-center justify-end px-2 text-xs sm:text-sm font-bold text-white transition-all"
+                      className="flex items-center justify-end px-2 text-xs sm:text-sm font-bold text-paper tabular-nums transition-all"
                       style={{ backgroundColor: RIGHT_COLOR }}
                     >
                       {pctRight > 10 && `${pctRight}%`}
@@ -743,7 +738,7 @@ export default function ResultEnhanced({
                   </div>
                 </div>
 
-                <div className="text-center text-xs italic text-white/70 leading-relaxed pb-1">
+                <div className="text-center text-xs text-ink2 leading-relaxed pb-1">
                   {axis}
                 </div>
               </div>
@@ -751,14 +746,14 @@ export default function ResultEnhanced({
           })}
 
           {/* Badges */}
-          <div className="mt-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center text-white">
-              🏆 Badges obtenus
+          <div className="mt-10 pt-8 border-t border-rule">
+            <h2 className="text-lg sm:text-xl font-semibold mb-5 text-center text-ink">
+              Badges obtenus
             </h2>
 
             {badges.length === 0 ? (
-              <p className="text-center text-sm text-white/80 py-8 bg-white/5 rounded-xl border border-white/10">
-                Aucun badge pour l'instant. Réessaie avec d'autres réponses !
+              <p className="text-center text-sm text-ink2 py-8 bg-paper2 rounded-md border border-rule">
+                Aucun badge pour l'instant. Réessaie avec d'autres réponses.
               </p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 place-items-center">
@@ -771,7 +766,7 @@ export default function ResultEnhanced({
                       animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
                     }}
                   >
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden transition-transform group-hover:scale-110 group-hover:rotate-6 shadow-lg">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 group-hover:scale-105">
                       <img
                         src={badge.icon}
                         alt={badge.label}
@@ -779,12 +774,12 @@ export default function ResultEnhanced({
                         loading="lazy"
                       />
                     </div>
-                    <span className="mt-2 text-xs sm:text-sm text-white text-center font-medium leading-normal">
+                    <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium leading-normal">
                       {badge.label}
                     </span>
 
                     {/* Tooltip desktop */}
-                    <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-gray-900/95 text-white text-sm rounded-lg text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-white/15 backdrop-blur-sm shadow-xl">
+                    <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-paper text-ink text-sm rounded-[4px] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-ink/15 shadow-xl">
                       {badge.description}
                     </div>
                   </div>
@@ -793,15 +788,12 @@ export default function ResultEnhanced({
             )}
           </div>
 
-          <div className="text-center mt-8">
+          <div className="text-center mt-10">
             <button
               onClick={onRestart}
-              className="px-6 py-3 text-white text-base font-semibold rounded-full shadow-xl hover:shadow-2xl active:scale-95 transition-all hover:brightness-110"
-              style={{
-                background: `linear-gradient(135deg, ${LEFT_COLOR}, ${RIGHT_COLOR})`,
-              }}
+              className="btn-ink px-7 py-3 text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
             >
-              🔄 Recommencer le test
+              Recommencer le test
             </button>
           </div>
         </div>
@@ -810,13 +802,13 @@ export default function ResultEnhanced({
       {/* ────────────── Onglet : Diagramme + Comparateur ────────────── */}
       {activeTab === "diagram" && (
         <div className="animate-fadeIn space-y-6">
-          <h3 className="text-xl sm:text-2xl text-center text-white font-bold">
-            📊 Comparateur de profils
+          <h3 className="text-2xl sm:text-3xl text-center text-ink font-semibold">
+            Comparateur de profils
           </h3>
 
           {/* Sélection des profils de référence */}
-          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h4 className="text-sm font-semibold text-white/90 mb-3 flex items-center gap-2">
+          <div className="bg-ink/5 rounded-xl p-4 border border-ink/10">
+            <h4 className="text-sm font-semibold text-ink mb-3 flex items-center gap-2 uppercase tracking-wide">
               <UserGroupIcon className="w-5 h-5" />
               Figures politiques
             </h4>
@@ -827,8 +819,8 @@ export default function ResultEnhanced({
                   onClick={() => toggleProfile(profile.id)}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
                     selectedProfiles.includes(profile.id)
-                      ? "bg-white/20 border-white/40 text-white scale-105"
-                      : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+                      ? "bg-ink/20 border-ink/40 text-ink scale-105"
+                      : "bg-ink/5 border-ink/10 text-ink/70 hover:bg-ink/10 hover:text-ink"
                   }`}
                   style={{
                     borderColor: selectedProfiles.includes(profile.id) ? profile.color : undefined,
@@ -847,22 +839,22 @@ export default function ResultEnhanced({
 
           {/* Profils sauvegardés */}
           {savedProfiles.length > 0 && (
-            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h4 className="text-sm font-semibold text-white/90 mb-3">
-                💾 Vos profils sauvegardés
+            <div className="bg-ink/5 rounded-xl p-4 border border-ink/10">
+              <h4 className="text-sm font-semibold text-ink mb-3 uppercase tracking-wide">
+                Vos profils sauvegardés
               </h4>
               <div className="space-y-2">
                 {savedProfiles.map((profile) => (
                   <div
                     key={profile.id}
-                    className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10"
+                    className="flex items-center justify-between bg-ink/5 rounded-lg p-2 border border-ink/10"
                   >
                     <button
                       onClick={() => toggleProfile(profile.id)}
                       className={`flex-1 text-left px-2 py-1 rounded text-sm transition ${
                         selectedProfiles.includes(profile.id)
-                          ? "text-white font-medium"
-                          : "text-white/70 hover:text-white"
+                          ? "text-ink font-medium"
+                          : "text-ink/70 hover:text-ink"
                       }`}
                     >
                       {profile.name}
@@ -872,7 +864,7 @@ export default function ResultEnhanced({
                     </button>
                     <button
                       onClick={() => handleDeleteProfile(profile.id)}
-                      className="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition"
+                      className="p-1 text-red-600 hover:text-red-700 hover:bg-red-500/10 rounded transition"
                     >
                       <TrashIcon className="w-4 h-4" />
                     </button>
@@ -883,20 +875,20 @@ export default function ResultEnhanced({
           )}
 
           {/* Graphique radar */}
-          <div className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-white/5 rounded-xl border border-white/10 p-4">
+          <div className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-ink/5 rounded-xl border border-ink/10 p-4">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 data={multiRadarData}
                 margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
               >
-                <PolarGrid stroke="rgba(255,255,255,0.15)" />
+                <PolarGrid stroke="rgba(35,32,26,0.15)" />
                 <PolarAngleAxis
                   dataKey="axis"
-                  tick={{ fill: "rgba(255,255,255,0.8)", fontSize: 11, fontWeight: 500 }}
+                  tick={{ fill: "rgba(35,32,26,0.85)", fontSize: 11, fontWeight: 500 }}
                 />
                 <PolarRadiusAxis
                   domain={[0, 100]}
-                  tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 10 }}
+                  tick={{ fill: "rgba(35,32,26,0.55)", fontSize: 10 }}
                   tickFormatter={(v) => `${v}%`}
                 />
 
@@ -907,7 +899,7 @@ export default function ResultEnhanced({
                     dataKey="Vous"
                     stroke={USER_COLOR}
                     fill={USER_COLOR}
-                    fillOpacity={0.5}
+                    fillOpacity={0.18}
                     strokeWidth={3}
                   />
                 )}
@@ -933,7 +925,7 @@ export default function ResultEnhanced({
 
                 <Tooltip content={<RadarTooltip axisLabelMap={axisLabelMap} />} />
                 <Legend
-                  wrapperStyle={{ color: "white" }}
+                  wrapperStyle={{ color: "#23201A" }}
                   iconType="circle"
                 />
               </RadarChart>
@@ -941,8 +933,8 @@ export default function ResultEnhanced({
           </div>
 
           {selectedProfiles.length === 0 && (
-            <p className="text-center text-white/70 text-sm">
-              👆 Sélectionnez des profils pour les comparer sur le graphique
+            <p className="text-center text-ink2 text-sm">
+              Sélectionnez des profils ci-dessus pour les comparer sur le graphique.
             </p>
           )}
         </div>
@@ -955,10 +947,10 @@ export default function ResultEnhanced({
             <>
               {/* Grille de sélection des profils */}
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-ink">
                   Sélectionnez une figure politique
                 </h3>
-                <p className="text-white/70 text-sm mb-6">
+                <p className="text-ink/70 text-sm mb-6">
                   Cliquez sur un profil pour voir ses positions détaillées, ses axes et ses badges
                 </p>
               </div>
@@ -968,7 +960,7 @@ export default function ResultEnhanced({
                   <button
                     key={profile.id}
                     onClick={() => setSelectedPoliticalProfile(profile.id)}
-                    className="group relative text-left rounded-2xl border border-white/15 p-5 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/50"
+                    className="group relative text-left rounded-2xl border border-ink/15 p-5 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink/50"
                     style={{
                       background: `linear-gradient(135deg, ${profile.color}22, ${profile.color}08)`,
                       animationDelay: `${idx * 50}ms`,
@@ -976,7 +968,7 @@ export default function ResultEnhanced({
                   >
                     <div className="flex items-start gap-4 mb-3">
                       <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-md"
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-paper shadow-md"
                         style={{ backgroundColor: profile.color }}
                       >
                         {profile.name
@@ -986,10 +978,10 @@ export default function ResultEnhanced({
                           .slice(0, 2)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-white mb-1 truncate">
+                        <h3 className="text-lg font-bold text-ink mb-1 truncate">
                           {profile.name}
                         </h3>
-                        <p className="text-xs text-white/70 line-clamp-2">
+                        <p className="text-xs text-ink/70 line-clamp-2">
                           {profile.description}
                         </p>
                       </div>
@@ -1000,7 +992,7 @@ export default function ResultEnhanced({
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: profile.color }}
                       />
-                      <span className="text-xs text-white/60">Voir le profil détaillé →</span>
+                      <span className="text-xs text-ink/60">Voir le profil détaillé →</span>
                     </div>
 
                     <div
@@ -1030,21 +1022,21 @@ export default function ResultEnhanced({
                     {/* Bouton retour */}
                     <button
                       onClick={() => setSelectedPoliticalProfile(null)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm rounded-full border border-white/15 bg-white/5 text-white/95 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
+                      className="flex items-center gap-2 px-4 py-2 text-sm rounded-full border border-ink/15 bg-ink/5 text-ink/95 hover:bg-ink/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
                     >
                       ← Retour à la liste
                     </button>
 
                     {/* Carte d'en-tête */}
                     <div
-                      className="rounded-2xl border border-white/15 p-6 shadow-xl"
+                      className="rounded-2xl border border-ink/15 p-6 shadow-xl"
                       style={{
                         background: `linear-gradient(135deg, ${profile.color}33, ${profile.color}11)`,
                       }}
                     >
                       <div className="flex items-start gap-4">
                         <div
-                          className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg"
+                          className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-paper shadow-lg"
                           style={{ backgroundColor: profile.color }}
                         >
                           {profile.name
@@ -1054,15 +1046,15 @@ export default function ResultEnhanced({
                             .slice(0, 2)}
                         </div>
                         <div className="flex-1">
-                          <h2 className="text-2xl font-bold text-white mb-1">{profile.name}</h2>
-                          <p className="text-white/80 text-sm">{profile.description}</p>
+                          <h2 className="text-2xl font-bold text-ink mb-1">{profile.name}</h2>
+                          <p className="text-ink/80 text-sm">{profile.description}</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Positions sur les axes */}
-                    <div className="rounded-2xl border border-white/15 bg-white/5 backdrop-blur-sm p-6 shadow-xl">
-                      <h3 className="text-xl font-bold mb-4 text-white">Positions sur les axes</h3>
+                    <div className="rounded-2xl border border-ink/15 bg-ink/5 backdrop-blur-sm p-6 shadow-xl">
+                      <h3 className="text-xl font-bold mb-4 text-ink">Positions sur les axes</h3>
                       <div className="space-y-6">
                         {sortedAxes.map((axisInfo) => {
                           const axisScore = profileScores[axisInfo.axis];
@@ -1076,11 +1068,11 @@ export default function ResultEnhanced({
                           return (
                             <div key={axisInfo.axis} className="space-y-2">
                               <div className="flex justify-between items-baseline text-xs sm:text-sm">
-                                <span className="text-white/80">{axisInfo.left.label}</span>
-                                <span className="text-white/80">{axisInfo.right.label}</span>
+                                <span className="text-ink/80">{axisInfo.left.label}</span>
+                                <span className="text-ink/80">{axisInfo.right.label}</span>
                               </div>
 
-                              <div className="relative h-8 rounded-full overflow-hidden bg-white/10 border border-white/15">
+                              <div className="relative h-8 rounded-full overflow-hidden bg-ink/10 border border-ink/15">
                                 <div
                                   className="absolute left-0 top-0 h-full transition-all duration-500"
                                   style={{
@@ -1098,14 +1090,14 @@ export default function ResultEnhanced({
                                 <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-semibold">
                                   <span
                                     className={
-                                      leftPct > 15 ? "text-white drop-shadow-md" : "text-white/60"
+                                      leftPct > 15 ? "text-paper font-bold tabular-nums" : "text-ink2 tabular-nums"
                                     }
                                   >
                                     {leftPct}%
                                   </span>
                                   <span
                                     className={
-                                      rightPct > 15 ? "text-white drop-shadow-md" : "text-white/60"
+                                      rightPct > 15 ? "text-paper font-bold tabular-nums" : "text-ink2 tabular-nums"
                                     }
                                   >
                                     {rightPct}%
@@ -1113,7 +1105,7 @@ export default function ResultEnhanced({
                                 </div>
                               </div>
 
-                              <div className="text-center text-xs text-white/60">{axisInfo.axis}</div>
+                              <div className="text-center text-xs text-ink/60">{axisInfo.axis}</div>
                             </div>
                           );
                         })}
@@ -1122,9 +1114,9 @@ export default function ResultEnhanced({
 
                     {/* Badges */}
                     {profileBadges.length > 0 && (
-                      <div className="rounded-2xl border border-white/15 bg-white/5 backdrop-blur-sm p-6 shadow-xl">
-                        <h3 className="text-xl font-bold mb-4 text-center text-white">
-                          🏆 Badges obtenus
+                      <div className="rounded-2xl border border-ink/15 bg-ink/5 backdrop-blur-sm p-6 shadow-xl">
+                        <h3 className="text-xl font-semibold mb-4 text-center text-ink">
+                          Badges obtenus
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 place-items-center">
                           {profileBadges.map((badge, idx) => (
@@ -1136,7 +1128,7 @@ export default function ResultEnhanced({
                                 animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
                               }}
                             >
-                              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden transition-transform group-hover:scale-110 group-hover:rotate-6 shadow-lg">
+                              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 group-hover:scale-105">
                                 <img
                                   src={badge.icon}
                                   alt={badge.label}
@@ -1144,12 +1136,12 @@ export default function ResultEnhanced({
                                   loading="lazy"
                                 />
                               </div>
-                              <span className="mt-2 text-xs sm:text-sm text-white text-center font-medium">
+                              <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium">
                                 {badge.label}
                               </span>
 
                               {/* Tooltip desktop */}
-                              <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-gray-900/95 text-white text-sm rounded-lg text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-white/15 backdrop-blur-sm shadow-xl">
+                              <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-paper text-ink text-sm rounded-[4px] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-ink/15 shadow-xl">
                                 {badge.description}
                               </div>
                             </div>
@@ -1168,10 +1160,10 @@ export default function ResultEnhanced({
       {/* ────────────── Onglet : Explications ────────────── */}
       {activeTab === "explained" && (
         <div className="space-y-6 sm:space-y-8 animate-fadeIn">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-white">
-            💡 Explication des axes
+          <h2 className="text-2xl sm:text-3xl font-semibold text-center text-ink">
+            Explication des axes
           </h2>
-          <p className="text-sm sm:text-base text-white/85 max-w-prose mx-auto px-1 leading-relaxed">
+          <p className="text-sm sm:text-base text-ink/85 max-w-prose mx-auto px-1 leading-relaxed">
             Les positions en <span style={{ color: LEFT_COLOR }} className="font-semibold">rouge</span> sont
             associées à la gauche, et celles en{" "}
             <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite — selon des codes
@@ -1194,15 +1186,15 @@ export default function ResultEnhanced({
             .map(({ id, axis, question, left, right }, idx) => (
               <div
                 key={id}
-                className="border border-white/10 rounded-xl p-4 sm:p-5 bg-white/5 text-white/90 hover:bg-white/8 transition-all"
+                className="border border-ink/10 rounded-xl p-4 sm:p-5 bg-ink/5 text-ink/90 hover:bg-paper3 transition-all"
                 style={{
                   animation: disableAnimations ? 'none' : `slideIn 0.3s ease-out ${idx * 0.05}s both`,
                 }}
               >
-                <div className="text-base sm:text-lg font-semibold mb-2 text-white">
+                <div className="text-base sm:text-lg font-semibold mb-2 text-ink">
                   {axis}
                 </div>
-                <div className="text-xs sm:text-sm italic text-white/70 mb-4">
+                <div className="text-xs sm:text-sm italic text-ink/70 mb-4">
                   {question}
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-4">
@@ -1216,7 +1208,7 @@ export default function ResultEnhanced({
                     <div className="font-semibold mb-2" style={{ color: LEFT_COLOR }}>
                       {left.label}
                     </div>
-                    <div className="text-sm leading-snug text-white/90">
+                    <div className="text-sm leading-snug text-ink/90">
                       {left.response}
                     </div>
                   </div>
@@ -1231,7 +1223,7 @@ export default function ResultEnhanced({
                     <div className="font-semibold mb-2" style={{ color: RIGHT_COLOR }}>
                       {right.label}
                     </div>
-                    <div className="text-sm leading-snug text-white/90">
+                    <div className="text-sm leading-snug text-ink/90">
                       {right.response}
                     </div>
                   </div>
@@ -1239,8 +1231,8 @@ export default function ResultEnhanced({
               </div>
             ))}
 
-          <div className="border-t border-white/15 pt-6 sm:pt-10 text-sm sm:text-base text-white/85 max-w-prose mx-auto px-1">
-            <h3 className="text-base sm:text-lg font-semibold text-center mb-2 text-white">
+          <div className="border-t border-ink/15 pt-6 sm:pt-10 text-sm sm:text-base text-ink/85 max-w-prose mx-auto px-1">
+            <h3 className="text-base sm:text-lg font-semibold text-center mb-2 text-ink">
               À propos
             </h3>
             <p className="mb-2">

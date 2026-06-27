@@ -7,23 +7,23 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="text-center text-white/60 text-xs py-6 border-t border-white/10 mt-8">
+      <footer className="text-center text-ink/60 text-xs py-6 border-t border-ink/10 mt-8">
         <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={() => setShowLegal(true)}
-            className="underline hover:text-white/90 transition"
+            className="underline hover:text-ink/90 transition"
           >
             Mentions légales
           </button>
-          <span className="text-white/30">•</span>
+          <span className="text-ink/30">•</span>
           <button
             onClick={() => setShowPrivacy(true)}
-            className="underline hover:text-white/90 transition"
+            className="underline hover:text-ink/90 transition"
           >
             Politique de confidentialité
           </button>
         </div>
-        <p className="mt-2 text-white/40">
+        <p className="mt-2 text-ink/40">
           © {new Date().getFullYear()} Polarity Quiz - Tous droits réservés
         </p>
       </footer>
@@ -31,28 +31,28 @@ export default function Footer() {
       {/* Modal Mentions Légales */}
       {showLegal && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
+          className="fixed inset-0 bg-ink/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
           onClick={() => setShowLegal(false)}
         >
           <div
-            className="bg-[#10284f] border border-white/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
+            className="bg-paper border border-ink/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">Mentions Légales</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-ink">Mentions Légales</h2>
               <button
                 onClick={() => setShowLegal(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition"
+                className="p-2 hover:bg-ink/10 rounded-lg transition"
                 aria-label="Fermer"
               >
-                <XMarkIcon className="w-6 h-6 text-white/80" />
+                <XMarkIcon className="w-6 h-6 text-ink/80" />
               </button>
             </div>
 
-            <div className="space-y-6 text-white/90 text-sm sm:text-base">
+            <div className="space-y-6 text-ink/90 text-sm sm:text-base">
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Éditeur du site</h3>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <h3 className="text-lg font-semibold text-ink mb-2">Éditeur du site</h3>
+                <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
                   <p className="mb-1">
                     <strong>Nom :</strong> Lukas VAUVERT
                   </p>
@@ -61,31 +61,31 @@ export default function Footer() {
                   </p>
                   <p className="mb-1">
                     <strong>Email :</strong>{" "}
-                    <a href="mailto:polarityquiz@gmail.com" className="text-blue-400 hover:underline">
+                    <a href="mailto:polarityquiz@gmail.com" className="text-right hover:underline">
                       polarityquiz@gmail.com
                     </a>
                   </p>
-                  <p className="text-xs text-white/60 mt-2">
+                  <p className="text-xs text-ink/60 mt-2">
                   </p>
                 </div>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Hébergement</h3>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <h3 className="text-lg font-semibold text-ink mb-2">Hébergement</h3>
+                <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
                   <p className="mb-1">
                     <strong>Hébergeur :</strong> [NOM DE L'HÉBERGEUR - ex: Vercel, Netlify, OVH]
                   </p>
                   <p className="mb-1">
                     <strong>Adresse :</strong> [ADRESSE DE L'HÉBERGEUR]
                   </p>
-                  <p className="text-xs text-white/60 mt-2">
+                  <p className="text-xs text-ink/60 mt-2">
                   </p>
                 </div>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Propriété intellectuelle
                 </h3>
                 <p className="leading-relaxed">
@@ -101,7 +101,7 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Limitation de responsabilité
                 </h3>
                 <p className="leading-relaxed">
@@ -119,7 +119,7 @@ export default function Footer() {
             <div className="mt-8 flex justify-end">
               <button
                 onClick={() => setShowLegal(false)}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition text-white font-medium"
+                className="px-6 py-3 bg-ink/10 hover:bg-ink/20 rounded-lg transition text-ink font-medium"
               >
                 Fermer
               </button>
@@ -131,46 +131,46 @@ export default function Footer() {
       {/* Modal Politique de Confidentialité */}
       {showPrivacy && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
+          className="fixed inset-0 bg-ink/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
           onClick={() => setShowPrivacy(false)}
         >
           <div
-            className="bg-[#10284f] border border-white/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
+            className="bg-paper border border-ink/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-ink">
                 Politique de Confidentialité
               </h2>
               <button
                 onClick={() => setShowPrivacy(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition"
+                className="p-2 hover:bg-ink/10 rounded-lg transition"
                 aria-label="Fermer"
               >
-                <XMarkIcon className="w-6 h-6 text-white/80" />
+                <XMarkIcon className="w-6 h-6 text-ink/80" />
               </button>
             </div>
 
-            <div className="space-y-6 text-white/90 text-sm sm:text-base">
-              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                <p className="text-green-400 font-semibold mb-2">
+            <div className="space-y-6 text-ink/90 text-sm sm:text-base">
+              <div className="bg-green-700/10 border border-green-500/30 rounded-lg p-4">
+                <p className="text-green-700 font-semibold mb-2">
                   ✅ Votre vie privée est totalement respectée
                 </p>
-                <p className="text-sm text-white/80">
+                <p className="text-sm text-ink/80">
                   Cette application ne collecte AUCUNE donnée personnelle et n'utilise AUCUN
                   cookie de tracking.
                 </p>
               </div>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Données collectées : AUCUNE
                 </h3>
                 <p className="leading-relaxed">
                   Cette application ne collecte, ne stocke et ne transmet <strong>aucune donnée
                   personnelle</strong> sur nos serveurs.
                 </p>
-                <ul className="list-disc list-inside mt-2 space-y-1 text-white/80">
+                <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
                   <li>Pas de compte utilisateur</li>
                   <li>Pas de demande d'email, nom ou téléphone</li>
                   <li>Pas de cookies de tracking</li>
@@ -180,14 +180,14 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Stockage local (localStorage)
                 </h3>
                 <p className="leading-relaxed">
                   Les résultats de votre test et vos profils sauvegardés sont stockés{" "}
                   <strong>uniquement dans votre navigateur</strong> via le localStorage.
                 </p>
-                <ul className="list-disc list-inside mt-2 space-y-1 text-white/80">
+                <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
                   <li>Ces données ne quittent jamais votre appareil</li>
                   <li>Elles ne sont jamais transmises à nos serveurs</li>
                   <li>
@@ -197,16 +197,16 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Partage de résultats via URL
                 </h3>
                 <p className="leading-relaxed">
                   Lorsque vous partagez vos résultats via le bouton "Partager" :
                 </p>
-                <ul className="list-disc list-inside mt-2 space-y-1 text-white/80">
+                <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
                   <li>
                     Vos réponses sont encodées directement dans l'URL (paramètre{" "}
-                    <code className="bg-white/10 px-1 rounded">?results=...</code>)
+                    <code className="bg-ink/10 px-1 rounded">?results=...</code>)
                   </li>
                   <li>Si vous fournissez un nom, il sera visible dans l'URL partagée</li>
                   <li>
@@ -215,8 +215,8 @@ export default function Footer() {
                   </li>
                   <li>Toute personne avec le lien peut voir les résultats partagés</li>
                 </ul>
-                <div className="mt-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                  <p className="text-yellow-400 text-sm">
+                <div className="mt-3 bg-yellow-700/10 border border-yellow-500/30 rounded-lg p-3">
+                  <p className="text-yellow-700 text-sm">
                     ⚠️ <strong>Attention :</strong> Si vous partagez un lien avec votre nom,
                     celui-ci sera visible par toute personne accédant au lien.
                   </p>
@@ -224,7 +224,7 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Cookies</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">Cookies</h3>
                 <p className="leading-relaxed">
                   Cette application <strong>n'utilise AUCUN cookie</strong>, ni de première
                   partie ni de tierce partie.
@@ -232,7 +232,7 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Analyse d'audience</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">Analyse d'audience</h3>
                 <p className="leading-relaxed mb-2">
                   Nous utilisons <strong>GoatCounter</strong>, un outil d'analyse respectueux de
                   la vie privée, pour collecter des statistiques anonymes sur l'utilisation du
@@ -241,7 +241,7 @@ export default function Footer() {
                 <p className="leading-relaxed mb-2">
                   <strong>Données collectées (anonymes) :</strong>
                 </p>
-                <ul className="list-disc list-inside space-y-1 text-white/80 text-sm">
+                <ul className="list-disc list-inside space-y-1 text-ink/80 text-sm">
                   <li>Pages visitées</li>
                   <li>Nombre de tests complétés</li>
                   <li>Plateforme de partage utilisée (Twitter, WhatsApp, etc.)</li>
@@ -250,7 +250,7 @@ export default function Footer() {
                 <p className="leading-relaxed mt-2">
                   <strong>Données NON collectées :</strong>
                 </p>
-                <ul className="list-disc list-inside space-y-1 text-white/80 text-sm">
+                <ul className="list-disc list-inside space-y-1 text-ink/80 text-sm">
                   <li>Aucune adresse IP</li>
                   <li>Aucune donnée personnelle identifiable</li>
                   <li>Aucun cookie de tracking</li>
@@ -263,7 +263,7 @@ export default function Footer() {
                     href="https://www.goatcounter.com/help/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline"
+                    className="text-right hover:underline"
                   >
                     Politique de confidentialité GoatCounter
                   </a>
@@ -271,11 +271,11 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Vos droits</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">Vos droits</h3>
                 <p className="leading-relaxed mb-2">
                   Vous disposez à tout moment du droit de :
                 </p>
-                <ul className="list-disc list-inside space-y-1 text-white/80">
+                <ul className="list-disc list-inside space-y-1 text-ink/80">
                   <li>
                     <strong>Supprimer vos données locales :</strong> Videz le cache et les
                     données de navigation de votre navigateur
@@ -292,7 +292,7 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-ink mb-2">
                   Modifications de cette politique
                 </h3>
                 <p className="leading-relaxed">
@@ -303,17 +303,17 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-white mb-2">Contact</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">Contact</h3>
                 <p className="leading-relaxed">
                   Pour toute question concernant cette politique de confidentialité, vous pouvez
                   nous contacter à l'adresse :{" "}
-                  <a href="mailto:polarityquiz@gmail.com" className="text-blue-400 hover:underline">
+                  <a href="mailto:polarityquiz@gmail.com" className="text-right hover:underline">
                     polarityquiz@gmail.com
                   </a>
                 </p>
               </section>
 
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10 text-xs text-white/60">
+              <div className="bg-ink/5 rounded-lg p-4 border border-ink/10 text-xs text-ink/60">
                 <p>
                   <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString("fr-FR")}
                 </p>
@@ -323,7 +323,7 @@ export default function Footer() {
             <div className="mt-8 flex justify-end">
               <button
                 onClick={() => setShowPrivacy(false)}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition text-white font-medium"
+                className="px-6 py-3 bg-ink/10 hover:bg-ink/20 rounded-lg transition text-ink font-medium"
               >
                 Fermer
               </button>

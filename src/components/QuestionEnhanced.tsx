@@ -11,25 +11,26 @@ export type QuestionProps = {
   total: number;
 };
 
-// Palette par niveau (plus visible, flat, cohérente avec la vibe hero)
+// Échelle divergente accord → désaccord. Verts/rouges = sémantique, conservés.
+// Neutre central en gris papier chaud (et non bleuté) pour ne pas évoquer "droite".
 const BTN_BG = [
   "#2E7D32", // +++ vert soutenu
-  "#43A047", // ++ vert
-  "#81C784", // + vert clair
-  "#CFD8E6", // 0 neutre légèrement bleuté
-  "#FFCDD2", // - rose clair
-  "#EF5350", // -- rouge
+  "#4F9D52", // ++ vert
+  "#A7CFA2", // + vert clair
+  "#D8D2C4", // 0 neutre — stone (papier)
+  "#E8B7AE", // - rose terni
+  "#D9594F", // -- rouge
   "#C62828", // --- rouge soutenu
 ] as const;
 
 const BTN_TEXT = [
-  "#F8F9FA", // sur vert foncé
-  "#F8F9FA",
-  "#0B1220", // sur vert clair
-  "#0B1220", // neutre bleuté
-  "#7A1F26", // sur rose clair
-  "#F8F9FA", // sur rouge moyen
-  "#F8F9FA", // sur rouge foncé
+  "#F6F3EC", // sur vert foncé
+  "#F6F3EC",
+  "#23201A", // sur vert clair → encre
+  "#23201A", // neutre → encre
+  "#23201A", // sur rose terni → encre
+  "#F6F3EC", // sur rouge moyen
+  "#F6F3EC", // sur rouge foncé
 ] as const;
 
 // Emojis retirés des boutons de réponse
@@ -86,87 +87,82 @@ export default function QuestionEnhanced({
     >
       <div className="mx-auto w-full max-w-2xl md:max-w-3xl">
         {/* Header avec compteur et boutons */}
-        <div className="flex items-center justify-between text-xs sm:text-sm text-white/90 mb-6">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-ink2 mb-5">
           <div className="flex items-center gap-3">
-            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-medium backdrop-blur">
+            <span className="font-semibold text-ink tabular-nums tracking-wide uppercase">
               Question {currentIndex + 1} / {total}
             </span>
-            <span className="hidden sm:inline text-white/70">
+            <span className="hidden sm:inline text-ink2">
               {progress}% complété
             </span>
           </div>
           <button
             onClick={handleRestart}
-            className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
+            className="text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
           >
-            🔄 Recommencer
+            Recommencer
           </button>
         </div>
 
         {/* Barre de progression visuelle */}
-        <div className="mb-6 h-2 rounded-full bg-white/10 overflow-hidden shadow-inner">
+        <div className="mb-7 h-1 rounded-full bg-rule overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-red-600 via-purple-600 to-blue-600"
+            className="h-full bg-ink"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
         </div>
 
         {/* Énoncé */}
         <motion.h2
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-xl sm:text-2xl font-semibold leading-snug tracking-tight mb-6 text-white"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-2xl sm:text-3xl font-semibold leading-tight tracking-tight mb-7 text-ink"
         >
           {question.text}
         </motion.h2>
 
         {/* Choix avec animations */}
-        <div className="flex flex-col gap-3 mb-6">
-          {choices.map((label, idx) => (
-            <motion.button
-              key={idx}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.15 + idx * 0.05 }}
-              onClick={() => handleAnswer(idx)}
-              disabled={selectedIdx !== null}
-              className={`group relative w-full text-left rounded-2xl min-h-14 px-4 py-3 font-medium transition-all
-                ${selectedIdx === idx ? "scale-105 shadow-2xl" : "hover:scale-[1.02] active:scale-[0.98]"}
-                ${selectedIdx !== null && selectedIdx !== idx ? "opacity-50" : ""}
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/50
-                shadow-lg hover:shadow-xl
-              `}
-              style={{
-                backgroundColor: BTN_BG[idx],
-                color: BTN_TEXT[idx],
-              }}
-            >
-              <span>{label}</span>
-
-              {/* Effet de brillance au hover */}
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+        <div className="flex flex-col gap-2.5 mb-6">
+          {choices.map((label, idx) => {
+            const isSelected = selectedIdx === idx;
+            const isDimmed = selectedIdx !== null && selectedIdx !== idx;
+            return (
+              <motion.button
+                key={idx}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: isDimmed ? 0.4 : 1, y: 0 }}
+                transition={{ duration: 0.25, delay: 0.04 * idx, ease: [0.16, 1, 0.3, 1] }}
+                onClick={() => handleAnswer(idx)}
+                disabled={selectedIdx !== null}
+                className={`relative w-full text-left rounded-[4px] min-h-14 px-4 py-3 font-medium transition-[box-shadow,transform] duration-150
+                  ${isSelected ? "ring-2 ring-ink ring-offset-2 ring-offset-paper2" : "hover:translate-x-0.5"}
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper2
+                `}
                 style={{
-                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+                  backgroundColor: BTN_BG[idx],
+                  color: BTN_TEXT[idx],
                 }}
-              />
-            </motion.button>
-          ))}
+              >
+                <span>{label}</span>
+              </motion.button>
+            );
+          })}
         </div>
 
         {/* Navigation + explication */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.35 }}
           className="flex flex-wrap gap-3 items-center justify-between"
         >
           <button
             onClick={onBack}
             disabled={currentIndex === 0}
-            className="px-4 py-2 text-sm rounded-full border border-white/15 bg-white/5 text-white/95 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
+            className="btn-outline px-4 py-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
           >
             ← Précédent
           </button>
@@ -176,9 +172,15 @@ export default function QuestionEnhanced({
               onClick={() => setShowExplanation((v) => !v)}
               aria-expanded={showExplanation}
               aria-controls="q-explanation"
-              className="px-4 py-2 text-sm rounded-full border border-white/15 bg-white/5 text-white/95 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-ink2 hover:text-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
             >
-              {showExplanation ? "Masquer 🔼" : "Aide 💡"}
+              {showExplanation ? "Masquer l'aide" : "Afficher l'aide"}
+              <svg
+                className={`w-4 h-4 transition-transform ${showExplanation ? "rotate-180" : ""}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
           )}
         </motion.div>
@@ -194,11 +196,8 @@ export default function QuestionEnhanced({
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="p-4 rounded-2xl border border-white/15 bg-white/10 text-white/90 text-sm leading-relaxed backdrop-blur-sm shadow-lg">
-                <div className="flex items-start gap-2">
-                  <span className="text-xl shrink-0">💡</span>
-                  <p>{question.explanation}</p>
-                </div>
+              <div className="p-4 rounded-[4px] border-l-2 border-ink bg-paper3 text-ink2 text-sm leading-relaxed">
+                <p>{question.explanation}</p>
               </div>
             </motion.div>
           )}

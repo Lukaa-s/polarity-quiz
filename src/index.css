@@ -1,3 +1,5 @@
+@import "../tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,64 +9,112 @@
     @apply antialiased;
   }
 
+  html,
   body {
-    @apply overflow-x-hidden;
+    overflow-x: clip;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  /* Titres en serif éditorial (Fraunces) ; les libellés d'UI restent en corps */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+}
+
+@layer components {
+  /* Carte papier à filet — remplace le glass-morphism */
+  .card {
+    background: var(--color-paper-2);
+    border: var(--rule-hair) solid var(--color-rule);
+    border-radius: var(--radius-card);
+  }
+
+  /* Filet fin horizontal */
+  .rule {
+    height: var(--rule-hair);
+    background: var(--color-rule);
+    border: 0;
+  }
+
+  /* Bouton primaire : encre pleine (CTA neutre) */
+  .btn-ink {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border: var(--rule-hair) solid var(--color-ink);
+    border-radius: var(--radius-input);
+    transition: background var(--dur-short) var(--ease-out),
+      color var(--dur-short) var(--ease-out);
+  }
+  .btn-ink:hover {
+    background: transparent;
+    color: var(--color-ink);
+  }
+
+  /* Bouton secondaire : contour encre */
+  .btn-outline {
+    background: transparent;
+    color: var(--color-ink);
+    border: var(--rule-hair) solid var(--color-ink);
+    border-radius: var(--radius-input);
+    transition: background var(--dur-short) var(--ease-out),
+      color var(--dur-short) var(--ease-out);
+  }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
   }
 }
 
 @layer utilities {
-  /* Scrollbar styling */
+  /* Scrollbar discrète (tons encre sur papier) */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+    scrollbar-color: rgba(35, 32, 26, 0.25) rgba(35, 32, 26, 0.06);
   }
-
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
-
   .scrollbar-thin::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(35, 32, 26, 0.06);
     border-radius: 10px;
   }
-
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(35, 32, 26, 0.25);
     border-radius: 10px;
   }
-
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(35, 32, 26, 0.4);
   }
 
-  /* Custom animations */
-  @keyframes shimmer {
-    0% {
-      background-position: -1000px 0;
-    }
-    100% {
-      background-position: 1000px 0;
-    }
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s infinite linear;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    background-size: 1000px 100%;
-  }
-
-  /* Glassmorphism */
+  /* Compat : anciennes classes glass réorientées vers la carte papier */
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-paper2 border border-rule;
   }
-
   .glass-strong {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+    @apply bg-paper3 border border-rule;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
