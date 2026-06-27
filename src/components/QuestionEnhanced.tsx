@@ -112,7 +112,7 @@ export default function QuestionEnhanced({
         </motion.h2>
 
         {/* Choix avec animations */}
-        <div className="flex flex-col gap-2.5 mb-3">
+        <div className="flex flex-col gap-2.5 mb-6">
           {choices.map((label, idx) => {
             const isSelected = selectedIdx === idx;
             const isDimmed = selectedIdx !== null && selectedIdx !== idx;
@@ -149,18 +149,6 @@ export default function QuestionEnhanced({
               </motion.button>
             );
           })}
-        </div>
-
-        {/* Ancres de l'échelle */}
-        <div className="flex items-center justify-between text-[0.7rem] sm:text-xs uppercase tracking-[0.15em] text-ink2 mb-6 px-1">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full" style={{ background: "#3F6F47" }} aria-hidden="true" />
-            D'accord
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            Pas d'accord
-            <span className="h-2 w-2 rounded-full" style={{ background: "#9C3B33" }} aria-hidden="true" />
-          </span>
         </div>
 
         {/* Navigation + explication */}

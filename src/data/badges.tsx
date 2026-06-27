@@ -16,7 +16,22 @@ export type Badge = {
   }) => boolean;
 };
 
-export const badges: Badge[] = [
+// Résolution des icônes via Vite : les PNG de src/badges/ sont bundlés et
+// reçoivent une URL hashée valable en production (Vercel). Les anciens chemins
+// "../src/badges/x.png" ne marchaient qu'en dev (Vite servait /src/).
+const ICON_URLS = import.meta.glob("../badges/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+function resolveIcon(path?: string): string | undefined {
+  if (!path) return undefined;
+  const file = path.split("/").pop();
+  return file ? ICON_URLS[`../badges/${file}`] ?? path : path;
+}
+
+const rawBadges: Badge[] = [
   {
     id: "pro_nuclear",
     label: "Pro-nucléaire",
@@ -626,3 +641,9 @@ export const badges: Badge[] = [
 
   // … ajoute ici d’autres badges avec la même logique idx/axisScores …
 ];
+
+// Icônes résolues en URLs bundlées (valables en production).
+export const badges: Badge[] = rawBadges.map((b) => ({
+  ...b,
+  icon: resolveIcon(b.icon),
+}));

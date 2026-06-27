@@ -82,6 +82,25 @@ const USER_COLOR = "#23201A"; // Encre, "Vous" : proéminent mais neutre (aucun 
 const RADAR_PALETTE = ["#9A6A00", "#2F6F6A", "#7A4A6B", "#566573"]; // ocre, sarcelle, prune, ardoise
 const MAX_COMPARE = 4;
 
+// Libellés courts pour les axes du radar (le tooltip garde le nom complet).
+// Évite tout chevauchement / coupe des longs intitulés autour du cercle.
+const RADAR_SHORT_LABELS: Record<string, string> = {
+  "Vision du progrès sociétal": "Progrès sociétal",
+  "Organisation du pouvoir": "Pouvoir",
+  "Rôle de l’État dans l’économie": "État & économie",
+  "Modèle écologique": "Écologie",
+  "Finalité de l’activité économique": "Finalité éco.",
+  "Modèle de propriété": "Propriété",
+  "Forme de démocratie": "Démocratie",
+  "Objectif du système judiciaire": "Justice",
+  "Échelle de souveraineté": "Souveraineté",
+  "Place du religieux dans la vie publique": "Religion",
+  "Rapport au changement social": "Changement social",
+  "Sens et fonction du travail": "Travail",
+  "Équilibre entre liberté et sécurité": "Liberté & sécurité",
+  "Progrès technologique et enjeux sociaux": "Technologie",
+};
+
 // Initiales encre (monogramme), sans bulle colorée.
 function profileInitials(name: string): string {
   return name
@@ -113,11 +132,12 @@ function wrapLabel(label: string, max = 18): string[] {
   return lines;
 }
 
-// Tick personnalisé pour PolarAngleAxis : libellés d'axes sur 2 lignes, sans chevauchement.
+// Tick personnalisé pour PolarAngleAxis : libellés courts, ≤ 2 lignes, sans chevauchement.
 function RadarAxisTick(props: any) {
-  const { x, y, cx, cy, payload, textAnchor } = props;
-  const lines = wrapLabel(String(payload?.value ?? ""));
-  // Décale verticalement pour centrer le bloc, et écarte un peu du cercle.
+  const { x, y, cy, payload, textAnchor } = props;
+  const full = String(payload?.value ?? "");
+  const label = RADAR_SHORT_LABELS[full] ?? full;
+  const lines = wrapLabel(label, 16);
   const isTop = y < cy;
   const dyStart = lines.length > 1 ? (isTop ? -(lines.length - 1) * 11 : 0) : 0;
   return (
@@ -125,8 +145,8 @@ function RadarAxisTick(props: any) {
       x={x}
       y={y}
       textAnchor={textAnchor}
-      fill="rgba(35,32,26,0.85)"
-      fontSize={10.5}
+      fill="rgba(35,32,26,0.9)"
+      fontSize={11}
       fontWeight={500}
     >
       {lines.map((ln, i) => (
@@ -1016,7 +1036,7 @@ export default function ResultEnhanced({
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 data={multiRadarData}
-                margin={{ top: 24, right: 80, bottom: 28, left: 80 }}
+                margin={{ top: 16, right: 56, bottom: 20, left: 56 }}
               >
                 <PolarGrid stroke="rgba(35,32,26,0.15)" />
                 <PolarAngleAxis

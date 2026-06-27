@@ -14,13 +14,7 @@ import { decodeResults } from "./utils/shareResults";
 import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode } from "./utils/analytics";
 
 // Heroicons
-import {
-  ScaleIcon,
-  QuestionMarkCircleIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/solid";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
 
 // ---- Seeded RNG + date Paris ----
 function fnv1a(str: string): number {
@@ -152,9 +146,6 @@ const App: React.FC = () => {
   console.log("📝 [App] poleScores:", poleScores);
   console.log("📝 [App] unlockedBadges:", unlockedBadges);
 
-  const LEFT_COLOR = "#C62828";
-  const RIGHT_COLOR = "#1565C0";
-
   // ──────────────────────────────────────────────────────────────────────────────
   // MODE EXPLORATEUR
   // ──────────────────────────────────────────────────────────────────────────────
@@ -201,7 +192,6 @@ const App: React.FC = () => {
   // ÉCRAN D'ACCUEIL : une éditoriale (masthead, hero, spectre, sommaire, features)
   // ──────────────────────────────────────────────────────────────────────────────
   if (!hasStarted && !isViewingSharedResults) {
-    const sortedAxes = [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex);
     return (
       <div className="relative min-h-dvh w-full bg-paper text-ink overflow-x-clip pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
 
@@ -217,9 +207,9 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        {/* Hero */}
+        {/* Hero : aéré, l'animation est la pièce maîtresse */}
         <section className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
-          <div className="py-14 sm:py-20 lg:py-24 space-y-10 sm:space-y-12">
+          <div className="flex min-h-[72dvh] flex-col justify-center py-14 sm:py-20 space-y-10 sm:space-y-14">
 
             {/* La question */}
             <h2 className="text-center font-display font-semibold tracking-tight leading-[1.0] text-4xl sm:text-5xl lg:text-6xl [text-wrap:balance]">
@@ -252,77 +242,24 @@ const App: React.FC = () => {
                 Explorer les profils
               </button>
             </div>
-
-            {/* Repères chiffrés (factuels, discrets) */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink2">
-              <span className="inline-flex items-center gap-2">
-                <QuestionMarkCircleIcon className="h-4 w-4 text-ink" />
-                {QUESTIONS_COUNT} affirmations
-              </span>
-              <span className="text-rule">•</span>
-              <span className="inline-flex items-center gap-2">
-                <ScaleIcon className="h-4 w-4 text-ink" />
-                {AXES_COUNT} clivages
-              </span>
-              <span className="text-rule">•</span>
-              <span className="inline-flex items-center gap-2">
-                <ClockIcon className="h-4 w-4 text-ink" />
-                15 à 20 min
-              </span>
-            </div>
-
-            {/* Note explicative */}
-            <p className="mx-auto text-xs sm:text-sm text-ink2 max-w-xl leading-relaxed text-center">
-              Si une affirmation vous semble floue, une explication est disponible. En cas d'hésitation, évitez la réponse <em className="text-ink not-italic font-semibold">neutre</em> et choisissez plutôt <em className="text-ink not-italic font-semibold">plutôt d'accord</em> ou <em className="text-ink not-italic font-semibold">plutôt pas d'accord</em>.
-            </p>
           </div>
         </section>
 
-        {/* Sommaire des axes : table des matières éditoriale */}
+        {/* Trois repères, sobres : motif ◊ en écho à l'animation */}
         <section className="relative z-10 border-t border-rule bg-paper2">
-          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-10 sm:py-14">
-            <div className="flex items-baseline justify-between gap-4 mb-6 sm:mb-8">
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Les {AXES_COUNT} clivages</h2>
-              <span className="text-xs sm:text-sm uppercase tracking-[0.18em] text-ink2 whitespace-nowrap">
-                2 pôles chacun
-              </span>
-            </div>
-            <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
-              {sortedAxes.map((ax) => (
-                <li key={ax.id} className="flex gap-3.5 py-3 border-b border-rule">
-                  <span className="font-display text-sm font-semibold text-ink2 tabular-nums pt-0.5 w-7 shrink-0">
-                    {String(ax.sortIndex).padStart(2, "0")}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-ink font-medium leading-snug">{ax.axis}</span>
-                    <span className="block text-xs text-ink2 mt-0.5">
-                      <span style={{ color: LEFT_COLOR }} className="font-medium">{ax.left.label}</span>
-                      <span className="px-1.5 text-ink2/70">↔</span>
-                      <span style={{ color: RIGHT_COLOR }} className="font-medium">{ax.right.label}</span>
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* Bande Features */}
-        <section className="relative z-10 border-t border-rule">
-          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-8 sm:py-10">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-rule border border-rule rounded-md overflow-hidden">
+          <div className="mx-auto max-w-4xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-9 sm:gap-10">
               {[
-                "Positionnement détaillé sur chaque axe",
-                "Profil visuel interactif",
-                "Indice de proximité avec des figures politiques",
-                "Aucune inscription, résultats instantanés",
-              ].map((feature) => (
-                <li key={feature} className="flex items-start gap-3 bg-paper p-4">
-                  <CheckCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-ink" />
-                  <span className="text-ink2 text-sm">{feature}</span>
-                </li>
+                `${AXES_COUNT} clivages, deux pôles sur chaque idée.`,
+                "Un profil détaillé, nuancé et partageable.",
+                "Sans inscription, en quelques minutes.",
+              ].map((point) => (
+                <div key={point} className="flex flex-col items-center sm:items-start gap-3 text-center sm:text-left">
+                  <span className="block h-2 w-2 rotate-45 bg-ink" aria-hidden="true" />
+                  <p className="text-ink font-medium leading-snug max-w-[26ch]">{point}</p>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </section>
 
