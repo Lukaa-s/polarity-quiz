@@ -5,6 +5,7 @@ import { ideologicalAxes } from "./data/axisexplaination";
 import type { QuestionDef } from "./utils/scoring";
 import QuestionEnhanced from "./components/QuestionEnhanced";
 import ResultEnhanced from "./components/ResultEnhanced";
+import PoleFaceoff from "./components/PoleFaceoff";
 import Footer from "./components/Footer";
 import { calculatePoleScores } from "./utils/scoring";
 import { evaluateBadges } from "./utils/badges";
@@ -204,83 +205,32 @@ const App: React.FC = () => {
     return (
       <div className="relative min-h-dvh w-full bg-paper text-ink overflow-x-clip pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
 
-        {/* Nameplate / masthead */}
+        {/* Masthead : nameplate « Polarity Quiz » */}
         <header className="relative z-10 border-b-2 border-ink">
-          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-4 py-3 text-[0.68rem] sm:text-xs uppercase tracking-[0.18em] text-ink2">
-              <span className="hidden sm:inline">Boussole&nbsp;politique</span>
-              <span className="font-display text-base sm:text-lg font-semibold tracking-normal normal-case text-ink">
-                Polarity&nbsp;Quiz
-              </span>
-              <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-                <ClockIcon className="h-3.5 w-3.5 shrink-0" />
-                <span className="hidden sm:inline">Édition&nbsp;</span>{seedKey}
-              </span>
-            </div>
+          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-6 sm:py-8 text-center">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-none">
+              Polarity Quiz
+            </h1>
+            <p className="mt-3 text-[0.7rem] sm:text-xs uppercase tracking-[0.25em] text-ink2">
+              Test de positionnement politique
+            </p>
           </div>
         </header>
 
-        {/* Hero / une */}
+        {/* Hero */}
         <section className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
-          <div className="py-12 sm:py-16 lg:py-20 space-y-7 sm:space-y-9">
+          <div className="py-14 sm:py-20 lg:py-24 space-y-10 sm:space-y-12">
 
-            {/* Surtitre */}
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-ink2 font-semibold">
-              Test de positionnement politique
-            </p>
-
-            {/* Titre */}
-            <h1 className="font-display font-semibold tracking-tight leading-[0.95] text-5xl sm:text-6xl lg:text-7xl max-w-4xl [text-wrap:balance]">
+            {/* La question */}
+            <h2 className="text-center font-display font-semibold tracking-tight leading-[1.0] text-4xl sm:text-5xl lg:text-6xl [text-wrap:balance]">
               Où vous situez-vous&nbsp;?
-            </h1>
+            </h2>
 
-            {/* Spectre : instrument signature, pleine largeur */}
-            <div className="space-y-3 pt-1">
-              <div
-                className="relative h-5 sm:h-6 w-full rounded-full overflow-hidden ring-1 ring-rule"
-                style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
-                aria-hidden="true"
-              >
-                {Array.from({ length: 11 }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={`absolute top-0 h-full ${i === 5 ? "w-0.5 bg-paper/80" : "w-px bg-paper/35"}`}
-                    style={{ left: `${i * 10}%` }}
-                  />
-                ))}
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm sm:text-base font-semibold" style={{ color: LEFT_COLOR }}>Gauche</span>
-                <span className="text-[0.65rem] sm:text-xs uppercase tracking-[0.2em] text-ink2">Centre</span>
-                <span className="text-sm sm:text-base font-semibold" style={{ color: RIGHT_COLOR }}>Droite</span>
-              </div>
-            </div>
-
-            {/* Chapô */}
-            <p className="text-lg sm:text-xl text-ink2 max-w-2xl leading-relaxed">
-              Répondez à une série d'affirmations concrètes pour situer vos convictions, axe par axe. À la fin, vous obtenez un profil clair, nuancé et facilement partageable.
-            </p>
-
-            {/* Repères chiffrés */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:text-base text-ink2 font-medium">
-              <span className="inline-flex items-center gap-2">
-                <QuestionMarkCircleIcon className="h-5 w-5 text-ink" />
-                {QUESTIONS_COUNT} affirmations
-              </span>
-              <span className="hidden sm:inline text-rule">•</span>
-              <span className="inline-flex items-center gap-2">
-                <ScaleIcon className="h-5 w-5 text-ink" />
-                {AXES_COUNT} axes
-              </span>
-              <span className="hidden sm:inline text-rule">•</span>
-              <span className="inline-flex items-center gap-2">
-                <ClockIcon className="h-5 w-5 text-ink" />
-                15 à 20 min
-              </span>
-            </div>
+            {/* Face-à-face cinétique : les 2 pôles de chaque clivage */}
+            <PoleFaceoff />
 
             {/* Boutons CTA */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               <button
                 onClick={() => {
                   setHasStarted(true);
@@ -303,8 +253,26 @@ const App: React.FC = () => {
               </button>
             </div>
 
+            {/* Repères chiffrés (factuels, discrets) */}
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink2">
+              <span className="inline-flex items-center gap-2">
+                <QuestionMarkCircleIcon className="h-4 w-4 text-ink" />
+                {QUESTIONS_COUNT} affirmations
+              </span>
+              <span className="text-rule">•</span>
+              <span className="inline-flex items-center gap-2">
+                <ScaleIcon className="h-4 w-4 text-ink" />
+                {AXES_COUNT} clivages
+              </span>
+              <span className="text-rule">•</span>
+              <span className="inline-flex items-center gap-2">
+                <ClockIcon className="h-4 w-4 text-ink" />
+                15 à 20 min
+              </span>
+            </div>
+
             {/* Note explicative */}
-            <p className="text-xs sm:text-sm text-ink2 max-w-2xl leading-relaxed border-l-2 border-rule pl-4">
+            <p className="mx-auto text-xs sm:text-sm text-ink2 max-w-xl leading-relaxed text-center">
               Si une affirmation vous semble floue, une explication est disponible. En cas d'hésitation, évitez la réponse <em className="text-ink not-italic font-semibold">neutre</em> et choisissez plutôt <em className="text-ink not-italic font-semibold">plutôt d'accord</em> ou <em className="text-ink not-italic font-semibold">plutôt pas d'accord</em>.
             </p>
           </div>
@@ -314,9 +282,9 @@ const App: React.FC = () => {
         <section className="relative z-10 border-t border-rule bg-paper2">
           <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-10 sm:py-14">
             <div className="flex items-baseline justify-between gap-4 mb-6 sm:mb-8">
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Au sommaire</h2>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Les {AXES_COUNT} clivages</h2>
               <span className="text-xs sm:text-sm uppercase tracking-[0.18em] text-ink2 whitespace-nowrap">
-                {AXES_COUNT} axes mesurés
+                2 pôles chacun
               </span>
             </div>
             <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10">

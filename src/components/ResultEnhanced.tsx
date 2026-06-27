@@ -94,6 +94,50 @@ function profileInitials(name: string): string {
     .toUpperCase();
 }
 
+// Découpe un libellé long en ≤ 2 lignes (sur les espaces, ~18 car. max/ligne).
+function wrapLabel(label: string, max = 18): string[] {
+  const words = label.split(" ");
+  const lines: string[] = [];
+  let cur = "";
+  for (const w of words) {
+    if (cur && (cur + " " + w).length > max) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = cur ? cur + " " + w : w;
+    }
+  }
+  if (cur) lines.push(cur);
+  // Au plus 2 lignes : si davantage, on regroupe le surplus sur la 2e.
+  if (lines.length > 2) return [lines[0], lines.slice(1).join(" ")];
+  return lines;
+}
+
+// Tick personnalisé pour PolarAngleAxis : libellés d'axes sur 2 lignes, sans chevauchement.
+function RadarAxisTick(props: any) {
+  const { x, y, cx, cy, payload, textAnchor } = props;
+  const lines = wrapLabel(String(payload?.value ?? ""));
+  // Décale verticalement pour centrer le bloc, et écarte un peu du cercle.
+  const isTop = y < cy;
+  const dyStart = lines.length > 1 ? (isTop ? -(lines.length - 1) * 11 : 0) : 0;
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={textAnchor}
+      fill="rgba(35,32,26,0.85)"
+      fontSize={10.5}
+      fontWeight={500}
+    >
+      {lines.map((ln, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? dyStart : 12}>
+          {ln}
+        </tspan>
+      ))}
+    </text>
+  );
+}
+
 // Indicateur de positionnement gauche↔droite : la couleur y est signifiante.
 function LeanIndicator({ value, showLabels = false }: { value: number; showLabels?: boolean }) {
   const pos = Math.max(0, Math.min(100, value));
@@ -972,12 +1016,12 @@ export default function ResultEnhanced({
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 data={multiRadarData}
-                margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
+                margin={{ top: 24, right: 80, bottom: 28, left: 80 }}
               >
                 <PolarGrid stroke="rgba(35,32,26,0.15)" />
                 <PolarAngleAxis
                   dataKey="axis"
-                  tick={{ fill: "rgba(35,32,26,0.85)", fontSize: 11, fontWeight: 500 }}
+                  tick={<RadarAxisTick />}
                 />
                 <PolarRadiusAxis
                   domain={[0, 100]}
@@ -1150,21 +1194,9 @@ export default function ResultEnhanced({
                                   className="absolute right-0 top-0 h-full transition-all duration-500"
                                   style={{ width: `${rightPct}%`, background: RIGHT_COLOR }}
                                 />
-                                <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-semibold">
-                                  <span
-                                    className={
-                                      leftPct > 15 ? "text-paper font-bold tabular-nums" : "text-ink2 tabular-nums"
-                                    }
-                                  >
-                                    {leftPct}%
-                                  </span>
-                                  <span
-                                    className={
-                                      rightPct > 15 ? "text-paper font-bold tabular-nums" : "text-ink2 tabular-nums"
-                                    }
-                                  >
-                                    {rightPct}%
-                                  </span>
+                                <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-semibold [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]">
+                                  <span className="text-paper font-bold tabular-nums">{leftPct}%</span>
+                                  <span className="text-paper font-bold tabular-nums">{rightPct}%</span>
                                 </div>
                               </div>
 
