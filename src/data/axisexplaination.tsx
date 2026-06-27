@@ -7,12 +7,12 @@ export const ideologicalAxes = [
   left: {
     label: "Progressisme",
     response:
-      "Une société juste ne peut se figer dans ses traditions. Certaines normes, jadis considérées comme naturelles — qu’il s’agisse de la place des femmes, des minorités, ou de la structure familiale — peuvent aujourd’hui entretenir des inégalités. Remettre ces cadres en question, c’est permettre à chacun de trouver sa place dans un monde qui change. Pour les progressistes, des évolutions comme le mariage pour tous, la reconnaissance des identités de genre ou la réforme de l’éducation illustrent la capacité d’une société à s’améliorer en s’ouvrant à plus d’égalité et de liberté.",
+      "Une société juste ne peut se figer dans ses traditions. Certaines normes, jadis considérées comme naturelles (qu’il s’agisse de la place des femmes, des minorités ou de la structure familiale), peuvent aujourd’hui entretenir des inégalités. Remettre ces cadres en question, c’est permettre à chacun de trouver sa place dans un monde qui change. Pour les progressistes, des évolutions comme le mariage pour tous, la reconnaissance des identités de genre ou la réforme de l’éducation illustrent la capacité d’une société à s’améliorer en s’ouvrant à plus d’égalité et de liberté.",
   },
   right: {
     label: "Conservatisme",
     response:
-      "Les normes établies sont le fruit d’une longue histoire : elles garantissent la stabilité et transmettent un cadre moral commun. Les bouleversements trop rapides — qu’il s’agisse de repenser les rôles familiaux, les traditions nationales ou l’autorité à l’école — risquent de déstabiliser le lien social et de créer de nouvelles tensions. Pour les conservateurs, le progrès ne consiste pas à effacer le passé, mais à le faire évoluer avec prudence, en conservant les repères qui permettent à la société de tenir ensemble.",
+      "Les normes établies sont le fruit d’une longue histoire : elles garantissent la stabilité et transmettent un cadre moral commun. Les bouleversements trop rapides (qu’il s’agisse de repenser les rôles familiaux, les traditions nationales ou l’autorité à l’école) risquent de déstabiliser le lien social et de créer de nouvelles tensions. Pour les conservateurs, le progrès ne consiste pas à effacer le passé, mais à le faire évoluer avec prudence, en conservant les repères qui permettent à la société de tenir ensemble.",
   },
   },
 {
@@ -71,12 +71,12 @@ export const ideologicalAxes = [
     left: {
       label: "Anticapitalisme",
       response:
-        "L’économie doit répondre aux besoins de toutes et tous. Quand elle privilégie le profit, elle devient source d’injustices, d’exploitation et de crises à répétition.",
+        "L’économie devrait avoir pour but de répondre aux besoins de toutes et tous, et non d’accumuler du capital. Quand le profit devient sa seule boussole, elle produit des injustices : salaires écrasés pour gonfler les dividendes, surexploitation des ressources, crises financières à répétition qui frappent d’abord les plus fragiles. Pour les anticapitalistes, des outils comme les coopératives, l’économie sociale et solidaire ou des services gratuits financés par l’impôt montrent qu’une autre logique est possible. L’objectif n’est pas de produire toujours plus, mais de mieux partager ce qui est produit et de remettre l’humain et le vivant au centre des choix économiques.",
     },
     right: {
       label: "Capitalisme entrepreneurial",
       response:
-        "Créer, investir, réussir : c’est ce qui fait avancer la société. L’économie récompense ceux qui prennent des risques, innovent et travaillent dur.",
+        "Créer une entreprise, investir, prendre des risques et réussir : c’est ce moteur qui fait avancer la société et élève le niveau de vie général. L’économie de marché récompense ceux qui innovent, travaillent dur et répondent à un besoin réel, et cette récompense incite chacun à se dépasser. Pour ses partisans, l’histoire montre que l’initiative privée a sorti des centaines de millions de personnes de la pauvreté, des révolutions industrielles aux start-up technologiques. La recherche du profit n’est pas un défaut mais un signal utile : elle oriente les ressources vers ce qui crée de la valeur, à condition que la concurrence reste loyale.",
     },
   },
   {
@@ -87,12 +87,12 @@ export const ideologicalAxes = [
     left: {
       label: "Collectivisme",
       response:
-        "Quand une minorité possède tout, le reste dépend d’elle. Les biens essentiels devraient être contrôlés collectivement ou par ceux qui les font vivre.",
+        "Quand une minorité possède l’essentiel des terres, des entreprises et des logements, le reste de la population se retrouve en situation de dépendance, contraint de louer son travail ou son toit à ceux qui détiennent le capital. Pour les collectivistes, les biens véritablement essentiels (le logement, l’eau, l’énergie, les grands moyens de production) devraient être contrôlés collectivement ou par celles et ceux qui les font vivre au quotidien. Des formes comme les coopératives ouvrières, les logements sociaux ou la propriété publique des infrastructures visent à empêcher qu’une rente s’installe et à garantir que la richesse profite à l’ensemble plutôt qu’à quelques propriétaires.",
     },
     right: {
       label: "Propriétarisme",
       response:
-        "Chacun a le droit d’acheter, vendre ou transmettre des biens. Sans ce droit fondamental, il n’y a ni liberté ni responsabilité individuelle.",
+        "Le droit de posséder, d’acheter, de vendre et de transmettre ses biens est une liberté fondamentale, indissociable de la responsabilité individuelle. Sans propriété privée garantie, il n’y a ni incitation à entretenir ce que l’on détient, ni sécurité juridique pour investir sur le long terme. Pour les propriétaristes, l’accès à la propriété (d’un logement, d’une entreprise, d’un terrain) est aussi un facteur d’autonomie et d’ascension sociale, qui permet à chacun de bâtir un patrimoine et de le transmettre. L’État doit avant tout protéger ce droit et faire respecter les contrats, plutôt que de redistribuer ou de socialiser les biens.",
     },
   },
   {
@@ -103,12 +103,12 @@ export const ideologicalAxes = [
     left: {
       label: "Participationnisme",
       response:
-        "Les citoyens doivent avoir plus de pouvoir entre les élections : référendums, assemblées tirées au sort, contrôle direct des décisions publiques.",
+        "La démocratie ne devrait pas se réduire à un vote tous les cinq ans suivi d’une longue délégation. Entre deux élections, les citoyens devraient garder un pouvoir réel : référendums d’initiative populaire, budgets participatifs, assemblées citoyennes tirées au sort, contrôle et révocabilité des élus. Pour les participationnistes, ces outils rapprochent la décision de celles et ceux qu’elle concerne, limitent l’écart entre gouvernants et gouvernés et redonnent confiance dans la vie publique. Des expériences comme la Convention citoyenne pour le climat ou les budgets participatifs locaux montrent que des citoyens informés peuvent débattre et trancher des sujets complexes.",
     },
     right: {
       label: "Parlementarisme",
       response:
-        "La démocratie repose sur l’élection de représentants compétents. Les décisions doivent rester efficaces, même si elles déplaisent parfois.",
+        "La démocratie repose sur l’élection de représentants chargés de décider au nom du peuple, puis de rendre des comptes devant les électeurs. Confier chaque choix à des consultations directes risque de rendre l’action publique lente, instable et vulnérable aux passions du moment ou à la désinformation. Pour les parlementaristes, des élus qui travaillent à plein temps, s’entourent d’experts et débattent dans la durée prennent des décisions plus cohérentes, y compris quand elles sont impopulaires mais nécessaires. La force de ce modèle tient à la qualité du débat parlementaire, à la séparation des pouvoirs et à la sanction régulière des urnes.",
     },
   },
   {
@@ -119,12 +119,12 @@ export const ideologicalAxes = [
     left: {
       label: "Justicialisme réparateur",
       response:
-        "Punir ne suffit pas. Une société juste cherche à comprendre, réparer les torts et donner une seconde chance. La réinsertion est plus utile que l’exclusion.",
+        "Punir ne suffit pas à rendre une société plus sûre ni plus juste. Une justice efficace cherche d’abord à comprendre les causes d’un acte, à réparer le tort causé à la victime et à offrir une véritable seconde chance à l’auteur. Pour les partisans de la justice réparatrice, la prison sèche, en coupant la personne de tout lien et de toute perspective, nourrit souvent la récidive. Mieux vaut investir dans la prévention, l’accompagnement social, la formation et les peines alternatives comme les travaux d’intérêt général ou la médiation entre victime et coupable. L’objectif final est la réinsertion, plus utile à tous que l’exclusion durable.",
     },
     right: {
       label: "Pénalisme répressif",
       response:
-        "Sans sanction ferme, il n’y a pas de justice. Il faut protéger la société, dissuader les récidives et faire respecter les règles par l’autorité.",
+        "Sans sanction claire et appliquée, la loi perd toute autorité et les victimes ne sont pas reconnues. La première fonction de la justice est de protéger la société, de dissuader le passage à l’acte et de marquer une limite ferme entre ce qui est permis et ce qui ne l’est pas. Pour les tenants d’une ligne répressive, des peines certaines et suffisamment sévères, une réponse rapide et une exécution réelle des sanctions sont la condition de la sécurité et de la confiance dans les institutions. La fermeté n’exclut pas la réinsertion, mais elle passe d’abord par le respect de la règle et la protection des citoyens honnêtes.",
     },
   },
   {
@@ -135,12 +135,12 @@ export const ideologicalAxes = [
     left: {
       label: "Internationalisme",
       response:
-        "Les frontières ne doivent pas empêcher la coopération ni la défense des droits humains. Les grands défis exigent des règles communes au-delà des nations.",
+        "Les grands défis du siècle (climat, pandémies, fiscalité des multinationales, conflits armés) ignorent les frontières et ne peuvent être traités par un pays seul. Pour les internationalistes, la coopération entre nations et des règles communes, par exemple au sein de l’Union européenne, de l’ONU ou des accords climatiques, sont plus efficaces que le repli national. Accepter de partager une part de souveraineté permet d’obtenir en échange une protection collective, un marché commun ou la défense partagée des droits humains. Cette vision valorise la solidarité au-delà des nations et considère que les intérêts des peuples sont souvent mieux servis ensemble que séparément.",
     },
     right: {
       label: "Souverainisme",
       response:
-        "Chaque peuple doit décider librement de ses lois, sans pression extérieure. La souveraineté est une condition de la démocratie.",
+        "Chaque peuple doit pouvoir décider librement de ses lois, de ses frontières et de son modèle de société, sans se voir imposer des règles par des instances qu’il ne contrôle pas. Pour les souverainistes, la démocratie n’a de sens que dans un cadre national, là où existe un peuple uni par une histoire et une langue, capable de demander des comptes à ses dirigeants. Transférer le pouvoir à des organisations supranationales éloigne la décision des citoyens et affaiblit leur capacité à choisir leur destin. Défendre la souveraineté, c’est préserver l’indépendance économique, le contrôle des frontières et la maîtrise des choix collectifs.",
     },
   },
   {
@@ -151,12 +151,12 @@ export const ideologicalAxes = [
     left: {
       label: "Laïcisme",
       response:
-        "Pour garantir l’égalité entre croyants et non-croyants, l’État doit rester neutre. La religion relève du privé, pas de l’espace public.",
+        "Pour garantir l’égalité entre croyants des différentes confessions et non-croyants, l’État doit rester strictement neutre en matière religieuse. La religion relève de la conscience et de la sphère privée : chacun est libre de croire ou de ne pas croire, mais aucune doctrine ne doit s’imposer dans les lois, l’école publique ou les institutions communes. Pour les laïques, cette séparation protège à la fois la liberté de culte et la liberté de ne pas en avoir, et empêche qu’une majorité religieuse n’impose ses normes à tous. La neutralité de l’espace public est vue comme la condition d’une coexistence apaisée dans une société diverse.",
     },
     right: {
       label: "Spiritualisme politique",
       response:
-        "Les traditions religieuses peuvent offrir des repères moraux utiles à tous. Les exclure totalement affaiblit le lien social.",
+        "Les traditions religieuses ont façonné la culture, le droit et la morale d’une société, et continuent d’offrir des repères utiles, notamment sur le sens de la vie, la solidarité ou la dignité humaine. Pour les tenants de cette vision, vouloir effacer totalement le religieux de l’espace public revient à appauvrir le lien social et à priver les citoyens d’une source de cohésion et de valeurs partagées. Reconnaître la place du fait religieux, dans le calendrier, le patrimoine ou le débat moral, n’interdit pas la tolérance : il s’agit d’assumer un héritage spirituel plutôt que de le reléguer entièrement à la sphère privée.",
     },
   },
   {
@@ -167,12 +167,12 @@ export const ideologicalAxes = [
     left: {
       label: "Révolutionnisme",
       response:
-        "Certaines injustices sont trop enracinées pour être corrigées à moitié. Il faut parfois rompre avec le système actuel pour reconstruire sur de nouvelles bases.",
+        "Certaines injustices sont si profondément enracinées dans les structures économiques et politiques qu’aucune retouche partielle ne suffira à les corriger. Pour les révolutionnaires, espérer transformer un système qui produit lui-même les inégalités en l’aménageant à la marge revient à reculer indéfiniment le changement réel. Il faut parfois rompre franchement avec l’ordre existant, par un mouvement social d’ampleur ou une refondation institutionnelle, pour reconstruire sur de nouvelles bases plus égalitaires. Cette position assume que les avancées majeures de l’histoire, du suffrage universel aux droits sociaux, ont souvent été arrachées par des ruptures et des rapports de force, et non par de simples ajustements.",
     },
     right: {
       label: "Réformisme",
       response:
-        "Changer les choses prend du temps. Mieux vaut améliorer le système existant pas à pas que tout détruire sans garantie d’un mieux.",
+        "Les changements durables se construisent progressivement, par des réformes négociées et évaluées plutôt que par des ruptures brutales aux conséquences imprévisibles. Pour les réformistes, vouloir tout renverser d’un coup expose au chaos, à la violence et souvent à un résultat pire que le point de départ, comme l’ont montré de nombreuses révolutions. Mieux vaut améliorer le système existant étape par étape, en s’appuyant sur le compromis, le débat démocratique et l’expérimentation. Cette approche valorise la stabilité, la prudence et la capacité à corriger le tir : avancer sûrement, en préservant ce qui fonctionne, plutôt que de parier sur un grand soir aux promesses incertaines.",
     },
   },
   {
@@ -183,12 +183,12 @@ export const ideologicalAxes = [
     left: {
       label: "Anti-productivisme",
       response:
-        "Le travail ne doit pas être une fin en soi. On peut viser une société où l’on travaille moins, mais mieux, pour libérer du temps et du sens.",
+        "Le travail ne devrait pas être le centre absolu de l’existence ni la mesure de la valeur d’une personne. Pour les anti-productivistes, l’obsession de la productivité et de la croissance épuise les individus comme la planète, au détriment du temps libre, des liens sociaux et des activités non marchandes (soin, culture, engagement, vie familiale). On peut viser une société où l’on travaille moins mais mieux, grâce à la réduction du temps de travail, au partage de l’emploi ou à des dispositifs comme le revenu universel. L’objectif est de libérer du temps et du sens, et de reconnaître que beaucoup d’activités utiles ne passent pas par un salaire.",
     },
     right: {
       label: "Travaillisme",
       response:
-        "Le travail permet de contribuer, de se réaliser et de mériter son revenu. Il reste un pilier essentiel de la vie collective.",
+        "Le travail reste un pilier de l’épanouissement personnel et de la vie collective : il permet de contribuer à la société, d’acquérir des compétences, de se réaliser et de gagner légitimement son revenu. Pour les travaillistes, l’effort et le mérite doivent être valorisés, et le plein emploi demeure un objectif central, car le chômage prolongé fragilise autant l’économie que la dignité des personnes. Cette vision défend la valeur travail face à l’assistanat, tout en reconnaissant l’importance de bonnes conditions et d’une juste rémunération. Travailler, c’est aussi prendre part à un projet commun et financer, par ses cotisations, la solidarité dont chacun bénéficie.",
     },
   },
   {
@@ -199,12 +199,12 @@ export const ideologicalAxes = [
     left: {
       label: "Libertarisme",
       response:
-        "La liberté individuelle doit être prioritaire, même si cela complique la sécurité collective. Les restrictions doivent être minimales.",
+        "La liberté individuelle doit primer, même lorsqu’elle complique la tâche des autorités. Pour les libertaires, chaque restriction (surveillance généralisée, fichage, contrôles d’identité étendus, état d’urgence prolongé) doit rester l’exception, strictement encadrée et temporaire, car les pouvoirs accordés au nom de la sécurité reviennent rarement en arrière. L’histoire montre que la peur sert souvent à justifier des atteintes durables aux droits fondamentaux. Mieux vaut accepter une part de risque inhérente à une société libre que de sacrifier la vie privée, la liberté d’expression ou la présomption d’innocence. La protection ne doit jamais se construire au prix d’une société de surveillance.",
     },
     right: {
       label: "Securitarisme",
       response:
-        "La protection collective justifie certaines restrictions des libertés individuelles, notamment pour garantir l’ordre et la sécurité.",
+        "La sécurité est la première des libertés : sans protection contre la violence, le terrorisme ou la criminalité, les autres droits deviennent théoriques. Pour les tenants de cette vision, il est légitime que la collectivité accepte certaines restrictions (vidéosurveillance, renseignement, contrôles renforcés) lorsqu’elles permettent de prévenir des drames et de garantir l’ordre public. Ceux qui respectent la loi n’ont rien à craindre de ces mesures, qui visent d’abord à protéger les citoyens et à dissuader les menaces. L’équilibre penche ici du côté de la responsabilité collective : un État capable d’assurer la sûreté de tous est la condition d’une vie sociale paisible.",
     },
   },
   {
@@ -215,12 +215,12 @@ export const ideologicalAxes = [
     left: {
       label: "Technoscepticisme",
       response:
-        "La technologie peut accroître les inégalités, menacer la vie privée et engendrer des risques éthiques. Elle doit être surveillée et régulée avec prudence.",
+        "Le progrès technique n’est pas neutre et mérite d’être évalué avant d’être adopté. Pour les technosceptiques, des innovations comme l’intelligence artificielle, la reconnaissance faciale ou la collecte massive de données peuvent accroître les inégalités, détruire des emplois, menacer la vie privée et concentrer un pouvoir immense entre les mains de quelques entreprises. L’automatisation profite rarement à ceux qu’elle remplace, et certaines technologies posent des questions éthiques majeures. Sans interdire le progrès, il s’agit de le soumettre au débat démocratique, au principe de précaution et à une régulation stricte, afin que la technique serve la société plutôt que de s’imposer à elle.",
     },
     right: {
       label: "Techno-optimisme",
       response:
-        "Les innovations technologiques améliorent la vie, créent des emplois et résolvent des problèmes sociaux. Il faut encourager leur développement rapide.",
+        "L’innovation technologique est l’un des principaux moteurs de l’amélioration des conditions de vie : médecine, accès à l’information, productivité, énergies nouvelles. Pour les techno-optimistes, freiner le progrès par excès de précaution revient à se priver de solutions à des problèmes majeurs, du cancer au changement climatique, et à laisser d’autres pays prendre l’avance. Les craintes suscitées par chaque vague d’innovation, de l’imprimerie à Internet, se sont souvent révélées exagérées, tandis que les bénéfices, eux, ont été immenses. Plutôt que de brider la recherche, mieux vaut encourager son développement rapide et accompagner les transitions, en faisant confiance à la capacité humaine à s’adapter.",
     },
   },
 ];

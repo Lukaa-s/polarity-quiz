@@ -41,7 +41,7 @@ const RadarTooltip: React.FC<RadarTooltipProps> = ({
     <div className="rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm text-white backdrop-blur-sm">
       <div className="mb-1 font-medium text-white/90">{label}</div>
       <div className="text-white/90">
-        {meta.left} {pctLeft}% — {meta.right} {pctRight}%
+        {meta.left} {pctLeft}% · {meta.right} {pctRight}%
       </div>
     </div>
   );
@@ -239,7 +239,7 @@ export default function Result({
           <p className="text-sm sm:text-base text-white/85 max-w-prose mx-auto px-1">
   Les positions en <span style={{ color: LEFT_COLOR }} className="font-semibold">rouge</span> sont
   associées à la gauche, et celles en{" "}
-  <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite — selon des codes
+  <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite, selon des codes
   politiques classiques, mais avec de nombreuses exceptions.  
   <br /><br />
   Certaines idées dites “de gauche” peuvent être reprises par la droite, et inversement : par exemple, un
@@ -331,7 +331,7 @@ export default function Result({
           <h3 className="text-lg sm:text-xl text-center mb-2 sm:mb-4 text-white">
             Position idéologique
             <span className="block text-xs sm:text-sm text-white/80">
-              Le polygone <span style={{color: LEFT_COLOR}} className="font-semibold">rouge</span> montre ta part “gauche” par axe (0–100%).
+              Le polygone <span style={{color: LEFT_COLOR}} className="font-semibold">rouge</span> montre ta part “gauche” par axe (0 à 100%).
             </span>
           </h3>
 

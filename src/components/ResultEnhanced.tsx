@@ -54,7 +54,7 @@ const RadarTooltip: React.FC<RadarTooltipProps> = ({
               style={{ backgroundColor: entry.stroke }}
             />
             <span className="text-ink/90 text-xs">
-              {entry.name}: {meta.left} {pctLeft}% — {meta.right} {pctRight}%
+              {entry.name}: {meta.left} {pctLeft}% · {meta.right} {pctRight}%
             </span>
           </div>
         );
@@ -76,7 +76,7 @@ export type ResultProps = {
 
 const LEFT_COLOR = "#C62828";
 const RIGHT_COLOR = "#1565C0";
-const USER_COLOR = "#23201A"; // Encre — "Vous" : proéminent mais neutre (aucun camp)
+const USER_COLOR = "#23201A"; // Encre, "Vous" : proéminent mais neutre (aucun camp)
 
 export default function ResultEnhanced({
   poleScores,
@@ -523,7 +523,7 @@ export default function ResultEnhanced({
 
               {/* Menu de partage (dropdown) */}
               {showShareMenu && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-paper/95 backdrop-blur-sm border border-ink/20 rounded-xl shadow-xl overflow-hidden z-50">
+                <div className="absolute top-full right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-paper2 border border-rule rounded-xl shadow-lg overflow-hidden z-50">
                   <div className="p-3 border-b border-ink/10">
                     <p className="text-sm font-semibold text-ink">Partager mes résultats</p>
                   </div>
@@ -531,7 +531,7 @@ export default function ResultEnhanced({
                   {/* Copier le lien */}
                   <button
                     onClick={handleCopyLink}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left"
                   >
                     {linkCopied ? (
                       <>
@@ -552,7 +552,7 @@ export default function ResultEnhanced({
                   {/* Twitter/X */}
                   <button
                     onClick={handleShareTwitter}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -566,7 +566,7 @@ export default function ResultEnhanced({
                   {/* WhatsApp */}
                   <button
                     onClick={handleShareWhatsApp}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -580,7 +580,7 @@ export default function ResultEnhanced({
                   {/* Discord */}
                   <button
                     onClick={handleShareDiscord}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
@@ -594,7 +594,7 @@ export default function ResultEnhanced({
                   {/* Facebook */}
                   <button
                     onClick={handleShareFacebook}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -608,7 +608,7 @@ export default function ResultEnhanced({
                   {/* Partage natif (SMS, Telegram, etc.) */}
                   <button
                     onClick={handleShareNative}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-ink/10 transition text-left border-t border-ink/10"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -820,7 +820,7 @@ export default function ResultEnhanced({
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
                     selectedProfiles.includes(profile.id)
                       ? "bg-ink/20 border-ink/40 text-ink scale-105"
-                      : "bg-ink/5 border-ink/10 text-ink/70 hover:bg-ink/10 hover:text-ink"
+                      : "bg-ink/5 border-ink/10 text-ink/70 hover:bg-paper3 hover:text-ink"
                   }`}
                   style={{
                     borderColor: selectedProfiles.includes(profile.id) ? profile.color : undefined,
@@ -1022,7 +1022,7 @@ export default function ResultEnhanced({
                     {/* Bouton retour */}
                     <button
                       onClick={() => setSelectedPoliticalProfile(null)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm rounded-full border border-ink/15 bg-ink/5 text-ink/95 hover:bg-ink/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
+                      className="flex items-center gap-2 px-4 py-2 text-sm rounded-full border border-ink/15 bg-ink/5 text-ink/95 hover:bg-paper3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
                     >
                       ← Retour à la liste
                     </button>
@@ -1053,7 +1053,7 @@ export default function ResultEnhanced({
                     </div>
 
                     {/* Positions sur les axes */}
-                    <div className="rounded-2xl border border-ink/15 bg-ink/5 backdrop-blur-sm p-6 shadow-xl">
+                    <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
                       <h3 className="text-xl font-bold mb-4 text-ink">Positions sur les axes</h3>
                       <div className="space-y-6">
                         {sortedAxes.map((axisInfo) => {
@@ -1114,7 +1114,7 @@ export default function ResultEnhanced({
 
                     {/* Badges */}
                     {profileBadges.length > 0 && (
-                      <div className="rounded-2xl border border-ink/15 bg-ink/5 backdrop-blur-sm p-6 shadow-xl">
+                      <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
                         <h3 className="text-xl font-semibold mb-4 text-center text-ink">
                           Badges obtenus
                         </h3>
@@ -1166,7 +1166,7 @@ export default function ResultEnhanced({
           <p className="text-sm sm:text-base text-ink/85 max-w-prose mx-auto px-1 leading-relaxed">
             Les positions en <span style={{ color: LEFT_COLOR }} className="font-semibold">rouge</span> sont
             associées à la gauche, et celles en{" "}
-            <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite — selon des codes
+            <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite, selon des codes
             politiques classiques, mais avec de nombreuses exceptions.
             <br /><br />
             Certaines idées dites "de gauche" peuvent être reprises par la droite, et inversement : par exemple, un

@@ -423,7 +423,7 @@ export const referenceProfiles: ReferenceProfile[] = [
 {
   id: "donald_trump",
   name: "Donald Trump",
-  description: "Droite populiste, nationaliste, anti-immigration, conservatrice et pro-business (mandat 2016–2020)",
+  description: "Droite populiste, nationaliste, anti-immigration, conservatrice et pro-business (mandat 2016-2020)",
   color: "#C62828",
   isReference: true,
   answers: {
@@ -2192,7 +2192,7 @@ export const referenceProfiles: ReferenceProfile[] = [
 {
   id: "staline_1930_53",
   name: "Joseph Staline (URSS stalinienne)",
-  description: "Dictature totalitaire communiste (URSS industrielle, 1930–1953)",
+  description: "Dictature totalitaire communiste (URSS industrielle, 1930-1953)",
   color: "#8B0000",
   isReference: true,
   answers: {

@@ -1,19 +1,19 @@
 /* Hallmark · theme: custom "Scrutin" (éditorial civique)
  * paper-band: light · display: high-contrast-serif · accent-hue: dual red/blue (functional poles)
- * Design tokens — source of truth for the Polarity Quiz visual system.
+ * Design tokens - source of truth for the Polarity Quiz visual system.
  * Red = gauche, Blue = droite : couleurs fonctionnelles, jamais décoratives.
  * CTA neutre = encre (ni rouge ni bleu) pour ne suggérer aucun camp.
  */
 :root {
   /* ── Couleurs ── */
-  --color-paper:   oklch(97% 0.006 85);   /* #F6F3EC — crème chaud, fond global */
-  --color-paper-2: oklch(94% 0.008 85);   /* #EDE9DE — panneaux / cartes */
-  --color-paper-3: oklch(90% 0.010 85);   /* #E3DDCE — hover / inset */
-  --color-ink:     oklch(24% 0.012 60);   /* #23201A — encre quasi-noir, texte + CTA */
-  --color-ink-2:   oklch(46% 0.012 60);   /* #5E594F — texte secondaire */
-  --color-rule:    oklch(86% 0.008 75);   /* #D8D2C4 — filet / bordure hairline */
-  --color-left:    #C62828;               /* GAUCHE — pôle rouge (fonctionnel) */
-  --color-right:   #1565C0;               /* DROITE — pôle bleu (fonctionnel) */
+  --color-paper:   oklch(97% 0.006 85);   /* #F6F3EC - crème chaud, fond global */
+  --color-paper-2: oklch(94% 0.008 85);   /* #EDE9DE - panneaux / cartes */
+  --color-paper-3: oklch(90% 0.010 85);   /* #E3DDCE - hover / inset */
+  --color-ink:     oklch(24% 0.012 60);   /* #23201A - encre quasi-noir, texte + CTA */
+  --color-ink-2:   oklch(46% 0.012 60);   /* #5E594F - texte secondaire */
+  --color-rule:    oklch(86% 0.008 75);   /* #D8D2C4 - filet / bordure hairline */
+  --color-left:    #C62828;               /* GAUCHE - pôle rouge (fonctionnel) */
+  --color-right:   #1565C0;               /* DROITE - pôle bleu (fonctionnel) */
   --color-focus:   oklch(24% 0.012 60);   /* anneau de focus = encre (neutre) */
 
   /* ── Typographie ── */

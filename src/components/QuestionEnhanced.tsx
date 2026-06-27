@@ -17,7 +17,7 @@ const BTN_BG = [
   "#2E7D32", // +++ vert soutenu
   "#4F9D52", // ++ vert
   "#A7CFA2", // + vert clair
-  "#D8D2C4", // 0 neutre — stone (papier)
+  "#D8D2C4", // 0 neutre, stone (papier)
   "#E8B7AE", // - rose terni
   "#D9594F", // -- rouge
   "#C62828", // --- rouge soutenu
@@ -86,19 +86,25 @@ export default function QuestionEnhanced({
       className="w-full px-3 sm:px-4 lg:px-6 py-4"
     >
       <div className="mx-auto w-full max-w-2xl md:max-w-3xl">
-        {/* Header avec compteur et boutons */}
-        <div className="flex items-center justify-between text-xs sm:text-sm text-ink2 mb-5">
-          <div className="flex items-center gap-3">
-            <span className="font-semibold text-ink tabular-nums tracking-wide uppercase">
-              Question {currentIndex + 1} / {total}
+        {/* Écho du spectre : motif de marque */}
+        <div
+          className="h-1 w-full rounded-full overflow-hidden mb-5"
+          style={{ background: "linear-gradient(90deg, #C62828 0%, #D8D2C4 50%, #1565C0 100%)" }}
+          aria-hidden="true"
+        />
+
+        {/* En-tête : index éditorial + reprise */}
+        <div className="flex items-center justify-between gap-3 mb-5">
+          <div className="flex items-baseline gap-2.5">
+            <span className="font-display text-2xl sm:text-3xl font-semibold text-ink tabular-nums leading-none">
+              Q.{String(currentIndex + 1).padStart(2, "0")}
             </span>
-            <span className="hidden sm:inline text-ink2">
-              {progress}% complété
-            </span>
+            <span className="text-xs sm:text-sm text-ink2 font-medium tabular-nums">/ {total}</span>
+            <span className="hidden sm:inline text-xs text-ink2 ml-1 tabular-nums">· {progress}%</span>
           </div>
           <button
             onClick={handleRestart}
-            className="text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
+            className="text-xs sm:text-sm text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
           >
             Recommencer
           </button>
@@ -119,13 +125,13 @@ export default function QuestionEnhanced({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-2xl sm:text-3xl font-semibold leading-tight tracking-tight mb-7 text-ink"
+          className="font-display text-2xl sm:text-3xl lg:text-[2.5rem] font-semibold leading-[1.12] tracking-tight mb-7 text-ink [text-wrap:balance]"
         >
           {question.text}
         </motion.h2>
 
         {/* Choix avec animations */}
-        <div className="flex flex-col gap-2.5 mb-6">
+        <div className="flex flex-col gap-2.5 mb-3">
           {choices.map((label, idx) => {
             const isSelected = selectedIdx === idx;
             const isDimmed = selectedIdx !== null && selectedIdx !== idx;
@@ -150,6 +156,18 @@ export default function QuestionEnhanced({
               </motion.button>
             );
           })}
+        </div>
+
+        {/* Ancres de l'échelle */}
+        <div className="flex items-center justify-between text-[0.7rem] sm:text-xs uppercase tracking-[0.15em] text-ink2 mb-6 px-1">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full" style={{ background: "#2E7D32" }} aria-hidden="true" />
+            D'accord
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            Pas d'accord
+            <span className="h-2 w-2 rounded-full" style={{ background: "#C62828" }} aria-hidden="true" />
+          </span>
         </div>
 
         {/* Navigation + explication */}

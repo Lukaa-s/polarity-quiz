@@ -80,7 +80,7 @@ export default function Question({
           {question.text}
         </h2>
 
-        {/* Choix — flat, très colorés, sans chevron ni relief */}
+        {/* Choix : flat, très colorés, sans chevron ni relief */}
         <div className="flex flex-col gap-3 mb-6">
           {choices.map((label, idx) => (
             <button

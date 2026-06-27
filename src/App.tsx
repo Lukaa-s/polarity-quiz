@@ -190,98 +190,144 @@ const App: React.FC = () => {
   }
 
   // ──────────────────────────────────────────────────────────────────────────────
-  // ÉCRAN D'ACCUEIL — HERO (sauf si on consulte des résultats partagés)
+  // ÉCRAN D'ACCUEIL : une éditoriale (masthead, hero, spectre, sommaire, features)
   // ──────────────────────────────────────────────────────────────────────────────
   if (!hasStarted && !isViewingSharedResults) {
+    const sortedAxes = [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex);
     return (
       <div className="relative min-h-dvh w-full bg-paper text-ink overflow-x-clip pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-        {/* HERO principal — masthead éditorial */}
-        <div className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
-          <div className="min-h-dvh flex flex-col justify-center py-12 sm:py-16 lg:py-20">
-            <div className="w-full space-y-7 sm:space-y-9">
 
-              {/* Bandeau-titre / dateline */}
-              <div className="flex items-center justify-between gap-4 text-xs sm:text-sm uppercase tracking-[0.2em] text-ink2">
-                <span className="font-semibold text-ink">Polarity&nbsp;Quiz</span>
-                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-                  <ClockIcon className="h-3.5 w-3.5 shrink-0" />
-                  <span className="hidden sm:inline">Édition du&nbsp;</span>{seedKey}
-                </span>
-              </div>
-              <hr className="rule" />
-
-              {/* Titre principal */}
-              <div className="space-y-4 max-w-3xl">
-                <h1 className="font-display font-semibold tracking-tight leading-[0.98] text-5xl sm:text-6xl lg:text-7xl">
-                  Où vous situez-vous&nbsp;?
-                </h1>
-                {/* Liseré rouge|bleu — clin d'œil aux pôles */}
-                <div className="flex h-1 w-32 overflow-hidden rounded-full">
-                  <span className="flex-1" style={{ background: LEFT_COLOR }} />
-                  <span className="flex-1" style={{ background: RIGHT_COLOR }} />
-                </div>
-                <p className="text-lg sm:text-xl text-ink2 font-medium">
-                  Test de positionnement politique
-                </p>
-              </div>
-
-              {/* Description */}
-              <p className="text-base sm:text-lg text-ink2 max-w-2xl leading-relaxed">
-                Répondez à une série d'affirmations concrètes pour situer vos convictions sur plusieurs axes politiques. À la fin du test, vous obtenez un profil clair, nuancé et facilement partageable.
-              </p>
-
-              {/* Stats rapides */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:text-base text-ink2 font-medium">
-                <span className="inline-flex items-center gap-2">
-                  <QuestionMarkCircleIcon className="h-5 w-5 text-ink" />
-                  {QUESTIONS_COUNT} affirmations
-                </span>
-                <span className="hidden sm:inline text-rule">•</span>
-                <span className="inline-flex items-center gap-2">
-                  <ScaleIcon className="h-5 w-5 text-ink" />
-                  {AXES_COUNT} axes
-                </span>
-                <span className="hidden sm:inline text-rule">•</span>
-                <span className="inline-flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-ink" />
-                  15–20 min
-                </span>
-              </div>
-
-              {/* Boutons CTA */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                <button
-                  onClick={() => {
-                    setHasStarted(true);
-                    trackTestStarted();
-                  }}
-                  className="btn-ink inline-flex justify-center items-center px-8 sm:px-10 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
-                >
-                  Commencer le test
-                </button>
-
-                <button
-                  onClick={() => {
-                    setExplorerMode(true);
-                    trackExplorerMode();
-                  }}
-                  className="btn-outline inline-flex justify-center items-center gap-2.5 px-7 sm:px-9 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
-                >
-                  <UserGroupIcon className="w-5 h-5" />
-                  Explorer les profils
-                </button>
-              </div>
-
-              {/* Note explicative */}
-              <p className="text-xs sm:text-sm text-ink2 max-w-2xl leading-relaxed border-l-2 border-rule pl-4">
-                Si une affirmation vous semble floue, une explication est disponible. En cas d'hésitation, évitez la réponse <em className="text-ink not-italic font-semibold">neutre</em> et choisissez plutôt <em className="text-ink not-italic font-semibold">plutôt d'accord</em> ou <em className="text-ink not-italic font-semibold">plutôt pas d'accord</em>.
-              </p>
+        {/* Nameplate / masthead */}
+        <header className="relative z-10 border-b-2 border-ink">
+          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between gap-4 py-3 text-[0.68rem] sm:text-xs uppercase tracking-[0.18em] text-ink2">
+              <span className="hidden sm:inline">Boussole&nbsp;politique</span>
+              <span className="font-display text-base sm:text-lg font-semibold tracking-normal normal-case text-ink">
+                Polarity&nbsp;Quiz
+              </span>
+              <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                <ClockIcon className="h-3.5 w-3.5 shrink-0" />
+                <span className="hidden sm:inline">Édition&nbsp;</span>{seedKey}
+              </span>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Bande Features sous le hero */}
+        {/* Hero / une */}
+        <section className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
+          <div className="py-12 sm:py-16 lg:py-20 space-y-7 sm:space-y-9">
+
+            {/* Surtitre */}
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-ink2 font-semibold">
+              Test de positionnement politique
+            </p>
+
+            {/* Titre */}
+            <h1 className="font-display font-semibold tracking-tight leading-[0.95] text-5xl sm:text-6xl lg:text-7xl max-w-4xl [text-wrap:balance]">
+              Où vous situez-vous&nbsp;?
+            </h1>
+
+            {/* Chapô */}
+            <p className="text-lg sm:text-xl text-ink2 max-w-2xl leading-relaxed">
+              Répondez à une série d'affirmations concrètes pour situer vos convictions, axe par axe. À la fin, vous obtenez un profil clair, nuancé et facilement partageable.
+            </p>
+
+            {/* Spectre : motif signature */}
+            <div className="max-w-2xl space-y-2 pt-1">
+              <div
+                className="relative h-3 sm:h-3.5 w-full rounded-full overflow-hidden ring-1 ring-rule"
+                style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
+                aria-hidden="true"
+              >
+                <span className="absolute left-1/2 top-0 h-full w-px bg-paper/70" />
+              </div>
+              <div className="flex justify-between text-xs sm:text-sm font-semibold">
+                <span style={{ color: LEFT_COLOR }}>Gauche</span>
+                <span className="text-ink2">Centre</span>
+                <span style={{ color: RIGHT_COLOR }}>Droite</span>
+              </div>
+            </div>
+
+            {/* Repères chiffrés */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:text-base text-ink2 font-medium">
+              <span className="inline-flex items-center gap-2">
+                <QuestionMarkCircleIcon className="h-5 w-5 text-ink" />
+                {QUESTIONS_COUNT} affirmations
+              </span>
+              <span className="hidden sm:inline text-rule">•</span>
+              <span className="inline-flex items-center gap-2">
+                <ScaleIcon className="h-5 w-5 text-ink" />
+                {AXES_COUNT} axes
+              </span>
+              <span className="hidden sm:inline text-rule">•</span>
+              <span className="inline-flex items-center gap-2">
+                <ClockIcon className="h-5 w-5 text-ink" />
+                15 à 20 min
+              </span>
+            </div>
+
+            {/* Boutons CTA */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+              <button
+                onClick={() => {
+                  setHasStarted(true);
+                  trackTestStarted();
+                }}
+                className="btn-ink inline-flex justify-center items-center px-8 sm:px-10 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
+              >
+                Commencer le test
+              </button>
+
+              <button
+                onClick={() => {
+                  setExplorerMode(true);
+                  trackExplorerMode();
+                }}
+                className="btn-outline inline-flex justify-center items-center gap-2.5 px-7 sm:px-9 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
+              >
+                <UserGroupIcon className="w-5 h-5" />
+                Explorer les profils
+              </button>
+            </div>
+
+            {/* Note explicative */}
+            <p className="text-xs sm:text-sm text-ink2 max-w-2xl leading-relaxed border-l-2 border-rule pl-4">
+              Si une affirmation vous semble floue, une explication est disponible. En cas d'hésitation, évitez la réponse <em className="text-ink not-italic font-semibold">neutre</em> et choisissez plutôt <em className="text-ink not-italic font-semibold">plutôt d'accord</em> ou <em className="text-ink not-italic font-semibold">plutôt pas d'accord</em>.
+            </p>
+          </div>
+        </section>
+
+        {/* Sommaire des axes : table des matières éditoriale */}
         <section className="relative z-10 border-t border-rule bg-paper2">
+          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-10 sm:py-14">
+            <div className="flex items-baseline justify-between gap-4 mb-6 sm:mb-8">
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Au sommaire</h2>
+              <span className="text-xs sm:text-sm uppercase tracking-[0.18em] text-ink2 whitespace-nowrap">
+                {AXES_COUNT} axes mesurés
+              </span>
+            </div>
+            <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
+              {sortedAxes.map((ax) => (
+                <li key={ax.id} className="flex gap-3.5 py-3 border-b border-rule">
+                  <span className="font-display text-sm font-semibold text-ink2 tabular-nums pt-0.5 w-7 shrink-0">
+                    {String(ax.sortIndex).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-ink font-medium leading-snug">{ax.axis}</span>
+                    <span className="block text-xs text-ink2 mt-0.5">
+                      <span style={{ color: LEFT_COLOR }} className="font-medium">{ax.left.label}</span>
+                      <span className="px-1.5 text-ink2/70">↔</span>
+                      <span style={{ color: RIGHT_COLOR }} className="font-medium">{ax.right.label}</span>
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Bande Features */}
+        <section className="relative z-10 border-t border-rule">
           <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-8 sm:py-10">
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-rule border border-rule rounded-md overflow-hidden">
               {[
@@ -356,13 +402,15 @@ const App: React.FC = () => {
             </div>
           )}
 
-          <h1 className="text-2xl sm:text-3xl font-semibold">
-            {isViewingSharedResults
-              ? sharedResultsName
-                ? `Résultats de ${sharedResultsName}`
-                : "Résultats partagés"
-              : "Votre profil politique"}
-          </h1>
+          {(submitted || isViewingSharedResults) && (
+            <h1 className="text-2xl sm:text-3xl font-semibold">
+              {isViewingSharedResults
+                ? sharedResultsName
+                  ? `Résultats de ${sharedResultsName}`
+                  : "Résultats partagés"
+                : "Votre profil politique"}
+            </h1>
+          )}
 
           {!submitted ? (
             <QuestionEnhanced

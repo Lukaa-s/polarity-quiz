@@ -197,7 +197,7 @@
     "rightPole": "Travaillisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Ici, on considère que le mérite vient surtout de l'implication personnelle, pas des résultats financiers. À l'inverse, certains estiment que ce sont les résultats concrets — création de valeur, richesse ou performance — qui comptent le plus."
+    "explanation": "Ici, on considère que le mérite vient surtout de l'implication personnelle, pas des résultats financiers. À l'inverse, certains estiment que ce sont les résultats concrets (création de valeur, richesse ou performance) qui comptent le plus."
   },
   {
     "id": "q21",
@@ -821,7 +821,7 @@
   },
   {
     "id": "q83",
-    "text": "Modifier génétiquement les humains — choisir les gènes d'un bébé, créer des \"enfants sur mesure\" — mène à des dérives inacceptables.",
+    "text": "Modifier génétiquement les humains, c'est-à-dire choisir les gènes d'un bébé ou créer des \"enfants sur mesure\", mène à des dérives inacceptables.",
     "axis": "Progrès technologique et enjeux sociaux",
     "leftPole": "Technoscepticisme",
     "rightPole": "Techno-optimisme",
@@ -967,7 +967,7 @@
     "rightPole": "Conservatisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Certains estiment que des inégalités persistantes — notamment salariales et dans la répartition des tâches parentales — justifient des mesures contraignantes. D'autres pensent que la loi garantit déjà l'égalité formelle et qu'il faut désormais traiter tout le monde de la même manière."
+    "explanation": "Certains estiment que des inégalités persistantes, notamment salariales et dans la répartition des tâches parentales, justifient des mesures contraignantes. D'autres pensent que la loi garantit déjà l'égalité formelle et qu'il faut désormais traiter tout le monde de la même manière."
   },
   {
     "id": "q100",

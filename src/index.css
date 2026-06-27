@@ -35,7 +35,7 @@
 }
 
 @layer components {
-  /* Carte papier à filet — remplace le glass-morphism */
+  /* Carte papier à filet : remplace le glass-morphism */
   .card {
     background: var(--color-paper-2);
     border: var(--rule-hair) solid var(--color-rule);
