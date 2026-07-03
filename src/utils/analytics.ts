@@ -7,6 +7,21 @@
  */
 
 /**
+ * Vérifie que GoatCounter est réellement configuré (script présent dans le
+ * document ET data-goatcounter renseigné avec un vrai code, pas le placeholder
+ * "YOUR-CODE"). Évite d'émettre des requêtes réseau vers un domaine inexistant
+ * tant que le propriétaire du site n'a pas créé son compte GoatCounter.
+ */
+function isGoatCounterConfigured(): boolean {
+  if (typeof document === 'undefined') return false;
+  const script = document.querySelector<HTMLScriptElement>('script[data-goatcounter]');
+  if (!script) return false;
+  const code = script.getAttribute('data-goatcounter') ?? '';
+  if (!code || code.includes('YOUR-CODE')) return false;
+  return true;
+}
+
+/**
  * Initialise le tracking GoatCounter
  * À appeler une seule fois au chargement de l'app
  */
@@ -14,6 +29,11 @@ export function initAnalytics() {
   // Ne pas tracker en mode développement
   if (import.meta.env.DEV) {
     console.log('📊 [Analytics] Mode développement - tracking désactivé');
+    return;
+  }
+
+  if (!isGoatCounterConfigured()) {
+    console.log('📊 [Analytics] GoatCounter non configuré (placeholder ou script absent) - tracking désactivé');
     return;
   }
 
@@ -32,6 +52,10 @@ export function trackEvent(event: string, path?: string) {
   // Ne pas tracker en mode développement
   if (import.meta.env.DEV) {
     console.log(`📊 [Analytics] Event: ${event}`, path);
+    return;
+  }
+
+  if (!isGoatCounterConfigured()) {
     return;
   }
 

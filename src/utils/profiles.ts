@@ -23,7 +23,11 @@ function read(): SavedProfile[] {
 }
 
 function write(list: SavedProfile[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch {
+    // localStorage indisponible (navigation privée, quota dépassé, etc.) : on ignore.
+  }
 }
 
 export function listProfiles(): SavedProfile[] {

@@ -1,6 +1,23 @@
 // src/utils/scoring.ts
 
+import { ideologicalAxes } from "../data/axisexplaination";
+
 export type AnswerMap = Record<string, number>;
+
+/**
+ * Les scores sont agrégés par `id` d'axe (ex. "state_vs_market"), jamais par
+ * libellé : les libellés diffèrent d'un fichier à l'autre au premier caractère
+ * près (apostrophe droite vs typographique) et un renommage ne doit rien casser.
+ */
+const normalizeAxisName = (s: string) => s.replace(/’/g, "'").trim();
+
+const AXIS_ID_BY_NAME: Record<string, string> = Object.fromEntries(
+  ideologicalAxes.map((a) => [normalizeAxisName(a.axis), a.id])
+);
+
+export function axisIdForName(name: string): string {
+  return AXIS_ID_BY_NAME[normalizeAxisName(name)] ?? normalizeAxisName(name);
+}
 
 export type QuestionDef = {
   id: string;
@@ -43,12 +60,13 @@ export function calculatePoleScores(
     const leftPts  = ((MAX_IDX - idx) / MAX_IDX) * MAX_PTS * w;
     const rightPts = (idx / MAX_IDX)       * MAX_PTS * w;
 
-    // 4) Agrège dans le résultat
-    if (!result[q.axis]) {
-      result[q.axis] = { left: 0, right: 0 };
+    // 4) Agrège dans le résultat, clé par id d'axe
+    const axisId = axisIdForName(q.axis);
+    if (!result[axisId]) {
+      result[axisId] = { left: 0, right: 0 };
     }
-    result[q.axis].left  += leftPts;
-    result[q.axis].right += rightPts;
+    result[axisId].left  += leftPts;
+    result[axisId].right += rightPts;
   });
 
   return result;

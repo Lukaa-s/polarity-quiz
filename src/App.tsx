@@ -1,20 +1,22 @@
 // src/App.tsx
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, lazy, Suspense } from "react";
 import questionsData from "./data/questions.json";
 import { ideologicalAxes } from "./data/axisexplaination";
 import type { QuestionDef } from "./utils/scoring";
 import QuestionEnhanced from "./components/QuestionEnhanced";
-import ResultEnhanced from "./components/ResultEnhanced";
 import PoleFaceoff from "./components/PoleFaceoff";
 import Footer from "./components/Footer";
 import { calculatePoleScores } from "./utils/scoring";
 import { evaluateBadges } from "./utils/badges";
-import { badges as allBadges } from "./data/badges";
 import { decodeResults } from "./utils/shareResults";
 import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode } from "./utils/analytics";
 
 // Heroicons
 import { UserGroupIcon } from "@heroicons/react/24/solid";
+
+// ResultEnhanced embarque recharts + html2canvas : chargement différé pour
+// ne pas alourdir le bundle initial (écran d'accueil / questions).
+const ResultEnhanced = lazy(() => import("./components/ResultEnhanced"));
 
 // ---- Seeded RNG + date Paris ----
 function fnv1a(str: string): number {
@@ -63,23 +65,52 @@ function getDailySeed(): { key: string; seed: number } {
   return { key, seed: fnv1a(key) };
 }
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+// ---- Persistance de la progression (localStorage) ----
+const PROGRESS_STORAGE_KEY = "pq_progress_v1";
+
+type SavedProgress = {
+  answers: Record<string, number>;
+  seedKey: string;
+  savedAtISO: string;
+};
+
+function readSavedProgress(): SavedProgress | null {
+  try {
+    const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && parsed.answers && typeof parsed.answers === "object") {
+      return parsed as SavedProgress;
+    }
+    return null;
+  } catch {
+    // localStorage indisponible (navigation privée, quota, etc.)
+    return null;
   }
-  return a;
+}
+
+function writeSavedProgress(data: SavedProgress) {
+  try {
+    localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // ignoré : pas de persistance possible, l'app reste utilisable
+  }
+}
+
+function clearSavedProgress() {
+  try {
+    localStorage.removeItem(PROGRESS_STORAGE_KEY);
+  } catch {
+    // ignoré
+  }
 }
 
 const App: React.FC = () => {
   const { key: seedKey, seed } = useMemo(getDailySeed, []);
   const questions = useMemo(() => shuffleWithSeed(questionsData as QuestionDef[], seed), [seed]);
-  console.log("[Questions seed] key=%s seed=%d", seedKey, seed);
 
   // Constantes dynamiques
   const AXES_COUNT = ideologicalAxes.length;
-  const QUESTIONS_COUNT = questionsData.length;
 
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -88,11 +119,27 @@ const App: React.FC = () => {
   const [explorerMode, setExplorerMode] = useState(false);
   const [sharedResultsName, setSharedResultsName] = useState<string | undefined>(undefined);
   const [isViewingSharedResults, setIsViewingSharedResults] = useState(false);
+  const [savedProgress, setSavedProgress] = useState<SavedProgress | null>(null);
 
   // Initialiser analytics au chargement de l'app
   useEffect(() => {
     initAnalytics();
   }, []);
+
+  // Détecter une progression non soumise au chargement (pour proposer une reprise)
+  useEffect(() => {
+    const existing = readSavedProgress();
+    if (existing && Object.keys(existing.answers).length > 0) {
+      setSavedProgress(existing);
+    }
+  }, []);
+
+  // Sauvegarder la progression à chaque réponse (tant que le test est en cours)
+  useEffect(() => {
+    if (!hasStarted || submitted || isViewingSharedResults) return;
+    if (Object.keys(answers).length === 0) return;
+    writeSavedProgress({ answers, seedKey, savedAtISO: new Date().toISOString() });
+  }, [answers, hasStarted, submitted, isViewingSharedResults, seedKey]);
 
   // Détecter les résultats partagés dans l'URL au chargement
   useEffect(() => {
@@ -126,6 +173,7 @@ const App: React.FC = () => {
       setCurrentIndex((i) => i + 1);
     } else {
       setSubmitted(true);
+      clearSavedProgress();
       // Track la complétion du test
       trackTestCompleted();
     }
@@ -138,13 +186,32 @@ const App: React.FC = () => {
     setSubmitted(false);
     setHasStarted(false);
     setExplorerMode(false);
+    clearSavedProgress();
+    setSavedProgress(null);
   };
 
-  const poleScores = calculatePoleScores(answers, questions);
-  const unlockedBadges = evaluateBadges(answers, questions, poleScores);
-  console.log("📝 [App] answers:", answers);
-  console.log("📝 [App] poleScores:", poleScores);
-  console.log("📝 [App] unlockedBadges:", unlockedBadges);
+  const handleResumeProgress = () => {
+    if (!savedProgress) return;
+    const restoredAnswers = savedProgress.answers;
+    const firstUnanswered = questions.findIndex((q) => !(q.id in restoredAnswers));
+    setAnswers(restoredAnswers);
+    if (firstUnanswered === -1) {
+      // Toutes les questions du jour ont déjà une réponse : on va directement aux résultats.
+      setSubmitted(true);
+    } else {
+      setCurrentIndex(firstUnanswered);
+    }
+    setHasStarted(true);
+    setSavedProgress(null);
+  };
+
+  const handleDiscardProgress = () => {
+    clearSavedProgress();
+    setSavedProgress(null);
+  };
+
+  const poleScores = useMemo(() => calculatePoleScores(answers, questions), [answers, questions]);
+  const unlockedBadges = useMemo(() => evaluateBadges(answers, questions, poleScores), [answers, questions, poleScores]);
 
   // ──────────────────────────────────────────────────────────────────────────────
   // MODE EXPLORATEUR
@@ -173,14 +240,16 @@ const App: React.FC = () => {
             </div>
 
             {/* Utilisation de ResultEnhanced en mode explorateur */}
-            <ResultEnhanced
-              poleScores={{}}
-              questions={questions}
-              badges={[]}
-              onRestart={handleRestart}
-              currentAnswers={{}}
-              explorerMode={true}
-            />
+            <Suspense fallback={<ResultFallback />}>
+              <ResultEnhanced
+                poleScores={{}}
+                questions={questions}
+                badges={[]}
+                onRestart={handleRestart}
+                currentAnswers={{}}
+                explorerMode={true}
+              />
+            </Suspense>
           </div>
         </div>
         <Footer />
@@ -219,6 +288,29 @@ const App: React.FC = () => {
             {/* Face-à-face cinétique : les 2 pôles de chaque clivage */}
             <PoleFaceoff />
 
+            {/* Reprise d'une progression non soumise */}
+            {savedProgress && (
+              <div className="mx-auto w-full max-w-lg rounded-md border border-rule bg-paper2 px-5 py-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-between">
+                <p className="text-sm text-ink2 text-center sm:text-left">
+                  Une progression a été enregistrée sur cet appareil.
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={handleResumeProgress}
+                    className="btn-ink inline-flex justify-center items-center px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                  >
+                    Reprendre le test ({Object.keys(savedProgress.answers).length}/{questions.length} répondues)
+                  </button>
+                  <button
+                    onClick={handleDiscardProgress}
+                    className="btn-outline inline-flex justify-center items-center px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                  >
+                    Repartir de zéro
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Boutons CTA */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               <button
@@ -242,6 +334,11 @@ const App: React.FC = () => {
                 Explorer les profils
               </button>
             </div>
+
+            {/* Durée honnête du test (nombre de questions réel, pas un nombre en dur) */}
+            <p className="text-center text-xs sm:text-sm text-ink2 tabular-nums">
+              {questions.length} questions · environ 15 minutes
+            </p>
           </div>
         </section>
 
@@ -252,7 +349,7 @@ const App: React.FC = () => {
               {[
                 `${AXES_COUNT} clivages, deux pôles sur chaque idée.`,
                 "Un profil détaillé, nuancé et partageable.",
-                "Sans inscription, en quelques minutes.",
+                "Sans inscription ni compte à créer.",
               ].map((point) => (
                 <div key={point} className="flex flex-col items-center sm:items-start gap-3 text-center sm:text-left">
                   <span className="block h-2 w-2 rotate-45 bg-ink" aria-hidden="true" />
@@ -338,19 +435,31 @@ const App: React.FC = () => {
               onAnswer={handleAnswer}
               onBack={handleBack}
               onRestart={handleRestart}
+              answeredIdx={answers[questions[currentIndex]?.id] ?? null}
             />
           ) : (
-            <ResultEnhanced
-              poleScores={poleScores}
-              questions={questions}
-              badges={unlockedBadges}
-              onRestart={handleRestart}
-              currentAnswers={answers}
-            />
+            <Suspense fallback={<ResultFallback />}>
+              <ResultEnhanced
+                poleScores={poleScores}
+                questions={questions}
+                badges={unlockedBadges}
+                onRestart={handleRestart}
+                currentAnswers={answers}
+              />
+            </Suspense>
           )}
         </div>
       </div>
       <Footer />
+    </div>
+  );
+}
+
+// Fallback simple pendant le chargement différé de ResultEnhanced (recharts + html2canvas)
+function ResultFallback() {
+  return (
+    <div className="w-full py-16 text-center text-ink2">
+      Chargement des résultats…
     </div>
   );
 }

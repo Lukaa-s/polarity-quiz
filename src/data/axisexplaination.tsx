@@ -117,7 +117,7 @@ export const ideologicalAxes = [
     axis: "Objectif du système judiciaire",
     question: "La justice doit-elle punir ou réparer ?",
     left: {
-      label: "Justicialisme réparateur",
+      label: "Justice réparatrice",
       response:
         "Punir ne suffit pas à rendre une société plus sûre ni plus juste. Une justice efficace cherche d’abord à comprendre les causes d’un acte, à réparer le tort causé à la victime et à offrir une véritable seconde chance à l’auteur. Pour les partisans de la justice réparatrice, la prison sèche, en coupant la personne de tout lien et de toute perspective, nourrit souvent la récidive. Mieux vaut investir dans la prévention, l’accompagnement social, la formation et les peines alternatives comme les travaux d’intérêt général ou la médiation entre victime et coupable. L’objectif final est la réinsertion, plus utile à tous que l’exclusion durable.",
     },
@@ -197,12 +197,12 @@ export const ideologicalAxes = [
     axis: "Équilibre entre liberté et sécurité",
     question: "Comment équilibrer liberté individuelle et protection collective ?",
     left: {
-      label: "Libertarisme",
+      label: "Défense des libertés",
       response:
         "La liberté individuelle doit primer, même lorsqu’elle complique la tâche des autorités. Pour les libertaires, chaque restriction (surveillance généralisée, fichage, contrôles d’identité étendus, état d’urgence prolongé) doit rester l’exception, strictement encadrée et temporaire, car les pouvoirs accordés au nom de la sécurité reviennent rarement en arrière. L’histoire montre que la peur sert souvent à justifier des atteintes durables aux droits fondamentaux. Mieux vaut accepter une part de risque inhérente à une société libre que de sacrifier la vie privée, la liberté d’expression ou la présomption d’innocence. La protection ne doit jamais se construire au prix d’une société de surveillance.",
     },
     right: {
-      label: "Securitarisme",
+      label: "Sécuritarisme",
       response:
         "La sécurité est la première des libertés : sans protection contre la violence, le terrorisme ou la criminalité, les autres droits deviennent théoriques. Pour les tenants de cette vision, il est légitime que la collectivité accepte certaines restrictions (vidéosurveillance, renseignement, contrôles renforcés) lorsqu’elles permettent de prévenir des drames et de garantir l’ordre public. Ceux qui respectent la loi n’ont rien à craindre de ces mesures, qui visent d’abord à protéger les citoyens et à dissuader les menaces. L’équilibre penche ici du côté de la responsabilité collective : un État capable d’assurer la sûreté de tous est la condition d’une vie sociale paisible.",
     },

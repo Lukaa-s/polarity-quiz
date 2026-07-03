@@ -8,16 +8,25 @@ export type ReferenceProfile = {
   color?: string;
   answers: Record<string, number>;
   isReference: true; // Flag pour distinguer des profils utilisateurs
+  /** Profil historique consultable dans l'annuaire mais exclu du classement « personnalités les plus proches ». */
+  excludeFromMatching?: boolean;
 };
 
 export const referenceProfiles: ReferenceProfile[] = [
   {
   id: "sarkozy_2007",
-  name: "Nicolas Sarkozy (Président)",
+  name: "Nicolas Sarkozy (2007-2012)",
   description: "Droite libérale et sécuritaire, pro-UE, volontarisme politique, autorité, économie de marché",
   color: "#1B3A8A",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non (ligne sécuritaire)
+    "q100": 6, // taxer l'héritage → non (loi TEPA 2007 : allègement massif)
+    "q101": 1, // le profit sort de la pauvreté → oui
+    "q102": 5, // monde sans obligation de travailler → non (« travailler plus »)
+    "q103": 1, // revenu sans contrepartie rend passif → oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 5,  // salariés co-décident → non
@@ -32,7 +41,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q8": 4,  // privatiser santé/école → plutôt non
     "q9": 1,  // hauts salaires → oui
     "q10": 5, // casser grands groupes → non
-    "q11": 2, // investissements publics → plutôt oui (plan relance 2008)
+    "q11": 5, // nationalisations → non (privatisation GDF 2008)
     "q97": 2, // accessibilité → plutôt oui
 
     // Finalité économie
@@ -76,13 +85,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 2, // incivilités = problème d’autorité → plutôt oui
-    "q42": 2, // famille/nation/tradition → plutôt oui
     "q43": 2, // père+mère → plutôt oui
     "q44": 4, // visibiliser minorités → plutôt non
     "q45": 5, // abandon normes traditionnelles → non
     "q46": 5, // genre = construction sociale → non
     "q47": 5, // discrimination positive → non
-    "q48": 1, // “se cacher derrière couleur peau” → oui
+    "q48": 1, // école : recentrer sur les fondamentaux → oui
     "q90": 4, // cause animale → plutôt non
     "q92": 3, // libertés LGBTQ+ → neutre/acceptable mais non militant
     "q99": 3, // égalité femmes/hommes → neutre
@@ -138,9 +146,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3, // méfiance IA opaque → neutre
     "q83": 2, // génétique médicale → plutôt oui
     "q84": 2, // réseaux sociaux = problème → plutôt oui
-    "q85": 3, // automatisation → neutre
     "q86": 3, // régulation tech → neutre
-    "q87": 2, // numérique modernise démocratie → plutôt oui
     "q88": 1, // tech sans entraves → oui
     "q93": 1, // génétique pour maladies → oui
     "q95": 2, // exploration spatiale → plutôt oui
@@ -154,6 +160,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#ED4E6E",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 5, // libéralisation des drogues → plutôt non (ligne Valls)
+    "q100": 2, // taxer l'héritage → plutôt oui (fiscalité redistributive)
+    "q101": 3, // profit et pauvreté → neutre (social-démocrate)
+    "q102": 4, // monde sans obligation de travailler → plutôt non
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui (préférence emploi)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 3,  // salariés participent à la gestion → neutre/pas prioritaire
@@ -212,13 +225,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 4,  // incivilités → plutôt non
-    "q42": 4,  // valeurs traditionnelles → plutôt non
     "q43": 4,  // père+mère obligatoires → plutôt non (mariage pour tous)
     "q44": 2,  // rendre visibles discriminations → plutôt oui
     "q45": 2,  // abandon normes excluantes → plutôt oui
     "q46": 2,  // genre construction sociale → plutôt oui (modérément)
     "q47": 3,  // discrimination positive → neutre/équilibré
-    "q48": 4,  // “on se cache derrière couleur peau” → plutôt non
+    "q48": 4, // école : recentrer sur les fondamentaux → plutôt non (ABCD de l'égalité)
     "q90": 3,  // abolition exploitation animale → neutre
     "q92": 1,  // droits LGBTQ+ → oui (mariage pour tous)
     "q99": 2,  // égalité femmes/hommes → plutôt oui
@@ -274,9 +286,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3, // méfiance IA opaque → neutre
     "q83": 2, // génétique médicale → plutôt oui
     "q84": 3, // réseaux sociaux → neutre
-    "q85": 3, // automatisation → neutre
     "q86": 3, // régulation technologie → neutre/équilibré
-    "q87": 2, // numérique modernise démocratie → plutôt oui
     "q88": 3, // tech sans entraves → neutre
     "q93": 2, // génétique pour maladies → plutôt oui
     "q95": 2, // exploration spatiale → plutôt oui
@@ -291,6 +301,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#1565C0",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 2, // taxer l'héritage → plutôt oui (défense de l'estate tax)
+    "q101": 1, // le profit sort de la pauvreté → oui (foi dans le marché régulé)
+    "q102": 5, // monde sans obligation de travailler → non (dignity of work)
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui
     // Modèle de propriété
     "q1": 4,
     "q2": 3,
@@ -348,13 +364,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // Vision du progrès sociétal
     "q41": 3,
-    "q42": 3,
     "q43": 5,
     "q44": 1,
     "q45": 2,
     "q46": 2,
     "q47": 2,
-    "q48": 5,
+    "q48": 4, // école : recentrer sur les fondamentaux → plutôt non
     "q90": 5,
     "q92": 1,
     "q99": 1,
@@ -404,16 +419,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 3,
     "q79": 2,
     "q80": 2,
-    "q94": 4,
+    "q94": 5, // libéralisation de toutes les drogues → non (fédéral prudent)
 
     // Progrès technologique et enjeux sociaux
     "q81": 3,
     "q82": 2,
     "q83": 2,
     "q84": 2,
-    "q85": 3,
     "q86": 2,
-    "q87": 2,
     "q88": 3,
     "q93": 1,
     "q95": 2,
@@ -427,6 +440,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#C62828",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 6, // taxer l'héritage → non (volonté d'abolir l'estate tax)
+    "q101": 0, // le profit sort de la pauvreté → oui fort
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 1, // revenu sans contrepartie rend passif → oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 6,
@@ -471,7 +490,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q30": 5,
     "q31": 6,
     "q32": 1,
-    "q33": 1,
+    "q33": 4, // représentants + experts plutôt que vote direct → plutôt non (défiance envers les experts)
     "q34": 1,
 
     // --- CHANGEMENT SOCIAL ---
@@ -484,13 +503,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,
-    "q42": 1,
     "q43": 1,
     "q44": 6,
     "q45": 6,
     "q46": 6,
     "q47": 6,
-    "q48": 1,
+    "q48": 0, // école : recentrer sur les fondamentaux → oui fort (croisade anti-woke)
     "q90": 6,
     "q92": 6,
     "q99": 4,
@@ -540,16 +558,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 1,
     "q79": 2,
     "q80": 2,
-    "q94": 6,
+    "q94": 6, // libéralisation des drogues → non (peine de mort pour les dealers évoquée)
 
     // --- TECHNOLOGIE & FUTUR ---
     "q81": 4,
     "q82": 6,
     "q83": 4,
     "q84": 3,
-    "q85": 3,
     "q86": 4,
-    "q87": 5,
     "q88": 2,
     "q93": 3,
     "q95": 3,
@@ -563,6 +579,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#2E86C1",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 4, // taxer l'héritage → plutôt non (transmission familiale/PME protégée)
+    "q101": 1, // le profit sort de la pauvreté → oui (économie sociale de marché)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 4,
@@ -620,13 +642,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 3,
-    "q42": 3,
     "q43": 4,
     "q44": 2,
     "q45": 3,
     "q46": 4,
     "q47": 4,
-    "q48": 4,
+    "q48": 2, // école : recentrer sur les fondamentaux → plutôt oui (CDU modérée)
     "q90": 3,
     "q92": 3,
     "q99": 2,
@@ -676,16 +697,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 3,
     "q79": 3,
     "q80": 4,
-    "q94": 3,
+    "q94": 5, // libéralisation des drogues → plutôt non
 
     // --- TECHNOLOGIE ---
     "q81": 3,
     "q82": 3,
     "q83": 3,
     "q84": 3,
-    "q85": 3,
     "q86": 3,
-    "q87": 3,
     "q88": 3,
     "q93": 2,
     "q95": 3,
@@ -700,8 +719,14 @@ export const referenceProfiles: ReferenceProfile[] = [
   isReference: true,
   answers: {
 
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 3, // taxer l'héritage → neutre (pas d'impôt successoral en Chine malgré la « prospérité commune »)
+    "q101": 2, // le profit sort de la pauvreté → plutôt oui (marché sous direction du Parti)
+    "q102": 5, // monde sans obligation de travailler → non (campagnes contre le « tang ping »)
+    "q103": 1, // revenu sans contrepartie rend passif → oui
+
     // --- PROPRIÉTÉ & ÉCONOMIE ---
-    "q1": 1,
+    "q1": 5, // codécision salariale → non (contrôle du Parti, pas d'autogestion)
     "q2": 3,
     "q3": 5,
     "q4": 2,
@@ -756,13 +781,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,
-    "q42": 1,
     "q43": 1,
     "q44": 6,
     "q45": 6,
     "q46": 6,
     "q47": 6,
-    "q48": 1,
+    "q48": 1, // école : recentrer sur les fondamentaux → oui (conservatisme moral d'État)
     "q90": 6,
     "q92": 6,
     "q99": 4,
@@ -812,16 +836,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 0,
     "q79": 0,
     "q80": 0,
-    "q94": 6,
+    "q94": 6, // libéralisation des drogues → non (répression très dure)
 
     // --- TECHNOLOGIE & FUTUR ---
     "q81": 3,
     "q82": 0,
     "q83": 3,
     "q84": 0,
-    "q85": 3,
     "q86": 0,
-    "q87": 6,
     "q88": 1,
     "q93": 3,
     "q95": 2,
@@ -835,6 +857,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#003F8C",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 5, // taxer l'héritage → non (pas de droits de succession en Israël)
+    "q101": 1, // le profit sort de la pauvreté → oui (libéralisme économique)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 5,
@@ -892,13 +920,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,
-    "q42": 1,
     "q43": 1,
     "q44": 6,
     "q45": 6,
     "q46": 6,
     "q47": 6,
-    "q48": 1,
+    "q48": 1, // école : recentrer sur les fondamentaux → oui (coalition conservatrice)
     "q90": 6,
     "q92": 5,
     "q99": 4,
@@ -948,16 +975,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 1,
     "q79": 2,
     "q80": 1,
-    "q94": 6,
+    "q94": 5, // libéralisation des drogues → plutôt non (dépénalisation cannabis limitée)
 
     // --- TECHNOLOGIE & FUTUR ---
     "q81": 3,
     "q82": 2,
     "q83": 3,
     "q84": 3,
-    "q85": 3,
     "q86": 3,
-    "q87": 3,
     "q88": 2,
     "q93": 2,
     "q95": 2,
@@ -971,6 +996,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#D50000",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 0, // taxer l'héritage → oui fort (abolition des grandes fortunes héritées)
+    "q101": 6, // le profit sort de la pauvreté → non (le profit EST l'exploitation)
+    "q102": 1, // monde sans obligation de travailler → oui (émancipation du travail contraint)
+    "q103": 6, // revenu sans contrepartie rend passif → non
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 0,
@@ -1028,13 +1059,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 6,
-    "q42": 5,
     "q43": 6,
     "q44": 1,
     "q45": 1,
     "q46": 1,
     "q47": 2,
-    "q48": 5,
+    "q48": 6, // école : recentrer sur les fondamentaux → non (éducation à l'égalité assumée)
     "q90": 3,
     "q92": 1,
     "q99": 1,
@@ -1079,21 +1109,19 @@ export const referenceProfiles: ReferenceProfile[] = [
     // --- LIBERTÉS PUBLIQUES ---
     "q75": 6,
     "q76a": 1,
-    "q76b": 6,
+    "q76b": 2, // limiter la désinformation → plutôt oui (réguler les plateformes capitalistes), méfiance envers la censure d'État
     "q77": 6,
     "q78": 6,
     "q79": 6,
     "q80": 6,
-    "q94": 6,
+    "q94": 1, // libéralisation des drogues → oui (NPA : dépénalisation, légalisation du cannabis)
 
     // --- TECHNOLOGIE & AVENIR ---
     "q81": 4,
     "q82": 3,
     "q83": 3,
     "q84": 4,
-    "q85": 4,
     "q86": 2,
-    "q87": 4,
     "q88": 5,
     "q93": 4,
     "q95": 3,
@@ -1107,6 +1135,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#43A047",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 1, // taxer l'héritage → oui (héritage plafonné, redistribution)
+    "q101": 5, // le profit sort de la pauvreté → plutôt non (critique du productivisme)
+    "q102": 1, // monde sans obligation de travailler → oui (post-croissance, temps libéré)
+    "q103": 6, // revenu sans contrepartie rend passif → non (favorable au revenu d'existence)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 1,
@@ -1164,13 +1198,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 6,
-    "q42": 6,
     "q43": 6,
     "q44": 1,
     "q45": 1,
     "q46": 1,
     "q47": 2,
-    "q48": 6,
+    "q48": 6, // école : recentrer sur les fondamentaux → non (éducation au genre et à l'égalité assumée)
     "q90": 1,
     "q92": 1,
     "q99": 1,
@@ -1215,21 +1248,19 @@ export const referenceProfiles: ReferenceProfile[] = [
     // --- LIBERTÉS PUBLIQUES ---
     "q75": 6,
     "q76a": 1,
-    "q76b": 6,
+    "q76b": 1, // limiter la désinformation → oui (régulation des plateformes défendue par les écologistes)
     "q77": 6,
     "q78": 6,
     "q79": 6,
     "q80": 6,
-    "q94": 5,
+    "q94": 2, // libéralisation des drogues → plutôt oui (EELV : légalisation du cannabis)
 
     // --- TECHNOLOGIE & AVENIR ---
     "q81": 4,
     "q82": 5,
     "q83": 5,
     "q84": 5,
-    "q85": 4,
     "q86": 5,
-    "q87": 4,
     "q88": 6,
     "q93": 4,
     "q95": 3,
@@ -1243,6 +1274,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#1E88E5",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 5, // taxer l'héritage → non (programme 2022 : alléger les successions)
+    "q101": 1, // le profit sort de la pauvreté → oui
+    "q102": 5, // monde sans obligation de travailler → non (valeur travail LR)
+    "q103": 1, // revenu sans contrepartie rend passif → oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 5,
@@ -1300,13 +1337,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 3,
-    "q42": 2,
     "q43": 4,
     "q44": 4,
     "q45": 5,
     "q46": 5,
     "q47": 4,
-    "q48": 2,
+    "q48": 1, // école : recentrer sur les fondamentaux → oui
     "q90": 4,
     "q92": 3,
     "q99": 3,
@@ -1356,16 +1392,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 2,
     "q79": 3,
     "q80": 2,
-    "q94": 4,
+    "q94": 6, // libéralisation des drogues → non
 
     // --- TECHNOLOGIE & FUTUR ---
     "q81": 4,
     "q82": 2,
     "q83": 4,
     "q84": 3,
-    "q85": 3,
     "q86": 3,
-    "q87": 3,
     "q88": 2,
     "q93": 2,
     "q95": 3,
@@ -1379,6 +1413,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#5D4037",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 3, // neutre : a défendu jeune les impôts progressifs (People's Budget), conservateur ensuite
+    "q101": 1, // le profit sort de la pauvreté → oui (libéralisme victorien)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui (assurances sociales oui, inconditionnalité non)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 5,
@@ -1436,13 +1476,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 2,
-    "q42": 1,
     "q43": 2,
     "q44": 5,
     "q45": 5,
     "q46": 5,
     "q47": 5,
-    "q48": 1,
+    "q48": 1, // non applicable à son époque ; conservatisme social projeté → oui
     "q90": 5,
     "q92": 4,
     "q99": 3,
@@ -1492,16 +1531,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 3,
     "q79": 4,
     "q80": 4,
-    "q94": 5,
+    "q94": 4, // non applicable tel quel ; libéral sur les mœurs personnelles mais ordre public → plutôt non
 
     // --- TECHNOLOGIE & AVENIR ---
     "q81": 4,
     "q82": 2,
     "q83": 4,
     "q84": 2,
-    "q85": 3,
     "q86": 4,
-    "q87": 3,
     "q88": 3,
     "q93": 2,
     "q95": 3,
@@ -1515,6 +1552,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#006400",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 0, // taxer l'héritage → oui fort (expropriations, propriété collective)
+    "q101": 6, // le profit sort de la pauvreté → non
+    "q102": 4, // monde sans obligation de travailler → plutôt non (travail = devoir révolutionnaire)
+    "q103": 3, // revenu sans contrepartie → neutre (garanties sociales fortes mais devoir de travailler)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 0,
@@ -1572,13 +1615,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 3,
-    "q42": 3,
     "q43": 2,
     "q44": 4,
     "q45": 6,
     "q46": 6,
     "q47": 4,
-    "q48": 2,
+    "q48": 4, // école : recentrer sur les fondamentaux → plutôt non (éducation égalitaire d'État ; homophobie initiale du régime corrigée tardivement)
     "q90": 4,
     "q92": 4,
     "q99": 3,
@@ -1628,16 +1670,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 0,
     "q79": 0,
     "q80": 0,
-    "q94": 6,
+    "q94": 6, // libéralisation des drogues → non (répression très dure à Cuba)
 
     // --- TECHNOLOGIE & AVENIR ---
     "q81": 3,
     "q82": 1,
     "q83": 2,
     "q84": 1,
-    "q85": 3,
     "q86": 2,
-    "q87": 3,
     "q88": 2,
     "q93": 2,
     "q95": 2,
@@ -1651,6 +1691,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#8B0000",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 5, // taxer l'héritage → non (impôt successoral aboli en Russie en 2006)
+    "q101": 2, // le profit sort de la pauvreté → plutôt oui (capitalisme d'État)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 1, // revenu sans contrepartie rend passif → oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 4,
@@ -1708,13 +1754,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,
-    "q42": 1,
     "q43": 1,
     "q44": 6,
     "q45": 6,
     "q46": 6,
     "q47": 6,
-    "q48": 1,
+    "q48": 0, // école : recentrer sur les fondamentaux → oui fort (lois « valeurs traditionnelles », anti-« propagande »)
     "q90": 6,
     "q92": 5,
     "q99": 4,
@@ -1764,16 +1809,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 1,
     "q79": 1,
     "q80": 1,
-    "q94": 6,
+    "q94": 6, // libéralisation des drogues → non (répression sévère)
 
     // --- TECHNOLOGIE & AVENIR ---
     "q81": 3,
     "q82": 2,
     "q83": 3,
     "q84": 2,
-    "q85": 3,
     "q86": 3,
-    "q87": 6,
     "q88": 3,
     "q93": 2,
     "q95": 3,
@@ -1787,6 +1830,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#0A3D62",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non (ordre moral gaullien)
+    "q100": 3, // taxer l'héritage → neutre (ni confiscation ni dogme propriétariste ; logique de participation)
+    "q101": 3, // profit et pauvreté → neutre (planisme + marché, ni libéral ni marxiste)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 2, // revenu sans contrepartie rend passif → plutôt oui
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 4,  // salariés cogestion → plutôt non
@@ -1845,13 +1895,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,  // incivilités → effondrement autorité → oui
-    "q42": 1,  // famille nation tradition → oui
     "q43": 1,  // père + mère → oui
     "q44": 5,  // rendre visibles minorités → non
     "q45": 5,  // abandon normes traditionnelles → non
     "q46": 5,  // genre = construction sociale → non
     "q47": 5,  // discrimination positive → non
-    "q48": 1,  // “on se réfugie derrière couleur peau” → oui
+    "q48": 1, // non applicable à son époque ; conservatisme social projeté → oui
     "q90": 4,  // cause animale → plutôt non (pas un sujet)
     "q92": 4,  // libertés LGBTQ+ → plutôt non (contexte 1960)
     "q99": 3,  // égalité femmes-hommes → neutre (pas combat majeur)
@@ -1907,9 +1956,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3, // méfiance IA opaque → neutre
     "q83": 3, // génétique médicale → neutre (anachronique)
     "q84": 3, // réseaux sociaux → neutre (non pertinent)
-    "q85": 3, // automatisation → neutre
     "q86": 3, // régulation techno → neutre
-    "q87": 3, // numérique pour démocratie → neutre
     "q88": 2, // tech sans entraves → plutôt oui (industrialisme)
     "q93": 3, // génétique maladies → neutre/anachronique
     "q95": 1, // exploration spatiale → oui (France puissance scientifique)
@@ -1924,6 +1971,12 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#B71C1C",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q100": 0, // taxer l'héritage → oui fort (le Manifeste demande l'abolition de l'héritage)
+    "q101": 4, // le profit sort de la pauvreté → plutôt non (reconnaît la puissance productive du capitalisme, récuse l'apologie)
+    "q102": 0, // monde sans obligation de travailler → oui fort (le règne de la liberté au-delà du travail contraint)
+    "q103": 6, // revenu sans contrepartie rend passif → non
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 0,  // les travailleurs décident & partagent → cœur du programme
@@ -1944,7 +1997,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q12": 0, // devenir milliardaire = exploitation → oui
     "q13": 6, // richesse « honnête » illimitée → non
     "q14": 2, // profit = moteur d’innovation → reconnaît MAIS critique
-    "q15": 1, // mérite entrepreneurial → non (capital = valeur volée)
+    "q15": 6, // l'entrepreneur mérite la grande richesse → non (la plus-value est du travail non payé)
     "q16": 0, // production orientée vers besoins → oui
 
     // --- TRAVAIL ---
@@ -1981,13 +2034,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 4,  // discours "incivilités / autorité" = idéologie conservatrice
-    "q42": 4,  // famille/nation/religion = superstructure → pas central
     "q43": 6,  // modèle familial unique → non
     "q44": 2,  // valoriser différences pour justice → oui (lutte des opprimés)
     "q45": 1,  // abandon de normes excluantes → oui
     "q46": 1,  // genres = construction sociale → oui
     "q47": 2,  // discrimination positive → mesure transitoire acceptable
-    "q48": 5,  // discours d’exclusion racial → rejet
+    "q48": 3, // non applicable à son époque, position non inférable
     "q90": 2,  // libération animale → pas central mais compatible
     "q92": 1,  // libertés LGBTQ+ → oui dans logique d’émancipation
     "q99": 1,  // égalité H/F → oui dans extension moderne
@@ -2037,16 +2089,14 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q78": 6, // plus de force policière → non
     "q79": 4, // vidéosurveillance → non
     "q80": 5, // état d’urgence → non
-    "q94": 2, // liberté sur drogues → plutôt oui
+    "q94": 3, // non applicable à son époque, position non inférable
 
     // --- TECHNOLOGIE ---
     "q81": 3, // IA = dynamique capitaliste → neutre
     "q82": 2, // algorithmes opaques = domination technique → oui
     "q83": 2, // génétique = prudence
     "q84": 2, // réseaux sociaux → plutôt critique
-    "q85": 2, // automatisation = armée industrielle de réserve
     "q86": 2, // réguler technologie → oui
-    "q87": 3, // numérique participatif → neutre
     "q88": 5, // développement « sans entrave » → non
     "q93": 2, // génétique = éviter maladies → oui
     "q95": 4, // exploration spatiale = luxe bourgeois
@@ -2057,10 +2107,18 @@ export const referenceProfiles: ReferenceProfile[] = [
 {
   id: "hitler_1933_39",
   name: "Adolf Hitler (régime nazi)",
-  description: "Dictature national-socialiste (Allemagne, années 1930)",
+  description: "Profil historique à valeur pédagogique (exclu du classement de proximité). Dictature national-socialiste (Allemagne, années 1930)",
   color: "#424242",
   isReference: true,
+  excludeFromMatching: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non
+    "q100": 5, // taxer l'héritage → non (transmission familiale « aryenne » valorisée)
+    "q101": 4, // le profit sort de la pauvreté → plutôt non (anticapitalisme rhétorique, économie de guerre)
+    "q102": 6, // monde sans obligation de travailler → non (culte du travail, travail forcé)
+    "q103": 1, // revenu sans contrepartie rend passif → oui
     // Modèle de propriété : capitalisme autoritaire, propriété privée conservée mais contrôlée
     "q1": 5, // pouvoir des salariés → rejet
     "q2": 1, // grandes propriétés privées → plutôt accepté
@@ -2074,7 +2132,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q8": 4, // santé/école privées → plutôt pas d’accord, État très présent/idéologique
     "q9": 1, // liberté de fixer des rémunérations très inégales → plutôt d’accord
     "q10": 4, // casser les grands groupes → plutôt pas d’accord (proximité avec grands cartels)
-    "q11": 1, // investissement public massif dans énergie/agri → oui (autarcie, réarmement)
+    "q11": 3, // propriété d'État des services → neutre (reprivatisations ET économie dirigée)
     "q97": 3, // accessibilité bâtiments anciens → anachronique → neutre
 
     // Finalité de l’activité économique : nationalisme + hiérarchie des fortunes
@@ -2118,13 +2176,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // Vision du progrès sociétal : conservatisme extrême, raciste et patriarcal
     "q41": 0, // “excuser les incivilités” fragilise la cohésion → tout à fait d’accord
-    "q42": 0, // supprimer repères famille/religion/nation = dangereux → tout à fait d’accord
     "q43": 0, // enfant a besoin d’un père et d’une mère → tout à fait d’accord
     "q44": 6, // rendre visibles les différences pour lutter contre discriminations → rejet total (idéologie raciste hiérarchisante)
     "q45": 6, // abandonner une norme qui empêche certains d’être reconnus → rejet
     "q46": 6, // rôles masculins/féminins = constructions à déconstruire → rejet complet
     "q47": 6, // priorité à une personne “issue de la diversité” → rejet
-    "q48": 1, // “beaucoup se cachent derrière leur couleur de peau” → plutôt d’accord dans sa rhétorique raciste
+    "q48": 0, // école : recentrer sur les fondamentaux → oui fort (rôles de genre imposés par l'idéologie nazie)
     "q90": 6, // élevage/expérimentation animale = barbarie → rejet (utilisation massive d’animaux)
     "q92": 6, // liberté totale pour LGBTQ+ → rejet total
     "q99": 6, // actions spécifiques pour égalité femmes/hommes → rejet
@@ -2178,11 +2235,9 @@ export const referenceProfiles: ReferenceProfile[] = [
     // Progrès technologique et enjeux sociaux : techno-autoritarisme (militaire et industriel)
     "q81": 4, // technologies détruisent plus d’emplois → plutôt pas d’accord (il les voit comme outils de puissance)
     "q82": 4, // IA/algorithmes trop opaques pour faire confiance → plutôt pas d’accord, confiance dans la technique au service de l’État
-    "q83": 1, // modifier génétiquement l’humain pose problèmes éthiques → dans sa logique eugéniste, il serait plutôt favorable aux manipulations → donc “plutôt pas d’accord” avec la prudence → 1
+    "q83": 5, // modification génétique = dérive inacceptable → non (eugénisme d'État revendiqué)
     "q84": 4, // réseaux sociaux affaiblissent débat démocratique → anachronique, mais il aurait utilisé ces outils → plutôt pas d’accord
-    "q85": 3, // automatisation = chômage massif → neutre (il s’en soucie peu, main-d’œuvre exploitée)
     "q86": 3, // réguler strictement la technologie pour éviter dérives → neutre (il veut la contrôler politiquement, pas moralement)
-    "q87": 2, // innovations numériques rendent la société plus connectée → plutôt d’accord si au service de la propagande
     "q88": 1, // développer sans entrave les technologies émergentes pour rester compétitifs → plutôt d’accord
     "q93": 0, // éviter la naissance d’enfants avec maladies graves via génétique → tout à fait d’accord (eugénisme)
     "q95": 2, // exploration spatiale pour défis à long terme → plutôt d’accord si puissance nationale
@@ -2192,13 +2247,21 @@ export const referenceProfiles: ReferenceProfile[] = [
 {
   id: "staline_1930_53",
   name: "Joseph Staline (URSS stalinienne)",
-  description: "Dictature totalitaire communiste (URSS industrielle, 1930-1953)",
+  description: "Profil historique à valeur pédagogique (exclu du classement de proximité). Dictature totalitaire communiste (URSS industrielle, 1930-1953)",
   color: "#8B0000",
   isReference: true,
+  excludeFromMatching: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non
+    "q100": 1, // taxer l'héritage → oui (héritage bourgeois liquidé, transmission résiduelle encadrée)
+    "q101": 6, // le profit sort de la pauvreté → non
+    "q102": 5, // monde sans obligation de travailler → non (stakhanovisme, travail obligatoire)
+    "q103": 1, // revenu sans contrepartie rend passif → oui (le travail est un devoir)
     // --- PROPRIÉTÉ & ÉCONOMIE ---
-    "q1": 0, // salariés décident + partagent → il impose contrôle total d'État
-    "q2": 0, // accumulation de logements → propriété privée abolie → tout à fait d'accord
+    "q1": 6, // codécision salariale → non (contrôle total du Parti, pas d'autogestion ouvrière)
+    "q2": 6, // posséder dix appartements locatifs → non (propriété privée lucrative abolie)
     "q3": 6, // propriété privée moteur de progrès → rejet total
     "q4": 0, // réquisition immeubles vides → oui
     "q5": 6, // sacralisation du droit de propriété → rejet total
@@ -2253,13 +2316,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- SOCIÉTÉ & VALEURS ---
     "q41": 1, // discours sur incivilités/autorité → assez d’accord (discipline)
-    "q42": 1, // préserver famille/nation → plutôt oui (conservatisme social soviétique)
     "q43": 1, // père + mère nécessaires → plutôt oui
     "q44": 6, // valoriser minorités discriminées → rejet (anti-individualisme)
     "q45": 6, // abandonner normes excluantes → rejet
     "q46": 6, // rôles genrés = construits socialement → rejet (conservateur)
     "q47": 6, // discrimination positive → rejet fort
-    "q48": 2, // “se cacher derrière sa couleur” → plutôt d’accord (idéologie “aveugle à la race”)
+    "q48": 1, // non applicable tel quel ; conservatisme moral stalinien projeté (recriminalisation de l'homosexualité en 1934) → oui
     "q90": 6, // abolition exploitation animale → rejet
     "q92": 6, // liberté LGBTQ+ → rejet
     "q99": 6, // actions égalité femmes/hommes → rejet (officiellement égalité, mais conservatisme réel)
@@ -2315,9 +2377,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 6, // méfiance envers algorithmes opaques → rejet (État seul décide)
     "q83": 3, // modification génétique → neutre (pas conceptuellement important)
     "q84": 3, // réseaux sociaux affaiblissent débat → neutre
-    "q85": 3, // automatisation = chômage massif → neutre
     "q86": 2, // réguler technologie → plutôt oui (contrôle étatique)
-    "q87": 2, // innovations numériques = société plus connectée → plutôt d’accord si contrôlé
     "q88": 1, // technologies émergentes sans entrave → plutôt d’accord si au service du plan
     "q93": 2, // éviter maladies via génétique → plutôt oui
     "q95": 2, // exploration spatiale → plutôt oui (prestige national)
@@ -2331,6 +2391,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#003366",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non (ligne ultra-répressive RN)
+    "q100": 5, // taxer l'héritage → non (RN : faciliter la transmission familiale)
+    "q101": 2, // le profit sort de la pauvreté → plutôt oui (avec protectionnisme)
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 1, // revenu sans contrepartie rend passif → oui
 
     // --- PROPRIÉTÉ / ÉCONOMIE ---
     "q1": 5,  // salariés décident + partagent → plutôt contre
@@ -2389,13 +2456,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- VALEURS SOCIALES / CULTURE ---
     "q41": 1, // relativisme des règles → plutôt d’accord avec critique
-    "q42": 1, // famille/religion/nation → plutôt oui
     "q43": 1, // père + mère → plutôt oui
     "q44": 5, // visibiliser différence pour lutter discriminations → non
     "q45": 4, // abandon normes excluantes → plutôt non
     "q46": 5, // rôles genrés sociaux → plutôt non
     "q47": 6, // discriminations positives → rejet total
-    "q48": 1, // “se cacher derrière sa couleur” → plutôt d’accord
+    "q48": 0, // école : recentrer sur les fondamentaux → oui fort
     "q90": 5, // abolition exploitation animale → non
     "q92": 4, // libertés LGBTQ+ → plutôt pas
     "q99": 4, // politiques pro-égalité femmes/hommes → plutôt sceptique
@@ -2451,9 +2517,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3, // méfiance IA opaque → neutre
     "q83": 3, // manipulations génétiques → neutre
     "q84": 3, // réseaux sociaux dégradent débat → neutre
-    "q85": 3, // automatisation → neutre
     "q86": 3, // réguler technologie → neutre
-    "q87": 3, // numérique rend société plus connectée → neutre-positif
     "q88": 1, // tech sans entrave → plutôt oui si souveraineté respectée
     "q93": 2, // génétique pour éviter maladies → plutôt oui
     "q95": 3, // exploration spatiale → neutre
@@ -2467,6 +2531,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#A60000",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 2, // libéralisation des drogues → plutôt oui (LFI : légalisation encadrée du cannabis)
+    "q100": 0, // taxer l'héritage → oui fort (héritage maximum proposé)
+    "q101": 5, // le profit sort de la pauvreté → plutôt non
+    "q102": 2, // monde sans obligation de travailler → plutôt oui (réduction du temps de travail, émancipation)
+    "q103": 5, // revenu sans contrepartie rend passif → plutôt non (préfère la garantie d'emploi au revenu universel)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 0,  // salariés décident + partagent → oui
@@ -2525,13 +2596,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 4,  // punir incivilités vs comprendre causes sociales → plutôt non
-    "q42": 5,  // défendre famille traditionnelle/religion/nation → plutôt non
     "q43": 5,  // père+mère obligatoire → non
     "q44": 1,  // rendre visibles discriminations → oui
     "q45": 1,  // abandon normes excluantes → oui
     "q46": 1,  // genre = construction sociale → oui
     "q47": 1,  // discrimination positive → plutôt oui
-    "q48": 5,  // “on se cache derrière couleur de peau” → non
+    "q48": 6, // école : recentrer sur les fondamentaux → non
     "q90": 2,  // cause animale → plutôt oui
     "q92": 1,  // liberté totale LGBTQ+ → oui
     "q99": 1,  // actions fortes égalité femmes/hommes → oui
@@ -2587,9 +2657,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 2,  // méfiance IA opaque → plutôt oui
     "q83": 2,  // modification génétique → plutôt oui avec régulation
     "q84": 3,  // réseaux sociaux dégradent débat → neutre
-    "q85": 2,  // automatisation et chômage → plutôt oui
     "q86": 1,  // régulation stricte technologies → oui
-    "q87": 2,  // numérique participatif → plutôt oui
     "q88": 5,  // tech sans entraves → non
     "q93": 1,  // génétique pour éviter maladies → oui
     "q95": 3,  // exploration spatiale → neutre (pas priorité)
@@ -2604,6 +2672,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   isReference: true,
   answers: {
 
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 5, // libéralisation des drogues → plutôt non (amende forfaitaire, contre la légalisation)
+    "q100": 5, // taxer l'héritage → non (refus d'alourdir, « préférence pour le risque »)
+    "q101": 0, // le profit sort de la pauvreté → oui fort (startup nation)
+    "q102": 5, // monde sans obligation de travailler → non (« traverser la rue »)
+    "q103": 1, // revenu sans contrepartie rend passif → oui (responsabilisation)
+
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 4,  // salariés décident + partagent → plutôt non (management participatif limité)
     "q2": 3,  // accumulation logement → neutre (régulation Airbnb modérée)
@@ -2617,7 +2692,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q8": 4,  // privatiser santé/école → plutôt non
     "q9": 2,  // liberté hauts salaires → plutôt oui
     "q10": 5, // casser grands groupes → plutôt non
-    "q11": 1, // investissement public (transition, innovation) → oui
+    "q11": 5, // nationalisations → non (privatisations FDJ, tentative ADP)
     "q97": 2, // accessibilité bâtiments → plutôt oui
 
     // Finalité économie
@@ -2661,13 +2736,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 4,  // incivilités = perte d’autorité → plutôt non (lecture social-libérale)
-    "q42": 4,  // conserver famille/religion/nation → plutôt non (progressisme)
     "q43": 4,  // père+mère indispensables → plutôt non
     "q44": 2,  // rendre visibles discriminations → plutôt oui
     "q45": 2,  // abandon normes excluantes → plutôt oui
     "q46": 2,  // genre construction sociale → plutôt oui
     "q47": 3,  // discrimination positive → neutre/équilibré
-    "q48": 4,  // “se cacher derrière couleur peau” → plutôt non
+    "q48": 3, // école : fondamentaux → neutre (dédoublement CP + éducation à l'égalité)
     "q90": 4,  // abolition exploitation animale → plutôt non
     "q92": 1,  // droits LGBTQ+ → oui
     "q99": 2,  // actions égalité femmes/hommes → plutôt oui
@@ -2723,9 +2797,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3,  // IA opaque → neutre
     "q83": 2,  // génétique médicale → plutôt oui
     "q84": 3,  // réseaux sociaux → neutre
-    "q85": 3,  // automatisation → neutre
     "q86": 2,  // régulation tech → plutôt oui
-    "q87": 1,  // numérique = démocratie participative → oui (grand débat)
     "q88": 2,  // tech sans entraves → plutôt oui
     "q93": 1,  // éviter maladies via génétique → oui
     "q95": 2,  // exploration spatiale → plutôt oui (NewSpace)
@@ -2740,6 +2812,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   isReference: true,
   answers: {
 
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 5, // libéralisation des drogues → plutôt non
+    "q100": 5, // taxer l'héritage → non
+    "q101": 0, // le profit sort de la pauvreté → oui fort
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 1, // revenu sans contrepartie rend passif → oui
+
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 5,  // salariés décident/partagent → plutôt non
     "q2": 3,  // accumulation logements → neutre (lutte Airbnb légère)
@@ -2753,7 +2832,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q8": 5,  // privatiser santé/école → plutôt non mais ouverture gestion privée
     "q9": 1,  // liberté hauts salaires → oui
     "q10": 5, // casser grands groupes → non
-    "q11": 1, // investissements publics stratégiques → oui
+    "q11": 5, // nationalisations → non (ligne pro-marché constante)
     "q97": 2, // accessibilité → plutôt oui
 
     // Finalité économie : compétitivité
@@ -2797,13 +2876,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 2,  // incivilités = problème d’autorité → plutôt oui
-    "q42": 3,  // repères traditionnels → neutre
     "q43": 4,  // père+mère indispensables → plutôt non
     "q44": 3,  // rendre visibles discriminations → neutre
     "q45": 3,  // abandon normes excluantes → neutre
     "q46": 2,  // genre construction sociale → plutôt oui
     "q47": 4,  // discrimination positive → plutôt non
-    "q48": 4,  // “se cacher derrière couleur peau” → plutôt non
+    "q48": 2, // école : recentrer sur les fondamentaux → plutôt oui (droitisation, uniforme expérimenté)
     "q90": 4,  // abolition exploitation animale → plutôt non
     "q92": 2,  // libertés LGBTQ+ → oui
     "q99": 2,  // actions égalité femmes/hommes → plutôt oui
@@ -2859,9 +2937,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 3, // méfiance IA opaque → neutre
     "q83": 2, // génétique médicale → plutôt oui
     "q84": 3, // réseaux sociaux = problème → neutre
-    "q85": 3, // automatisation → neutre
     "q86": 3, // réguler technologie → neutre
-    "q87": 1, // numérique modernise démocratie → oui
     "q88": 1, // tech sans entraves → oui (innovation first)
     "q93": 1, // génétique pour éviter maladies → oui
     "q95": 1, // exploration spatiale → oui
@@ -2875,6 +2951,13 @@ export const referenceProfiles: ReferenceProfile[] = [
   color: "#222222",
   isReference: true,
   answers: {
+
+    // --- Recalibrage 2026-07 (questions ajoutées / recodées) ---
+    "q94": 6, // libéralisation des drogues → non
+    "q100": 6, // taxer l'héritage → non (transmission = civilisation)
+    "q101": 1, // le profit sort de la pauvreté → oui
+    "q102": 5, // monde sans obligation de travailler → non
+    "q103": 0, // revenu sans contrepartie rend passif → oui fort (rhétorique de l'assistanat)
 
     // --- PROPRIÉTÉ & ÉCONOMIE ---
     "q1": 6,  // salariés décident + partagent → non
@@ -2933,13 +3016,12 @@ export const referenceProfiles: ReferenceProfile[] = [
 
     // --- PROGRÈS SOCIÉTAL ---
     "q41": 1,  // incivilités = effondrement autorité → oui
-    "q42": 0,  // famille, nation, tradition → oui très fort
     "q43": 0,  // un père + une mère → oui
     "q44": 6,  // visibiliser minorités pour lutter discriminations → non total
     "q45": 6,  // abandon normes traditionnelles → non
     "q46": 6,  // genre = construction sociale → rejet total
     "q47": 6,  // discrimination positive → rejet
-    "q48": 0,  // “on se cache derrière couleur peau” → oui (rhétorique)
+    "q48": 0, // école : recentrer sur les fondamentaux → oui fort (thème central)
     "q90": 6,  // abolition domination animale → non
     "q92": 4,  // libertés LGBTQ+ → plutôt non
     "q99": 5,  // politiques égalité femmes/hommes → plutôt contre
@@ -2995,9 +3077,7 @@ export const referenceProfiles: ReferenceProfile[] = [
     "q82": 4, // méfiance IA opaque → plutôt non
     "q83": 2, // génétique médicale → plutôt oui
     "q84": 2, // réseaux sociaux → plutôt oui, outil culturel/identitaire
-    "q85": 3, // automatisation → neutre
     "q86": 3, // régulation tech → neutre
-    "q87": 3, // numérique pour démocratie → neutre
     "q88": 1, // tech sans entraves → oui
     "q93": 1, // génétique pour éviter maladies → oui
     "q95": 2, // exploration spatiale → plutôt oui (civilisation occidentale)

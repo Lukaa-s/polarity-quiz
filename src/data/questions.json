@@ -77,7 +77,7 @@
     "rightPole": "Libéralisme économique",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Pour les partisans de cette idée, des acteurs privés offriraient plus de choix, moins de files d'attente, et des services adaptés aux besoins. D'autres craignent qu'un tel modèle creuse les inégalités : selon l'OCDE, les pays où la santé est majoritairement privée connaissent souvent des écarts d'accès importants entre riches et pauvres."
+    "explanation": "Pour les partisans de cette idée, des acteurs privés offriraient plus de choix, moins de files d'attente, et des services adaptés aux besoins. D'autres craignent qu'un tel modèle creuse les inégalités d'accès aux soins et à l'éducation entre riches et pauvres."
   },
   {
     "id": "q9",
@@ -87,7 +87,7 @@
     "rightPole": "Libéralisme économique",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Certains considèrent que si un dirigeant assume les risques et les responsabilités, il est normal qu'il décide de sa rémunération. D'autres soulignent que l'écart de salaire moyen entre les PDG du CAC 40 et leurs employés dépasse 100 fois, ce qui interroge sur la justice de ces écarts."
+    "explanation": "Certains considèrent que si un dirigeant assume les risques et les responsabilités, il est normal qu'il décide de sa rémunération. D'autres soulignent que les écarts de salaire entre grands patrons et employés ont fortement augmenté, ce qui interroge sur la justice de ces écarts."
   },
   {
     "id": "q10",
@@ -111,13 +111,13 @@
   },
   {
     "id": "q12",
-    "text": "Devenir milliardaire suppose toujours d'avoir exploité le travail des autres.",
+    "text": "Les très grandes fortunes se construisent le plus souvent sur l'exploitation du travail des autres.",
     "axis": "Finalité de l'activité économique",
     "leftPole": "Anticapitalisme",
     "rightPole": "Capitalisme entrepreneurial",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "L'idée ici est qu'accumuler une fortune aussi immense ne peut se faire sans s'appuyer sur une main-d'œuvre sous-payée ou des rapports de force inéquitables. En 2023, les PDG des grandes entreprises américaines gagnaient en moyenne 344 fois plus que leurs employés, ce qui alimente ce type de critique."
+    "explanation": "L'idée ici est qu'accumuler une fortune immense se fait rarement sans s'appuyer sur le travail de nombreuses autres personnes, dans des rapports de force parfois inéquitables. D'autres estiment qu'une grande fortune peut récompenser une innovation ou une prise de risque qui a profité à tous."
   },
   {
     "id": "q13",
@@ -217,7 +217,7 @@
     "rightPole": "Étatisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Certains pensent qu'un pouvoir ne mérite l'obéissance que s'il reste contrôlable et temporaire, car toute autorité prolongée tend à s'imposer sans discussion. D'autres estiment qu'une société a besoin de figures stables pour fonctionner, même si elles ne sont pas remises en question à chaque instant"
+    "explanation": "Certains pensent qu'un pouvoir ne mérite l'obéissance que s'il reste contrôlable et temporaire, car toute autorité prolongée tend à s'imposer sans discussion. D'autres estiment qu'une société a besoin de figures stables pour fonctionner, même si elles ne sont pas remises en question à chaque instant."
   },
   {
     "id": "q23",
@@ -227,7 +227,7 @@
     "rightPole": "Étatisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Quand une crise frappe, beaucoup jugent qu'un centre de décision fort permet d'éviter le désordre et d'agir avec cohérence. Mais d'autres rappellent que ce type de pouvoir concentré peut manquer de transparence ou imposer des mesures contestables sans réel débat"
+    "explanation": "Quand une crise frappe, beaucoup jugent qu'un centre de décision fort permet d'éviter le désordre et d'agir avec cohérence. Mais d'autres rappellent que ce type de pouvoir concentré peut manquer de transparence ou imposer des mesures contestables sans réel débat."
   },
   {
     "id": "q24",
@@ -237,7 +237,7 @@
     "rightPole": "Étatisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Certaines personnes craignent que déléguer trop de responsabilités à un petit nombre crée des déséquilibres durables, voire des abus. À l'inverse, d'autres estiment qu'une direction resserrée peut faciliter l'efficacité et la vision à long terme, surtout en période d'incertitude"
+    "explanation": "Certaines personnes craignent que déléguer trop de responsabilités à un petit nombre crée des déséquilibres durables, voire des abus. À l'inverse, d'autres estiment qu'une direction resserrée peut faciliter l'efficacité et la vision à long terme, surtout en période d'incertitude."
   },
   {
     "id": "q25",
@@ -247,17 +247,17 @@
     "rightPole": "Étatisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Pour garantir l'ordre et la prévisibilité, certains préfèrent que les règles soient respectées même lorsqu'elles sont imparfaites. D'autres considèrent qu'accepter aveuglément des lois discutables revient à bloquer toute évolution ou justice"
+    "explanation": "Pour garantir l'ordre et la prévisibilité, certains préfèrent que les règles soient respectées même lorsqu'elles sont imparfaites. D'autres considèrent qu'accepter aveuglément des lois discutables revient à bloquer toute évolution ou justice."
   },
   {
     "id": "q26",
-    "text": "Sans chef ni règles claires, un groupe finit toujours par se paralyser ou se déchirer.",
+    "text": "Sans chef, un groupe finit toujours par se paralyser ou se déchirer.",
     "axis": "Organisation du pouvoir",
     "leftPole": "Anarchisme",
     "rightPole": "Étatisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Une structure sans chef ou sans règles peut favoriser l'égalité, mais elle risque aussi de ralentir ou de s'enliser. Pour cette raison, certains défendent l'utilité d'un minimum de coordination, tandis que d'autres misent sur l'autonomie collective"
+    "explanation": "Une structure sans chef peut favoriser l'égalité, mais certains estiment qu'elle risque de ralentir ou de s'enliser sans une direction claire. D'autres misent sur l'autonomie collective et des règles décidées en commun, sans hiérarchie."
   },
   {
     "id": "q27",
@@ -321,13 +321,13 @@
   },
   {
     "id": "q33",
-    "text": "Une société est mieux gouvernée par une minorité compétente et instruite que par la masse des citoyens.",
+    "text": "Les grandes décisions publiques sont mieux prises par des représentants entourés d'experts que par un vote direct des citoyens.",
     "axis": "Forme de démocratie",
     "leftPole": "Participationnisme",
     "rightPole": "Parlementarisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Cette vision élitiste considère que la plupart des citoyens n'ont ni le temps ni les connaissances pour juger des enjeux complexes, et qu'il est donc plus rationnel de laisser les décisions à une minorité instruite et capable."
+    "explanation": "Certains estiment que les citoyens n'ont pas toujours le temps ou l'information nécessaires pour trancher des enjeux complexes, et que des représentants qui s'appuient sur des experts décident mieux. D'autres jugent que ce raisonnement éloigne les décisions de ceux qu'elles concernent et sous-estime la capacité des citoyens à débattre et à trancher."
   },
   {
     "id": "q34",
@@ -341,7 +341,7 @@
   },
   {
     "id": "q35",
-    "text": "Interdire les grèves sauvages, les occupations d'usine ou les manifs non déclarées, c'est briser des mouvements qui ont souvent fait avancer les droits.",
+    "text": "Interdire les grèves sauvages, les occupations d'usine ou les manifestations non déclarées, c'est briser des mouvements qui ont souvent fait avancer les droits.",
     "axis": "Rapport au changement social",
     "leftPole": "Révolutionnisme",
     "rightPole": "Réformisme",
@@ -401,13 +401,13 @@
   },
   {
     "id": "q41",
-    "text": "À force de tout excuser au nom de la tolérance, l'insolence comme le refus des règles, on finit par abîmer le vivre-ensemble.",
+    "text": "Notre société est devenue trop tolérante envers les comportements qui enfreignent les règles communes.",
     "axis": "Vision du progrès sociétal",
     "leftPole": "Progressisme",
     "rightPole": "Conservatisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Cette position critique une tendance à justifier certains comportements au nom de la compréhension sociale ou culturelle, au risque d'affaiblir le respect des règles communes et l'idée d'une norme partagée."
+    "explanation": "Cette position estime qu'à trop justifier certains comportements au nom de la compréhension sociale ou culturelle, on affaiblit le respect des règles communes. D'autres jugent que ce discours exagère le phénomène et sert surtout à refuser les évolutions de la société."
   },
   {
     "id": "q43",
@@ -451,7 +451,7 @@
   },
   {
     "id": "q47",
-    "text": "Réserver un poste en priorité à une personne issue d'une minorité, même un peu moins qualifiée (quotas), peut se justifier.",
+    "text": "Des mesures de discrimination positive (quotas, priorité à l'embauche) peuvent se justifier pour corriger des inégalités.",
     "axis": "Vision du progrès sociétal",
     "leftPole": "Progressisme",
     "rightPole": "Conservatisme",
@@ -481,13 +481,13 @@
   },
   {
     "id": "q50",
-    "text": "Une majorité des migrants vient surtout pour profiter d'un système d'aide trop généreux.",
+    "text": "La France accorde trop d'aides sociales aux personnes immigrées récemment arrivées.",
     "axis": "Échelle de souveraineté",
     "leftPole": "Internationalisme",
     "rightPole": "Souverainisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Certains pensent qu'une politique trop accueillante incite aux abus et met en danger la cohésion sociale. D'autres rappellent que la plupart des migrants fuient des situations extrêmes et que l'accueil reste un devoir moral et humain."
+    "explanation": "Certains pensent qu'une politique d'aide trop généreuse incite aux abus et pèse sur les finances publiques. D'autres estiment que ces aides restent limitées, qu'elles répondent à des situations souvent précaires et que l'accueil digne est un devoir moral et humain."
   },
   {
     "id": "q51",
@@ -521,7 +521,7 @@
   },
   {
     "id": "q54",
-    "text": "Face au climat ou aux pandémies, il faudrait une autorité mondiale capable d'imposer ses décisions aux États, même contre leur gré.",
+    "text": "Face au climat ou aux pandémies, les États devraient accepter de se soumettre à des règles internationales contraignantes.",
     "axis": "Échelle de souveraineté",
     "leftPole": "Internationalisme",
     "rightPole": "Souverainisme",
@@ -531,13 +531,13 @@
   },
   {
     "id": "q55",
-    "text": "L'État ne devrait financer aucune religion : ni entretenir les églises, ni subventionner les fêtes religieuses comme Noël.",
+    "text": "L'État ne devrait consacrer aucun argent public au culte, pas même pour l'entretien des édifices religieux.",
     "axis": "Place du religieux dans la vie publique",
     "leftPole": "Laïcisme",
     "rightPole": "Spiritualisme politique",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Cette position défend une séparation stricte entre religion et sphère publique, y compris pour les fêtes, symboles ou monuments liés à une religion. D'autres estiment qu'il est légitime de préserver ces éléments pour leur valeur culturelle ou historique."
+    "explanation": "Cette position défend une séparation financière stricte entre l'État et les religions. D'autres rappellent que les communes entretiennent légalement les églises construites avant 1905 et estiment légitime de préserver ce patrimoine pour sa valeur culturelle ou historique."
   },
   {
     "id": "q56",
@@ -593,7 +593,7 @@
     "id": "q61",
     "text": "Il faut des peines plus sévères pour que la justice soit respectée.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "right",
     "weight": 1,
@@ -603,7 +603,7 @@
     "id": "q62",
     "text": "Quand les délits restent impunis, les gens recommencent : le sentiment d'impunité nourrit la violence.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "right",
     "weight": 1,
@@ -613,7 +613,7 @@
     "id": "q63",
     "text": "Certains crimes devraient être punis sans aucune possibilité de remise de peine.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "right",
     "weight": 1,
@@ -623,7 +623,7 @@
     "id": "q64",
     "text": "Un procès remplit son rôle dès lors que la victime est entendue et l'auteur reconnaît ses torts, même sans peine lourde.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "left",
     "weight": 1,
@@ -633,7 +633,7 @@
     "id": "q65",
     "text": "Un système judiciaire qui ne réinsère pas échoue dans sa mission.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "left",
     "weight": 1,
@@ -643,7 +643,7 @@
     "id": "q66",
     "text": "Un violeur récidiviste ne mérite pas qu'on parle de \"réinsertion\", il doit être enfermé à vie.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "right",
     "weight": 1,
@@ -653,7 +653,7 @@
     "id": "q67",
     "text": "La prison transforme souvent les détenus en criminels plus endurcis qu'à leur entrée.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "left",
     "weight": 1,
@@ -663,7 +663,7 @@
     "id": "q68",
     "text": "Pour la plupart des délits, les peines alternatives (travail d'intérêt général, thérapie, réparation) devraient remplacer la prison.",
     "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
+    "leftPole": "Justice réparatrice",
     "rightPole": "Pénalisme répressif",
     "favoredPole": "left",
     "weight": 1,
@@ -711,13 +711,13 @@
   },
   {
     "id": "q73",
-    "text": "Demander aux gens de moins consommer ou moins voyager pour le climat, c'est culpabiliser pour rien : ça ne change quasiment rien.",
+    "text": "Réduire notre confort de vie (voiture, avion, viande) n'est pas nécessaire pour répondre à la crise climatique.",
     "axis": "Modèle écologique",
     "leftPole": "Écologisme radical",
     "rightPole": "Productivisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Cette position estime que les efforts individuels (moins consommer, moins voyager) ont un impact marginal face aux émissions des grandes industries et des États. La culpabilisation des citoyens serait une diversion. D'autres pensent que les comportements individuels comptent et que tout le monde doit contribuer à l'effort collectif."
+    "explanation": "Cette position estime que l'innovation et l'organisation de la production permettront de répondre à la crise climatique sans renoncer à notre confort. D'autres pensent qu'une réduction réelle des consommations les plus émettrices sera inévitable, qu'elle soit choisie individuellement ou organisée collectivement."
   },
   {
     "id": "q74",
@@ -733,8 +733,8 @@
     "id": "q75",
     "text": "Surveiller les communications privées est indispensable pour empêcher les actes terroristes.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Cette position considère que la sécurité collective passe avant la confidentialité individuelle, et que les mesures de surveillance protègent la population. D'autres estiment que le respect de la vie privée est un droit fondamental qui ne doit pas être sacrifié, même pour la sécurité."
@@ -743,8 +743,8 @@
     "id": "q76a",
     "text": "La liberté d'expression, c'est aussi le droit de blasphémer, de caricaturer ou de choquer, même quand ça met mal à l'aise.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "left",
     "weight": 1,
     "explanation": "Cette idée défend un droit absolu à s'exprimer sans censure, même si cela offense. D'autres jugent que les propos insultants peuvent nuire à la cohésion sociale et doivent être encadrés."
@@ -753,8 +753,8 @@
     "id": "q76b",
     "text": "La diffusion de fausses informations doit être limitée, quitte à restreindre un peu la liberté d'expression.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Ce point de vue considère que limiter la désinformation est nécessaire pour éviter la manipulation et la confusion. D'autres estiment que même les idées erronées doivent pouvoir circuler pour préserver la liberté d'opinion."
@@ -763,8 +763,8 @@
     "id": "q77",
     "text": "Multiplier les contrôles d'identité dans les transports et les lieux publics est une bonne chose, même si cela pèse sur la liberté de circuler.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Cette idée affirme que ces contrôles peuvent prévenir les délits et rassurer la population. D'autres estiment que ces pratiques portent atteinte à la liberté de circulation et risquent de stigmatiser certains groupes."
@@ -773,8 +773,8 @@
     "id": "q78",
     "text": "La police doit pouvoir utiliser la force plus librement pour maintenir l'ordre.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Cette position soutient que la fermeté est nécessaire pour éviter le chaos et assurer la sécurité publique. D'autres considèrent que le recours excessif à la force peut conduire à des abus et à une perte de confiance envers les institutions."
@@ -783,8 +783,8 @@
     "id": "q79",
     "text": "Filmer en permanence l'espace public par vidéosurveillance est souhaitable, même au prix de notre vie privée.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Pour certains, une surveillance permanente de l'espace public est une avancée souhaitable : elle dissuade les actes criminels et facilite les enquêtes. D'autres estiment que la vie privée est un droit fondamental qui ne devrait pas être sacrifié au nom de la sécurité."
@@ -793,8 +793,8 @@
     "id": "q80",
     "text": "L'état d'urgence doit pouvoir suspendre temporairement certaines libertés pour faire face à une menace grave.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "right",
     "weight": 1,
     "explanation": "Certains pensent que dans des situations exceptionnelles, des mesures restrictives sont justifiées pour protéger la population. D'autres craignent que cela ouvre la porte à des dérives autoritaires et à la remise en cause durable des droits."
@@ -865,7 +865,7 @@
     "axis": "Modèle écologique",
     "leftPole": "Écologisme radical",
     "rightPole": "Productivisme",
-    "favoredPole": "left",
+    "favoredPole": "right",
     "weight": 0,
     "explanation": "Certains estiment que le nucléaire est indispensable pour produire de l'électricité bas carbone, de manière stable et à grande échelle. D'autres rappellent les risques d'accidents, les déchets à très longue durée de vie, et les coûts élevés de cette technologie."
   },
@@ -887,7 +887,7 @@
     "rightPole": "Souverainisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Certain·es défendent le projet européen comme un cadre de coopération dépassant les intérêts nationaux. D'autres le critiquent comme une perte de souveraineté, ou une entité technocratique éloignée des peuples."
+    "explanation": "Certains défendent le projet européen comme un cadre de coopération dépassant les intérêts nationaux. D'autres le critiquent comme une perte de souveraineté, ou une entité technocratique éloignée des peuples."
   },
   {
     "id": "q92",
@@ -897,7 +897,7 @@
     "rightPole": "Conservatisme",
     "favoredPole": "left",
     "weight": 0.5,
-    "explanation": "Certain·es estiment que la pleine reconnaissance des droits et identités LGBTQ+ est non négociable. D'autres peuvent défendre une vision plus traditionnelle de la société ou accorder des droits avec réserve."
+    "explanation": "Certains estiment que la pleine reconnaissance des droits et identités LGBTQ+ est non négociable. D'autres peuvent défendre une vision plus traditionnelle de la société ou accorder des droits avec réserve."
   },
   {
     "id": "q93",
@@ -907,17 +907,17 @@
     "rightPole": "Techno-optimisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Certain·es estiment que la médecine moderne devrait prévenir certaines souffrances à la racine. D'autres craignent une dérive eugéniste qui réduirait la diversité humaine à des normes médicales ou sociales."
+    "explanation": "Certains estiment que la médecine moderne devrait prévenir certaines souffrances à la racine. D'autres craignent une dérive eugéniste qui réduirait la diversité humaine à des normes médicales ou sociales."
   },
   {
     "id": "q94",
     "text": "Chaque adulte devrait être libre de consommer la drogue de son choix ; ce n'est pas à l'État de l'interdire.",
     "axis": "Équilibre entre liberté et sécurité",
-    "leftPole": "Libertarisme",
-    "rightPole": "Securitarisme",
+    "leftPole": "Défense des libertés",
+    "rightPole": "Sécuritarisme",
     "favoredPole": "left",
     "weight": 0.2,
-    "explanation": "Certain·es estiment que chacun·e doit pouvoir disposer librement de son corps, sans que l'État n'intervienne. D'autres jugent qu'une telle liberté mènerait à des abus, nuirait à la santé publique et affaiblirait le cadre social."
+    "explanation": "Certains estiment que chacun doit pouvoir disposer librement de son corps, sans que l'État n'intervienne. D'autres jugent qu'une telle liberté mènerait à des abus, nuirait à la santé publique et affaiblirait le cadre social."
   },
   {
     "id": "q95",
@@ -927,7 +927,7 @@
     "rightPole": "Techno-optimisme",
     "favoredPole": "right",
     "weight": 0.3,
-    "explanation": "Certain·es estiment qu'il faut préparer l'avenir, quitte à viser au-delà de la Terre. D'autres jugent prioritaire de concentrer les ressources sur les urgences terrestres."
+    "explanation": "Certains estiment qu'il faut préparer l'avenir, quitte à viser au-delà de la Terre. D'autres jugent prioritaire de concentrer les ressources sur les urgences terrestres."
   },
   {
     "id": "q96",
@@ -937,7 +937,7 @@
     "rightPole": "Techno-optimisme",
     "favoredPole": "right",
     "weight": 0.3,
-    "explanation": "Certain·es pensent que les décisions collectives devraient s'appuyer uniquement sur des données objectives. D'autres jugent qu'il faut aussi tenir compte de l'histoire, des affects et des sensibilités culturelles."
+    "explanation": "Certains pensent que les décisions collectives devraient s'appuyer uniquement sur des données objectives. D'autres jugent qu'il faut aussi tenir compte de l'histoire, des affects et des sensibilités culturelles."
   },
   {
     "id": "q97",
@@ -952,9 +952,9 @@
   {
     "id": "q98",
     "text": "Les sanctions pour cruauté animale devraient être équivalentes à celles prévues pour des violences contre des humains.",
-    "axis": "Objectif du système judiciaire",
-    "leftPole": "Justicialisme réparateur",
-    "rightPole": "Pénalisme répressif",
+    "axis": "Vision du progrès sociétal",
+    "leftPole": "Progressisme",
+    "rightPole": "Conservatisme",
     "favoredPole": "left",
     "weight": 0.2,
     "explanation": "Certains veulent renforcer la protection juridique des animaux au même niveau que celle des humains ; d'autres considèrent que cette égalité de traitement est excessive."

@@ -1,6 +1,10 @@
 // src/components/QuestionEnhanced.tsx
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+/* Hallmark · component: réponse Likert 7 points · genre: editorial · theme: Scrutin
+ * states: default · hover · focus-visible · active · disabled · selected
+ * échelle: intensité d'encre (pas de teinte : valence, daltonisme, rouge=gauche réservé)
+ */
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 export type QuestionProps = {
   question: { id: string; text: string; explanation?: string };
@@ -9,29 +13,17 @@ export type QuestionProps = {
   onRestart?: () => void;
   currentIndex: number;
   total: number;
+  /** Index de la réponse déjà donnée pour cette question (0-6), ou null si non répondue. */
+  answeredIdx?: number | null;
 };
 
-// Échelle divergente accord → désaccord. Tons assourdis (terreux, papier) pour
-// rester éditorial. Neutre central en stone chaud, jamais bleuté.
-const BTN_BG = [
-  "#3F6F47", // +++ vert profond mat
-  "#6E9A6E", // ++ vert moyen mat
-  "#AEC4A6", // + vert pâle
-  "#D8D2C4", // 0 neutre, stone (papier)
-  "#D8B3A8", // - terracotta pâle
-  "#B5685E", // -- brique mat
-  "#9C3B33", // --- rouge brique profond
-] as const;
-
-const BTN_TEXT = [
-  "#F6F3EC", // sur vert profond
-  "#23201A", // sur vert moyen → encre
-  "#23201A", // sur vert pâle → encre
-  "#23201A", // neutre → encre
-  "#23201A", // sur terracotta pâle → encre
-  "#F6F3EC", // sur brique
-  "#F6F3EC", // sur rouge brique
-] as const;
+// Échelle divergente accord → désaccord : l'INTENSITÉ est portée par la densité
+// d'encre du marqueur (symétrique autour du neutre creux), la DIRECTION par la
+// position et le libellé. Aucune teinte : le vert/rouge portait un jugement
+// (bien/mal), excluait les daltoniens, et le rouge est réservé au pôle gauche.
+const MARKER_ALPHA = [1, 0.68, 0.4, 0, 0.4, 0.68, 1] as const;
+const INK = "35, 32, 26"; // --color-ink
+const PAPER = "246, 243, 236"; // --color-paper
 
 export default function QuestionEnhanced({
   question,
@@ -40,27 +32,63 @@ export default function QuestionEnhanced({
   onRestart,
   currentIndex,
   total,
+  answeredIdx = null,
 }: QuestionProps) {
+  const reduceMotion = useReducedMotion();
   const [showExplanation, setShowExplanation] = useState(false);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(answeredIdx);
+  // Transition en cours (délai d'animation avant de passer à la question suivante) :
+  // distinct de la pré-sélection, qui elle doit rester modifiable.
+  const [isAdvancing, setIsAdvancing] = useState(false);
+  const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const isFirstQuestionRender = useRef(true);
 
-  // Reset animation when question changes
+  // Reset (et pré-sélection de la réponse déjà donnée) quand la question change.
+  // Annule aussi tout timeout de transition en attente pour éviter une navigation fantôme.
   useEffect(() => {
-    setSelectedIdx(null);
+    setSelectedIdx(answeredIdx);
     setShowExplanation(false);
+    setIsAdvancing(false);
+
+    // Ramène le focus sur l'énoncé à chaque nouvelle question : sans ça, un
+    // utilisateur clavier repart du haut du document 101 fois de suite.
+    if (isFirstQuestionRender.current) {
+      isFirstQuestionRender.current = false;
+    } else {
+      titleRef.current?.focus();
+    }
+
+    return () => {
+      if (advanceTimeoutRef.current) {
+        clearTimeout(advanceTimeoutRef.current);
+        advanceTimeoutRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question.id]);
 
   const handleRestart = () => {
+    if (isAdvancing) return;
+    const confirmed = window.confirm(
+      "Recommencer effacera toutes vos réponses. Voulez-vous vraiment repartir de zéro ?"
+    );
+    if (!confirmed) return;
     if (onRestart) onRestart();
     else window.location.reload();
   };
 
   const handleAnswer = (idx: number) => {
     setSelectedIdx(idx);
-    // Petit délai pour l'animation
-    setTimeout(() => {
+    setIsAdvancing(true);
+    if (advanceTimeoutRef.current) {
+      clearTimeout(advanceTimeoutRef.current);
+    }
+    // Petit délai pour l'animation (raccourci quand le mouvement est réduit)
+    advanceTimeoutRef.current = setTimeout(() => {
+      advanceTimeoutRef.current = null;
       onAnswer(question.id, idx);
-    }, 300);
+    }, reduceMotion ? 120 : 300);
   };
 
   const choices = [
@@ -77,13 +105,18 @@ export default function QuestionEnhanced({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
+      exit={reduceMotion ? undefined : { opacity: 0, y: -20 }}
+      transition={{ duration: reduceMotion ? 0 : 0.3 }}
       className="w-full px-3 sm:px-4 lg:px-6 py-4"
     >
       <div className="mx-auto w-full max-w-2xl md:max-w-3xl">
+        {/* Annonce de progression pour les lecteurs d'écran */}
+        <div aria-live="polite" className="sr-only">
+          Question {currentIndex + 1} sur {total}
+        </div>
+
         {/* En-tête : index éditorial + reprise */}
         <div className="flex items-center justify-between gap-3 mb-6">
           <div className="flex items-baseline gap-2.5">
@@ -95,50 +128,72 @@ export default function QuestionEnhanced({
           </div>
           <button
             onClick={handleRestart}
-            className="text-xs sm:text-sm text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
+            disabled={isAdvancing}
+            className="text-xs sm:text-sm text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-ink2 disabled:hover:decoration-rule focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
           >
             Recommencer
           </button>
         </div>
 
-        {/* Énoncé (grotesque, pas de serif sur les questions) */}
+        {/* Énoncé (grotesque, pas de serif sur les questions).
+            tabIndex=-1 : cible du focus programmatique à chaque nouvelle question. */}
         <motion.h2
-          initial={{ opacity: 0, y: 8 }}
+          ref={titleRef}
+          id="question-title"
+          tabIndex={-1}
+          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="font-body text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug mb-8 text-ink [text-wrap:balance]"
+          transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="font-body text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug mb-8 text-ink [text-wrap:balance] outline-none"
         >
           {question.text}
         </motion.h2>
 
-        {/* Choix avec animations */}
-        <div className="flex flex-col gap-2.5 mb-6">
+        {/* Choix : rampe d'intensité d'encre, direction portée par position + libellé */}
+        <div role="group" aria-labelledby="question-title" className="flex flex-col gap-2.5 mb-6">
           {choices.map((label, idx) => {
             const isSelected = selectedIdx === idx;
             const isDimmed = selectedIdx !== null && selectedIdx !== idx;
+            const alpha = MARKER_ALPHA[idx];
+            const markerRgb = isSelected ? PAPER : INK;
             return (
               <motion.button
                 key={idx}
-                initial={{ opacity: 0, y: 6 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 6 }}
                 animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
-                transition={{ duration: 0.22, delay: selectedIdx === null ? 0.035 * idx : 0, ease: [0.16, 1, 0.3, 1] }}
-                onClick={() => handleAnswer(idx)}
-                disabled={selectedIdx !== null}
-                className={`group relative flex w-full items-center justify-between gap-3 text-left rounded-[5px] min-h-14 px-4 py-3 font-medium transition-[filter,box-shadow] duration-150
-                  ${isSelected ? "ring-2 ring-inset ring-ink" : "hover:brightness-[0.96]"}
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink
-                `}
-                style={{
-                  backgroundColor: BTN_BG[idx],
-                  color: BTN_TEXT[idx],
+                transition={{
+                  duration: reduceMotion ? 0 : 0.22,
+                  delay: reduceMotion || selectedIdx !== null ? 0 : 0.035 * idx,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
+                onClick={() => handleAnswer(idx)}
+                disabled={isAdvancing}
+                aria-pressed={isSelected}
+                className={`group relative flex w-full items-center gap-3 text-left rounded-[5px] min-h-14 px-4 py-3 font-medium border transition-colors duration-150
+                  ${
+                    isSelected
+                      ? "bg-ink text-paper border-ink"
+                      : "bg-paper text-ink border-rule hover:bg-paper3 active:translate-y-px"
+                  }
+                  disabled:cursor-not-allowed
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink
+                `}
               >
-                <span>{label}</span>
+                <span
+                  aria-hidden="true"
+                  className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+                  style={
+                    alpha === 0
+                      ? { border: `1.5px solid rgba(${markerRgb}, 0.55)` }
+                      : { backgroundColor: `rgba(${markerRgb}, ${alpha})` }
+                  }
+                />
+                <span className="flex-1">{label}</span>
                 {isSelected && (
                   <motion.svg
-                    initial={{ scale: 0.6, opacity: 0 }}
+                    initial={reduceMotion ? false : { scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
                     className="h-5 w-5 shrink-0"
                     viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}
                     aria-hidden="true"
@@ -153,14 +208,14 @@ export default function QuestionEnhanced({
 
         {/* Navigation + explication */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: reduceMotion ? 0 : 0.35 }}
           className="flex flex-wrap gap-3 items-center justify-between"
         >
           <button
             onClick={onBack}
-            disabled={currentIndex === 0}
+            disabled={currentIndex === 0 || isAdvancing}
             className="btn-outline px-4 py-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
           >
             ← Précédent
@@ -189,10 +244,10 @@ export default function QuestionEnhanced({
           {showExplanation && question.explanation && (
             <motion.div
               id="q-explanation"
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              initial={reduceMotion ? false : { opacity: 0, height: 0, marginTop: 0 }}
               animate={{ opacity: 1, height: "auto", marginTop: 12 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.3 }}
               className="overflow-hidden"
             >
               <div className="p-4 rounded-[4px] border-l-2 border-ink bg-paper3 text-ink2 text-sm leading-relaxed">

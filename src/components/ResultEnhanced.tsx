@@ -201,11 +201,20 @@ export default function ResultEnhanced({
   const [selectedPoliticalProfile, setSelectedPoliticalProfile] = useState<string | null>(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [saveName, setSaveName] = useState("");
+  const [profileSaved, setProfileSaved] = useState(false);
+  // Badge dont la description est dépliée (tap/clic : le survol seul excluait le mobile)
+  const [expandedBadgeId, setExpandedBadgeId] = useState<string | null>(null);
 
-  // ordre stable des axes - en mode explorateur, on utilise tous les axes
+  // Ordre stable des axes (sortIndex), scores toujours consultés par id d'axe.
+  // En mode explorateur, on utilise tous les axes.
+  const sortedAxisDefs = useMemo(
+    () => [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex),
+    []
+  );
   const axes = explorerMode
-    ? ideologicalAxes.map((a) => a.axis)
-    : ideologicalAxes.map((a) => a.axis).filter((a) => poleScores[a]);
+    ? sortedAxisDefs
+    : sortedAxisDefs.filter((a) => poleScores[a.id]);
 
   const axisLabelMap = useMemo(
     () =>
@@ -218,18 +227,16 @@ export default function ResultEnhanced({
     []
   );
 
-  // Données radar pour l'utilisateur (seulement en mode normal)
-  const radarData = useMemo(() => {
-    if (explorerMode) return []; // Pas utilisé en mode explorateur
-    return axes.map((axis) => {
-      const axisScore = poleScores[axis];
-      if (!axisScore) return { axis, pctLeft: 0 };
-      const { left, right } = axisScore;
-      const total = left + right || 1;
-      const pctLeft = Math.round((left / total) * 100);
-      return { axis, pctLeft };
-    });
-  }, [axes, poleScores, explorerMode]);
+  // Sauvegarder les réponses courantes comme profil local (localStorage)
+  const handleSaveCurrentProfile = () => {
+    const name = saveName.trim();
+    if (!name) return;
+    saveProfile({ name, answers: currentAnswers });
+    setSavedProfiles(listProfiles());
+    setSaveName("");
+    setProfileSaved(true);
+    setTimeout(() => setProfileSaved(false), 2000);
+  };
 
   // Supprimer un profil
   const handleDeleteProfile = (id: string) => {
@@ -297,7 +304,7 @@ export default function ResultEnhanced({
         originalStyles.push({ element: htmlEl, style: htmlEl.style.cssText });
         // Désactiver backdrop-filter qui cause des problèmes avec html2canvas
         htmlEl.style.backdropFilter = 'none';
-        htmlEl.style.webkitBackdropFilter = 'none';
+        (htmlEl.style as CSSStyleDeclaration & { webkitBackdropFilter?: string }).webkitBackdropFilter = 'none';
       });
 
       const canvas = await html2canvas(element, {
@@ -456,80 +463,48 @@ export default function ResultEnhanced({
     return "Opposé";
   };
 
-  // Calcul de distance avec récompense des accords forts
-  const calculateDistance = (profile: SavedProfile): number => {
+  // Distance = écart moyen (en points de %) entre les positions de l'utilisateur
+  // et celles du profil, sur chaque axe. Similarité affichée = 100 - distance.
+  // Volontairement sans bonus/malus : le score reste interprétable.
+  const calculateDistance = (profile: { answers: Record<string, number> }): number => {
     const profileScores = calculatePoleScores(profile.answers, questions);
-    let totalSimilarity = 0; // On calcule une similarité (0-100)
-    let strongAgreements = 0; // Compteur d'accords forts
+    let totalDiff = 0;
     let count = 0;
 
-    axes.forEach((axis) => {
-      const user = poleScores[axis];
-      const ref = profileScores[axis];
+    axes.forEach((a) => {
+      const user = poleScores[a.id];
+      const ref = profileScores[a.id];
       if (user && ref) {
         const userPct = (user.left / (user.left + user.right || 1)) * 100;
         const refPct = (ref.left / (ref.left + ref.right || 1)) * 100;
-
-        // Distance brute sur cet axe (0-100)
-        const axisDiff = Math.abs(userPct - refPct);
-
-        // Similarité de base sur cet axe (100 = identique, 0 = opposé)
-        let axisSimilarity = 100 - axisDiff;
-
-        // Détecter si les deux sont dans le même camp ET avec position forte (>60% ou <40%)
-        const userIsLeft = userPct > 60;
-        const userIsRight = userPct < 40;
-        const refIsLeft = refPct > 60;
-        const refIsRight = refPct < 40;
-
-        // Bonus si accord fort (même camp + positions tranchées)
-        if ((userIsLeft && refIsLeft) || (userIsRight && refIsRight)) {
-          strongAgreements++;
-          // Augmenter la similarité de 15% (bonus pour accord fort)
-          axisSimilarity = Math.min(100, axisSimilarity * 1.15);
-        } else if ((userIsLeft && refIsRight) || (userIsRight && refIsLeft)) {
-          // Pénalité si opposition forte (camps opposés)
-          // Réduire la similarité de 30%
-          axisSimilarity = axisSimilarity * 0.7;
-        }
-        // Si au moins un est centriste, pas de modification
-
-        totalSimilarity += axisSimilarity;
+        totalDiff += Math.abs(userPct - refPct);
         count++;
       }
     });
 
-    if (count === 0) return 0;
-
-    // Similarité moyenne (0-100)
-    let avgSimilarity = totalSimilarity / count;
-
-    // Bonus global basé sur le nombre d'accords forts
-    // Chaque accord fort ajoute 1% de similarité finale
-    const agreementBonus = (strongAgreements / count) * 5; // Max 5% si tous les axes sont des accords forts
-
-    avgSimilarity = Math.min(100, avgSimilarity + agreementBonus);
-
-    // On retourne la DISTANCE (100 - similarité) pour garder la compatibilité
-    return Math.max(0, 100 - avgSimilarity);
+    if (count === 0) return 100;
+    return totalDiff / count;
   };
 
-  // Profils de référence triés par proximité (seulement en mode normal)
+  // Profils de référence triés par proximité (seulement en mode normal).
+  // Les profils historiques marqués excludeFromMatching (ex. régimes totalitaires)
+  // restent consultables dans l'annuaire mais sont exclus du classement.
   const sortedReferenceProfiles = useMemo(() => {
     if (explorerMode) return []; // Pas utilisé en mode explorateur
-    return [...referenceProfiles]
+    return referenceProfiles
+      .filter((p) => !p.excludeFromMatching)
       .map((p) => ({ ...p, distance: calculateDistance(p) }))
       .sort((a, b) => a.distance - b.distance);
-  }, [poleScores, explorerMode]);
+  }, [poleScores, explorerMode, questions]);
 
   // Données radar avec profils sélectionnés
   const multiRadarData = useMemo(() => {
-    const data = axes.map((axis) => {
-      const result: any = { axis };
+    const data = axes.map((a) => {
+      const result: Record<string, string | number> = { axis: a.axis };
 
       // Ajouter "Vous" seulement si on n'est pas en mode explorateur
-      if (!explorerMode && poleScores[axis]) {
-        const { left, right } = poleScores[axis];
+      if (!explorerMode && poleScores[a.id]) {
+        const { left, right } = poleScores[a.id];
         const total = left + right || 1;
         result.Vous = Math.round((left / total) * 100);
       }
@@ -540,7 +515,7 @@ export default function ResultEnhanced({
         );
         if (profile) {
           const profileScores = calculatePoleScores(profile.answers, questions);
-          const axisScore = profileScores[axis];
+          const axisScore = profileScores[a.id];
           if (axisScore) {
             const axisTotal = axisScore.left + axisScore.right || 1;
             result[profile.name] = Math.round((axisScore.left / axisTotal) * 100);
@@ -551,7 +526,7 @@ export default function ResultEnhanced({
       return result;
     });
     return data;
-  }, [selectedProfiles, poleScores, savedProfiles, explorerMode, axes]);
+  }, [selectedProfiles, poleScores, savedProfiles, explorerMode, axes, questions]);
 
   const profileColors = useMemo(() => {
     const colors: Record<string, string> = {};
@@ -767,7 +742,11 @@ export default function ResultEnhanced({
             <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
               Vos 3 personnalités les plus proches
             </h3>
-            <div className="rule mb-4 mt-3" />
+            <div className="rule mb-3 mt-3" />
+            <p className="text-xs text-ink2 leading-normal mb-4">
+              Score fondé sur l'écart moyen entre vos positions et les siennes, axe par axe.
+              Ce n'est pas une mesure scientifique exacte.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-rule border border-rule rounded-md overflow-hidden">
               {sortedReferenceProfiles.slice(0, 3).map((profile, idx) => {
                 const similarity = Math.round(100 - profile.distance);
@@ -812,31 +791,22 @@ export default function ResultEnhanced({
                         </div>
                       </div>
                     </div>
-                    {/* Tooltip explicative au survol (desktop uniquement) */}
-                    <div className="hidden sm:block absolute -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-paper text-ink text-xs rounded-[4px] px-3 py-2 whitespace-nowrap shadow-lg border border-ink/15 z-10">
-                      Ce score reflète la compatibilité de vos positions politiques.
-                      <br />
-                      Ce n'est pas une mesure scientifique exacte.
-                    </div>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {axes.map((axis, idx) => {
-            const { left, right } = poleScores[axis];
+          {axes.map((a, idx) => {
+            const { left, right } = poleScores[a.id];
             const total = left + right || 1;
             const pctLeft = Math.round((left / total) * 100);
             const pctRight = 100 - pctLeft;
-            const labels = axisLabelMap.get(axis) ?? {
-              left: "Gauche",
-              right: "Droite",
-            };
+            const labels = { left: a.left.label, right: a.right.label };
 
             return (
               <div
-                key={axis}
+                key={a.id}
                 className="space-y-2 py-3 mb-2 border-b border-rule last:border-b-0"
                 style={{
                   animation: disableAnimations ? 'none' : `slideIn 0.3s ease-out ${idx * 0.05}s both`,
@@ -870,7 +840,7 @@ export default function ResultEnhanced({
                 </div>
 
                 <div className="text-center text-xs text-ink2 leading-relaxed pb-1">
-                  {axis}
+                  {a.axis}
                 </div>
               </div>
             );
@@ -878,43 +848,51 @@ export default function ResultEnhanced({
 
           {/* Badges */}
           <div className="mt-10 pt-8 border-t border-rule">
-            <h2 className="text-lg sm:text-xl font-semibold mb-5 text-center text-ink">
+            <h2 className="text-lg sm:text-xl font-semibold mb-1 text-center text-ink">
               Badges obtenus
             </h2>
+            <p className="text-xs text-ink2 text-center mb-5">
+              Touchez un badge pour afficher sa signification.
+            </p>
 
             {badges.length === 0 ? (
               <p className="text-center text-sm text-ink2 py-8 bg-paper2 rounded-md border border-rule">
                 Aucun badge pour l'instant. Réessaie avec d'autres réponses.
               </p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 place-items-center">
-                {badges.map((badge, idx) => (
-                  <div
-                    key={badge.id}
-                    className="relative group flex flex-col items-center"
-                    title={badge.description}
-                    style={{
-                      animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
-                    }}
-                  >
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 group-hover:scale-105">
-                      <img
-                        src={badge.icon}
-                        alt={badge.label}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium leading-normal">
-                      {badge.label}
-                    </span>
-
-                    {/* Tooltip desktop */}
-                    <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-paper text-ink text-sm rounded-[4px] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-ink/15 shadow-xl">
-                      {badge.description}
-                    </div>
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 items-start justify-items-center">
+                {badges.map((badge, idx) => {
+                  const expanded = expandedBadgeId === badge.id;
+                  return (
+                    <button
+                      key={badge.id}
+                      type="button"
+                      onClick={() => setExpandedBadgeId(expanded ? null : badge.id)}
+                      aria-expanded={expanded}
+                      className="flex w-full flex-col items-center rounded-md p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                      style={{
+                        animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
+                      }}
+                    >
+                      <span className="block w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 hover:scale-105">
+                        <img
+                          src={badge.icon}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </span>
+                      <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium leading-normal">
+                        {badge.label}
+                      </span>
+                      {expanded && (
+                        <span className="mt-1 text-xs text-ink2 text-center leading-normal">
+                          {badge.description}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -993,6 +971,38 @@ export default function ResultEnhanced({
               })}
             </ul>
           </div>
+
+          {/* Sauvegarder son propre profil (stockage local uniquement) */}
+          {!explorerMode && (
+            <div className="bg-paper2 rounded-xl p-4 border border-rule">
+              <h4 className="text-xs font-semibold text-ink2 mb-3 uppercase tracking-[0.15em]">
+                Sauvegarder mon profil
+              </h4>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveCurrentProfile();
+                  }}
+                  placeholder="Nom du profil (ex. Moi)"
+                  maxLength={40}
+                  className="flex-1 rounded-md border border-rule bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink2/70 focus:outline-none focus:ring-2 focus:ring-ink"
+                />
+                <button
+                  onClick={handleSaveCurrentProfile}
+                  disabled={!saveName.trim()}
+                  className="btn-outline px-4 py-2 text-sm font-medium disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                >
+                  {profileSaved ? "Sauvegardé ✓" : "Sauvegarder"}
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-ink2">
+                Stocké uniquement dans votre navigateur, pour retrouver et comparer vos résultats dans le temps.
+              </p>
+            </div>
+          )}
 
           {/* Profils sauvegardés */}
           {savedProfiles.length > 0 && (
@@ -1157,7 +1167,6 @@ export default function ResultEnhanced({
 
                 const profileScores = calculatePoleScores(profile.answers, questions);
                 const profileBadges = evaluateBadges(profile.answers, questions, profileScores);
-                const sortedAxes = [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex);
 
                 return (
                   <div className="space-y-6">
@@ -1189,17 +1198,17 @@ export default function ResultEnhanced({
                     <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
                       <h3 className="text-xl font-bold mb-4 text-ink">Positions sur les axes</h3>
                       <div className="space-y-6">
-                        {sortedAxes.map((axisInfo) => {
-                          const axisScore = profileScores[axisInfo.axis];
+                        {sortedAxisDefs.map((axisInfo) => {
+                          const axisScore = profileScores[axisInfo.id];
                           if (!axisScore) return null;
 
                           const { left, right } = axisScore;
                           const total = left + right || 1;
                           const leftPct = Math.round((left / total) * 100);
-                          const rightPct = Math.round((right / total) * 100);
+                          const rightPct = 100 - leftPct;
 
                           return (
-                            <div key={axisInfo.axis} className="space-y-2">
+                            <div key={axisInfo.id} className="space-y-2">
                               <div className="flex justify-between items-baseline text-xs sm:text-sm">
                                 <span className="text-ink2">{axisInfo.left.label}</span>
                                 <span className="text-ink2">{axisInfo.right.label}</span>
@@ -1233,34 +1242,39 @@ export default function ResultEnhanced({
                         <h3 className="text-xl font-semibold mb-4 text-center text-ink">
                           Badges obtenus
                         </h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 place-items-center">
-                          {profileBadges.map((badge, idx) => (
-                            <div
-                              key={badge.id}
-                              className="relative group flex flex-col items-center"
-                              title={badge.description}
-                              style={{
-                                animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
-                              }}
-                            >
-                              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 group-hover:scale-105">
-                                <img
-                                  src={badge.icon}
-                                  alt={badge.label}
-                                  className="w-full h-full object-cover"
-                                  loading="lazy"
-                                />
-                              </div>
-                              <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium">
-                                {badge.label}
-                              </span>
-
-                              {/* Tooltip desktop */}
-                              <div className="pointer-events-none hidden md:block absolute bottom-full mb-3 w-56 px-3 py-2 bg-paper text-ink text-sm rounded-[4px] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 border border-ink/15 shadow-xl">
-                                {badge.description}
-                              </div>
-                            </div>
-                          ))}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 items-start justify-items-center">
+                          {profileBadges.map((badge, idx) => {
+                            const expanded = expandedBadgeId === badge.id;
+                            return (
+                              <button
+                                key={badge.id}
+                                type="button"
+                                onClick={() => setExpandedBadgeId(expanded ? null : badge.id)}
+                                aria-expanded={expanded}
+                                className="flex w-full flex-col items-center rounded-md p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                                style={{
+                                  animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
+                                }}
+                              >
+                                <span className="block w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 hover:scale-105">
+                                  <img
+                                    src={badge.icon}
+                                    alt=""
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                  />
+                                </span>
+                                <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium">
+                                  {badge.label}
+                                </span>
+                                {expanded && (
+                                  <span className="mt-1 text-xs text-ink2 text-center leading-normal">
+                                    {badge.description}
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
@@ -1296,8 +1310,7 @@ export default function ResultEnhanced({
             refléter toutes les nuances et contradictions qui composent une pensée politique réelle.
           </p>
 
-          {ideologicalAxes
-            .sort((a, b) => a.sortIndex - b.sortIndex)
+          {sortedAxisDefs
             .map(({ id, axis, question, left, right }, idx) => (
               <div
                 key={id}

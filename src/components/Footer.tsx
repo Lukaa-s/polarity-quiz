@@ -7,7 +7,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="text-center text-ink/60 text-xs py-6 border-t border-ink/10 mt-8">
+      <footer className="text-center text-ink/70 text-xs py-6 border-t border-ink/10 mt-8">
         <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={() => setShowLegal(true)}
@@ -23,7 +23,7 @@ export default function Footer() {
             Politique de confidentialité
           </button>
         </div>
-        <p className="mt-2 text-ink/40">
+        <p className="mt-2 text-ink/70">
           © {new Date().getFullYear()} Polarity Quiz - Tous droits réservés
         </p>
       </footer>
@@ -65,7 +65,7 @@ export default function Footer() {
                       polarityquiz@gmail.com
                     </a>
                   </p>
-                  <p className="text-xs text-ink/60 mt-2">
+                  <p className="text-xs text-ink/70 mt-2">
                   </p>
                 </div>
               </section>
@@ -74,12 +74,12 @@ export default function Footer() {
                 <h3 className="text-lg font-semibold text-ink mb-2">Hébergement</h3>
                 <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
                   <p className="mb-1">
-                    <strong>Hébergeur :</strong> [NOM DE L'HÉBERGEUR - ex: Vercel, Netlify, OVH]
+                    <strong>Hébergeur :</strong> Vercel Inc.
                   </p>
                   <p className="mb-1">
-                    <strong>Adresse :</strong> [ADRESSE DE L'HÉBERGEUR]
+                    <strong>Adresse :</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, USA
                   </p>
-                  <p className="text-xs text-ink/60 mt-2">
+                  <p className="text-xs text-ink/70 mt-2">
                   </p>
                 </div>
               </section>
@@ -154,17 +154,17 @@ export default function Footer() {
             <div className="space-y-6 text-ink/90 text-sm sm:text-base">
               <div className="bg-green-700/10 border border-green-500/30 rounded-lg p-4">
                 <p className="text-green-700 font-semibold mb-2">
-                  ✅ Votre vie privée est totalement respectée
+                  ✅ Votre vie privée est respectée
                 </p>
                 <p className="text-sm text-ink/80">
-                  Cette application ne collecte AUCUNE donnée personnelle et n'utilise AUCUN
-                  cookie de tracking.
+                  Aucune donnée personnelle n'est collectée. Seules des statistiques de
+                  fréquentation anonymes sont mesurées via GoatCounter, sans cookies.
                 </p>
               </div>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Données collectées : AUCUNE
+                  Données personnelles collectées : aucune
                 </h3>
                 <p className="leading-relaxed">
                   Cette application ne collecte, ne stocke et ne transmet <strong>aucune donnée
@@ -177,6 +177,11 @@ export default function Footer() {
                   <li>Pas de Google Analytics, Facebook Pixel ou autre outil de suivi</li>
                   <li>Pas de publicité ciblée</li>
                 </ul>
+                <p className="leading-relaxed mt-2 text-sm text-ink/80">
+                  Des statistiques de fréquentation anonymes et agrégées (pages vues, appareils,
+                  tests complétés) sont mesurées via GoatCounter — voir la section « Analyse
+                  d'audience » ci-dessous.
+                </p>
               </section>
 
               <section>
@@ -313,7 +318,7 @@ export default function Footer() {
                 </p>
               </section>
 
-              <div className="bg-ink/5 rounded-lg p-4 border border-ink/10 text-xs text-ink/60">
+              <div className="bg-ink/5 rounded-lg p-4 border border-ink/10 text-xs text-ink/70">
                 <p>
                   <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString("fr-FR")}
                 </p>

@@ -4,94 +4,78 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Polarity Quiz** is a political quiz application built with React, TypeScript, Vite, and Tailwind CSS. Users answer a series of political questions to discover their ideological position across multiple axes (e.g., progressivism vs. conservatism, interventionism vs. economic liberalism). Results are displayed as percentage breakdowns per axis, a radar chart visualization, and earned badges based on specific response patterns.
+**Polarity Quiz** is a French political quiz application built with React 18, TypeScript, Vite, and Tailwind CSS. Users answer 101 political questions to discover their ideological position across 14 axes. Results are displayed as percentage breakdowns per axis, a radar chart (recharts), earned badges, and a proximity ranking against 22 reference profiles of political figures.
 
 ## Development Commands
 
 ```bash
-# Start development server (with Vite HMR)
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build locally
-npm run preview
+npm run dev              # Vite dev server (HMR)
+npm run build            # Production build
+npm run preview          # Serve the production build locally
+npm run typecheck        # tsc --noEmit (strict)
+npm run test             # Vitest (data-sync test suite)
+npm run optimize:badges  # Re-compress src/badges/*.png via sharp (512px, ≤150 KB)
 ```
 
 ## Architecture
 
-### Core Flow
+### Core Flow (App.tsx)
 
-1. **Welcome Screen** (`App.tsx` lines 119-204): Hero section with test overview
-2. **Question Flow** (`App.tsx` lines 228-237): Sequential question display using `Question.tsx`
-3. **Results** (`App.tsx` lines 238-243): Shows axis scores, radar chart, and badges via `Result.tsx`
+1. **Welcome screen** — hero with PoleFaceoff, honest length notice ("101 questions · ~15 min"), and a "Reprendre le test" banner when an unfinished run exists in localStorage
+2. **Question flow** — sequential display via `QuestionEnhanced.tsx` (7-point ink-intensity Likert scale, focus management, aria-live progress)
+3. **Results** — `ResultEnhanced.tsx`, loaded via `React.lazy()` (recharts + html2canvas stay out of the initial bundle)
+
+`Question.tsx` and `Result.tsx` were removed (dead legacy versions) — only the `*Enhanced` components exist.
 
 ### Key State Management
 
-- **Daily Seed**: Questions are shuffled deterministically based on Paris timezone date (or URL `?seed=` param) using FNV-1a hash + Mulberry32 PRNG
-- **Answers**: Stored as `Record<string, number>` where key = question ID, value = 0-6 index (0 = "Tout à fait d'accord", 6 = "Pas du tout d'accord")
-- **Navigation**: `currentIndex` tracks progress, `submitted` determines if results are shown
+- **Daily seed**: questions are shuffled deterministically per Paris-timezone day (or `?seed=` URL param) using FNV-1a + Mulberry32. The shuffle only affects presentation order, never scoring.
+- **Answers**: `Record<string, number>` where key = question id, value = 0–6 (0 = "Tout à fait d'accord", 6 = "Pas du tout d'accord", 3 = neutral).
+- **Progress persistence**: answers are saved to localStorage under `pq_progress_v1` on every answer; cleared on submit and on voluntary restart. Resume repositions on the first unanswered question in the current day's order.
+- Shared-results URLs encode answers in a base64 `?results=` param (`shareResults.ts`).
 
-### Scoring System (`src/utils/scoring.ts`)
+### Scoring (`src/utils/scoring.ts`)
 
-Each question contributes points to a specific axis (defined in `questions.json`):
-- Questions have a `favoredPole` ("left" or "right")
-- If `favoredPole === "right"`, the answer index is inverted: `idx = 6 - idx`
-- Points are distributed linearly: `leftPts = (6 - idx) / 6 * 10 * weight`, `rightPts = idx / 6 * 10 * weight`
-- Points are aggregated per axis to produce final `{ left, right }` scores
+**Scores are keyed by axis `id`** (e.g. `state_vs_market`), never by the display label — labels differ by apostrophe variants across files and renames must not break joins. `axisIdForName()` normalizes apostrophes and maps a label to its id from `axisexplaination.tsx`.
 
-### Badge System (`src/utils/badges.ts`)
+- Questions have a `favoredPole` ("left"/"right"); right-favored answers are inverted (`idx = 6 - idx`)
+- Points distributed linearly: `leftPts = (6 - idx) / 6 * 10 * weight`
+- Missing answers currently default to neutral (3) — known methodological limitation
 
-Badges are defined in `src/data/badges.tsx` with:
-- `test({ answers, axisScores })`: A function that returns `true` if the badge should be awarded
-- Evaluated badges are shuffled with a seed for consistent display order
-- Badges have icons, labels, and descriptions shown on hover (desktop) or as title (mobile)
+### Badges (`src/data/badges.tsx`, `src/utils/badges.ts`)
+
+- `test({ answers, axisScores })` — **`axisScores` is keyed by axis id** (see comment in the Badge type)
+- All tests must return a real boolean and guard against missing axes/empty answers
+- Badge PNGs in `src/badges/` are optimized (512px, ≤150 KB each); run `npm run optimize:badges` after adding one
 
 ### Data Files
 
-- **`questions.json`**: Array of questions with `id`, `text`, `axis`, `leftPole`, `rightPole`, `favoredPole`, `weight`, `explanation`
-- **`axisexplaination.tsx`**: Defines 14 ideological axes with `sortIndex`, labels, and detailed left/right explanations
-- **`badges.tsx`**: Badge definitions with test logic
+- **`questions.json`** — 101 questions: `id`, `text`, `axis` (label matching `axisexplaination.tsx`), `leftPole`, `rightPole`, `favoredPole`, `weight`, `explanation`
+- **`axisexplaination.tsx`** — the 14 axes: `id` (stable join key), `sortIndex` (display order everywhere), labels, left/right pole explanations
+- **`referenceProfiles.ts`** — 22 political figures with full answer sets (must cover every question id). `excludeFromMatching: true` keeps historical totalitarian profiles (Hitler, Staline) out of the "closest personalities" ranking while staying browsable in the explorer.
 
-### Styling Approach
+### Tests (`src/__tests__/data-sync.test.ts`)
 
-- Tailwind CSS for utility-first styling
-- Custom color palette: Red (`#C62828`) for left, Blue (`#1565C0`) for right
-- Dark blue background (`#10284f`) with white text and glass-morphism effects (`bg-white/5`, `backdrop-blur`)
-- Responsive design with mobile-first breakpoints
+Run `npm run test` after ANY change to the data files. The suite locks the data joins: every question axis resolves to a known axis id, poles match axis labels, every profile covers exactly the current question ids, badges only read valid axis ids, every badge is reachable, no badge fires on empty answers.
 
-### Vite Configuration Notes
+### Styling
 
-- `vite.config.ts` enables `host: true` and allows `.ngrok-free.app` hosts for remote development/testing
-- React plugin for JSX/TSX support
-
-### Profile Storage (Optional Feature)
-
-`src/utils/profiles.ts` provides localStorage-based profile saving:
-- `saveProfile({ name, answers, seedKey })`: Saves a profile with UUID
-- `listProfiles()`: Retrieves all saved profiles
-- `deleteProfile(id)`: Removes a profile by ID
+- Editorial "Scrutin" theme: warm paper background, near-black ink, Fraunces (display) + Libre Franklin (body)
+- Tokens live in `tokens.css` (source of truth, OKLCH) and are mirrored in `tailwind.config.js` (hex, for opacity modifiers)
+- **Red `#C62828` = left pole, blue `#1565C0` = right pole — strictly functional, never decorative.** The answer scale uses ink-intensity markers, no hue.
+- Respect `prefers-reduced-motion`: use `useReducedMotion()` to gate framer-motion props
 
 ## Common Patterns
 
-**Adding a New Question:**
-1. Add entry to `src/data/questions.json` with unique `id`, `axis` matching an existing axis from `axisexplaination.tsx`, and `favoredPole`
-2. Questions are automatically shuffled daily
+**Adding a question**: add to `questions.json` with a unique `id`, an `axis` label that matches `axisexplaination.tsx`, and matching pole labels — then add an answer for it in ALL 22 reference profiles and run `npm run test` (it fails loudly on any desync).
 
-**Adding a New Axis:**
-1. Add definition to `src/data/axisexplaination.tsx` with unique `id` and `sortIndex`
-2. Update questions to reference the new axis name
-3. Ensure axis name matches exactly between `questions.json` and `axisexplaination.tsx`
+**Adding an axis**: add to `axisexplaination.tsx` with unique `id` and `sortIndex`; reference the exact label from questions.
 
-**Adding a New Badge:**
-1. Add badge object to `src/data/badges.tsx` with `id`, `icon`, `label`, `description`, and `test` function
-2. Test function receives `{ answers, axisScores }` and should return boolean
+**Adding a badge**: add to `badges.tsx`; read `axisScores` by axis **id**; return a boolean; guard missing data. The reachability test will fail if the badge can never trigger.
 
 ## Important Notes
 
-- Question order is deterministic per day (Paris timezone) but can be overridden with `?seed=` URL param
-- Answer indices run 0-6 (7 choices from strong agreement to strong disagreement)
-- The scoring inverts right-favored questions to ensure consistent directionality
-- Results are computed live from answers, no server/API required
-- The app uses `dvh` (dynamic viewport height) units for mobile Safari compatibility
+- Answer indices run 0–6 (7 choices); scoring inverts right-favored questions
+- Results are computed live from answers; no server/API
+- GoatCounter analytics is opt-in: `index.html` still has the `YOUR-CODE` placeholder; `analytics.ts` no-ops until it is replaced
+- Legacy iteration docs are archived in `docs/archive/`
