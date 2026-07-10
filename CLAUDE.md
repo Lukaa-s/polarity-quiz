@@ -81,6 +81,6 @@ Run `npm run test` after ANY change to the data files. The suite locks the data 
 - GoatCounter analytics is **active** (code `polarity-quiz`, script in `index.html`); `analytics.ts` auto-detects it and tracks events (start, completion, shares, Ko-fi clicks). The CSP in `vercel.json` allows `https://gc.zgo.at` (script-src) and `https://*.goatcounter.com` (connect-src) — keep both aligned with the script tag if the code or domain ever changes
 - Support links point to `https://ko-fi.com/lukaaasss` (plain outbound links, no third-party script): a salient block at the end of the results tab (`ResultEnhanced.tsx`) and a discreet line on the welcome screen (`App.tsx`)
 - Security headers incl. CSP live in `vercel.json` — adding any new external origin (font, analytics…) requires updating the CSP there
-- SEO/share assets live in `public/` (`favicon.svg`, `og-image.png`, `robots.txt`); `og:url`/`og:image` in `index.html` point to the placeholder domain `polarity-quiz.vercel.app`, to replace once the production domain is final
+- SEO/share assets live in `public/` (`favicon.svg`, `og-image.png`, `robots.txt`, `sitemap.xml`); the production domain is `https://polarity-quiz.fr` — `og:url`/`og:image`/canonical in `index.html`, the `Sitemap:` line in `robots.txt` and `sitemap.xml` all reference it and must stay in sync if it ever changes
 - `html2canvas` is dynamically imported inside the export handler (own chunk, loaded on click); recharts stays in the lazy ResultEnhanced chunk
 - Legacy iteration docs are archived in `docs/archive/`
