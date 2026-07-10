@@ -22,8 +22,9 @@ export type QuestionProps = {
 
 // Bulletin de vote : 7 cases à cocher en rang horizontal. L'INTENSITÉ est portée
 // par la TAILLE de la case (symétrique autour du neutre, marqué par un losange
-// pivot), la DIRECTION par la position + les ancrages « D'accord / Pas d'accord ».
-// Cocher trace une croix d'encre dans la case. dist = |idx - 3| → taille.
+// pivot), la DIRECTION par la position + les ancrages « Pas d'accord / D'accord »
+// (échelle ascendante : le désaccord à gauche, l'accord à droite, comme les
+// questionnaires Likert). Cocher trace une croix d'encre. dist = |idx - 3| → taille.
 const BOX: Record<1 | 2 | 3, string> = {
   1: "h-6 w-6 sm:h-7 sm:w-7",
   2: "h-[30px] w-[30px] sm:h-9 sm:w-9",
@@ -118,15 +119,19 @@ export default function QuestionEnhanced({
   ];
 
   // Navigation aux flèches dans le radiogroup (roving tabindex, avec bouclage).
+  // Les flèches suivent l'ordre VISUEL (désaccord à gauche → accord à droite),
+  // qui est l'inverse des indices de réponse — d'où la conversion par position.
   const handleGroupKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    let next: number | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (focusIdx + 1) % choices.length;
+    const pos = choices.length - 1 - focusIdx;
+    let nextPos: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") nextPos = (pos + 1) % choices.length;
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
-      next = (focusIdx + choices.length - 1) % choices.length;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = choices.length - 1;
-    if (next === null) return;
+      nextPos = (pos + choices.length - 1) % choices.length;
+    else if (e.key === "Home") nextPos = 0;
+    else if (e.key === "End") nextPos = choices.length - 1;
+    if (nextPos === null) return;
     e.preventDefault();
+    const next = choices.length - 1 - nextPos;
     setFocusIdx(next);
     optionRefs.current[next]?.focus();
   };
@@ -179,16 +184,16 @@ export default function QuestionEnhanced({
           {question.text}
         </motion.h2>
 
-        {/* Échelle « bulletin » : 7 cases à cocher, l'accord à gauche, le désaccord
-            à droite, le neutre en losange pivot. Cocher trace une croix d'encre. */}
+        {/* Échelle « bulletin » : 7 cases à cocher, le désaccord à gauche, l'accord
+            à droite (ascendante), le neutre en losange pivot. Croix d'encre = coché. */}
         <div className="mb-6">
           {/* Ancrages de direction (les libellés exacts passent par aria-label + légende) */}
           <div
             aria-hidden="true"
             className="flex items-baseline justify-between mb-3 text-[11px] sm:text-xs font-medium uppercase tracking-[0.14em] text-ink2"
           >
-            <span>D'accord</span>
             <span>Pas d'accord</span>
+            <span>D'accord</span>
           </div>
 
           <div
@@ -201,7 +206,14 @@ export default function QuestionEnhanced({
             }}
             className={`flex items-center gap-1 sm:gap-2 ${isAdvancing ? "pointer-events-none" : ""}`}
           >
-            {choices.map((label, idx) => {
+            {choices.map((_, pos) => {
+              // Ordre d'affichage inversé : la position visuelle `pos` va du
+              // désaccord (gauche) à l'accord (droite), mais les INDICES de
+              // réponse (0 = tout à fait d'accord) restent inchangés — le
+              // scoring, les profils de référence et les liens de partage en
+              // dépendent. Seule la présentation est retournée.
+              const idx = choices.length - 1 - pos;
+              const label = choices[idx];
               const isSelected = selectedIdx === idx;
               const isDimmed = selectedIdx !== null && selectedIdx !== idx;
               const dist = Math.abs(idx - 3); // 3,2,1,0,1,2,3 — intensité
@@ -228,7 +240,7 @@ export default function QuestionEnhanced({
                   animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
                   transition={{
                     duration: reduceMotion ? 0 : 0.22,
-                    delay: reduceMotion || selectedIdx !== null ? 0 : 0.035 * idx,
+                    delay: reduceMotion || selectedIdx !== null ? 0 : 0.035 * pos,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                   className="group flex h-12 flex-1 items-center justify-center rounded active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
