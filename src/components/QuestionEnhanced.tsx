@@ -1,7 +1,10 @@
 // src/components/QuestionEnhanced.tsx
-/* Hallmark · component: réponse Likert 7 points · genre: editorial · theme: Scrutin
- * states: default · hover · focus-visible · active · disabled · selected
- * échelle: intensité d'encre (pas de teinte : valence, daltonisme, rouge=gauche réservé)
+/* Hallmark · component: réponse Likert 7 points « bulletin » · genre: editorial · theme: Scrutin
+ * pre-emit critique: P4 H5 E4 S5 R4 V5
+ * states: default · hover · focus-visible · active · advancing (aria-disabled) · selected · dimmed
+ * échelle: rang horizontal de cases à cocher de scrutin — taille = intensité (symétrique),
+ * losange pivot au neutre, croix d'encre tracée à la sélection. Aucune teinte (valence,
+ * daltonisme, rouge=gauche réservé) ; la direction est portée par la position + les ancrages.
  */
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -17,13 +20,15 @@ export type QuestionProps = {
   answeredIdx?: number | null;
 };
 
-// Échelle divergente accord → désaccord : l'INTENSITÉ est portée par la densité
-// d'encre du marqueur (symétrique autour du neutre creux), la DIRECTION par la
-// position et le libellé. Aucune teinte : le vert/rouge portait un jugement
-// (bien/mal), excluait les daltoniens, et le rouge est réservé au pôle gauche.
-const MARKER_ALPHA = [1, 0.68, 0.4, 0, 0.4, 0.68, 1] as const;
-const INK = "35, 32, 26"; // --color-ink
-const PAPER = "246, 243, 236"; // --color-paper
+// Bulletin de vote : 7 cases à cocher en rang horizontal. L'INTENSITÉ est portée
+// par la TAILLE de la case (symétrique autour du neutre, marqué par un losange
+// pivot), la DIRECTION par la position + les ancrages « D'accord / Pas d'accord ».
+// Cocher trace une croix d'encre dans la case. dist = |idx - 3| → taille.
+const BOX: Record<1 | 2 | 3, string> = {
+  1: "h-6 w-6 sm:h-7 sm:w-7",
+  2: "h-[30px] w-[30px] sm:h-9 sm:w-9",
+  3: "h-9 w-9 sm:h-11 sm:w-11",
+};
 
 export default function QuestionEnhanced({
   question,
@@ -40,6 +45,13 @@ export default function QuestionEnhanced({
   // Transition en cours (délai d'animation avant de passer à la question suivante) :
   // distinct de la pré-sélection, qui elle doit rester modifiable.
   const [isAdvancing, setIsAdvancing] = useState(false);
+  // Roving tabindex du radiogroup : Tab entre sur le neutre (point d'entrée non
+  // biaisé), les flèches déplacent le focus SANS sélectionner (la sélection
+  // auto-avance, elle ne doit donc jamais suivre le focus), Entrée/Espace cochent.
+  const [focusIdx, setFocusIdx] = useState<number>(answeredIdx ?? 3);
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [groupFocused, setGroupFocused] = useState(false);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const isFirstQuestionRender = useRef(true);
@@ -50,6 +62,8 @@ export default function QuestionEnhanced({
     setSelectedIdx(answeredIdx);
     setShowExplanation(false);
     setIsAdvancing(false);
+    setFocusIdx(answeredIdx ?? 3);
+    setHoverIdx(null);
 
     // Ramène le focus sur l'énoncé à chaque nouvelle question : sans ça, un
     // utilisateur clavier repart du haut du document 101 fois de suite.
@@ -79,7 +93,9 @@ export default function QuestionEnhanced({
   };
 
   const handleAnswer = (idx: number) => {
+    if (isAdvancing) return;
     setSelectedIdx(idx);
+    setFocusIdx(idx);
     setIsAdvancing(true);
     if (advanceTimeoutRef.current) {
       clearTimeout(advanceTimeoutRef.current);
@@ -101,7 +117,22 @@ export default function QuestionEnhanced({
     "Pas du tout d'accord",
   ];
 
-  const progress = Math.round(((currentIndex + 1) / total) * 100);
+  // Navigation aux flèches dans le radiogroup (roving tabindex, avec bouclage).
+  const handleGroupKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    let next: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (focusIdx + 1) % choices.length;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+      next = (focusIdx + choices.length - 1) % choices.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = choices.length - 1;
+    if (next === null) return;
+    e.preventDefault();
+    setFocusIdx(next);
+    optionRefs.current[next]?.focus();
+  };
+
+  // Libellé affiché sous l'échelle : survol > focus clavier > réponse cochée.
+  const captionIdx = hoverIdx ?? (groupFocused ? focusIdx : null) ?? selectedIdx;
 
   return (
     <motion.div
@@ -124,7 +155,6 @@ export default function QuestionEnhanced({
               Q.{String(currentIndex + 1).padStart(2, "0")}
             </span>
             <span className="text-xs sm:text-sm text-ink2 font-medium tabular-nums">/ {total}</span>
-            <span className="hidden sm:inline text-xs text-ink2 ml-1 tabular-nums">· {progress}%</span>
           </div>
           <button
             onClick={handleRestart}
@@ -149,61 +179,118 @@ export default function QuestionEnhanced({
           {question.text}
         </motion.h2>
 
-        {/* Choix : rampe d'intensité d'encre, direction portée par position + libellé */}
-        <div role="group" aria-labelledby="question-title" className="flex flex-col gap-2.5 mb-6">
-          {choices.map((label, idx) => {
-            const isSelected = selectedIdx === idx;
-            const isDimmed = selectedIdx !== null && selectedIdx !== idx;
-            const alpha = MARKER_ALPHA[idx];
-            const markerRgb = isSelected ? PAPER : INK;
-            return (
-              <motion.button
-                key={idx}
-                initial={reduceMotion ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.22,
-                  delay: reduceMotion || selectedIdx !== null ? 0 : 0.035 * idx,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                onClick={() => handleAnswer(idx)}
-                disabled={isAdvancing}
-                aria-pressed={isSelected}
-                className={`group relative flex w-full items-center gap-3 text-left rounded-[5px] min-h-14 px-4 py-3 font-medium border transition-colors duration-150
-                  ${
-                    isSelected
-                      ? "bg-ink text-paper border-ink"
-                      : "bg-paper text-ink border-rule hover:bg-paper3 active:translate-y-px"
-                  }
-                  disabled:cursor-not-allowed
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink
-                `}
-              >
-                <span
-                  aria-hidden="true"
-                  className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                  style={
-                    alpha === 0
-                      ? { border: `1.5px solid rgba(${markerRgb}, 0.55)` }
-                      : { backgroundColor: `rgba(${markerRgb}, ${alpha})` }
-                  }
-                />
-                <span className="flex-1">{label}</span>
-                {isSelected && (
-                  <motion.svg
-                    initial={reduceMotion ? false : { scale: 0.6, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="h-5 w-5 shrink-0"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </motion.svg>
-                )}
-              </motion.button>
-            );
-          })}
+        {/* Échelle « bulletin » : 7 cases à cocher, l'accord à gauche, le désaccord
+            à droite, le neutre en losange pivot. Cocher trace une croix d'encre. */}
+        <div className="mb-6">
+          {/* Ancrages de direction (les libellés exacts passent par aria-label + légende) */}
+          <div
+            aria-hidden="true"
+            className="flex items-baseline justify-between mb-3 text-[11px] sm:text-xs font-medium uppercase tracking-[0.14em] text-ink2"
+          >
+            <span>D'accord</span>
+            <span>Pas d'accord</span>
+          </div>
+
+          <div
+            role="radiogroup"
+            aria-labelledby="question-title"
+            onKeyDown={handleGroupKeyDown}
+            onFocus={() => setGroupFocused(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) setGroupFocused(false);
+            }}
+            className={`flex items-center gap-1 sm:gap-2 ${isAdvancing ? "pointer-events-none" : ""}`}
+          >
+            {choices.map((label, idx) => {
+              const isSelected = selectedIdx === idx;
+              const isDimmed = selectedIdx !== null && selectedIdx !== idx;
+              const dist = Math.abs(idx - 3); // 3,2,1,0,1,2,3 — intensité
+              return (
+                <motion.button
+                  key={idx}
+                  ref={(el) => {
+                    optionRefs.current[idx] = el;
+                  }}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  aria-label={label}
+                  /* aria-disabled (pas l'attribut disabled natif) : un bouton
+                     désactivé nativement éjecte le focus vers <body> à chaque
+                     réponse ; le garde est dans handleAnswer + pointer-events. */
+                  aria-disabled={isAdvancing || undefined}
+                  tabIndex={focusIdx === idx ? 0 : -1}
+                  onClick={() => handleAnswer(idx)}
+                  onMouseEnter={() => setHoverIdx(idx)}
+                  onMouseLeave={() => setHoverIdx(null)}
+                  onFocus={() => setFocusIdx(idx)}
+                  initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
+                  transition={{
+                    duration: reduceMotion ? 0 : 0.22,
+                    delay: reduceMotion || selectedIdx !== null ? 0 : 0.035 * idx,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="group flex h-12 flex-1 items-center justify-center rounded active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                >
+                  {dist === 0 ? (
+                    // Pivot neutre : losange (écho du motif d'accueil), plein quand coché
+                    <span
+                      className={`h-3.5 w-3.5 sm:h-4 sm:w-4 rotate-45 border-[1.5px] transition-colors duration-150 ${
+                        isSelected
+                          ? "border-ink bg-ink"
+                          : "border-ink2/70 bg-paper group-hover:bg-paper3"
+                      }`}
+                    />
+                  ) : (
+                    <span
+                      className={`relative flex items-center justify-center rounded-[3px] border-[1.5px] transition-colors duration-150 ${BOX[dist as 1 | 2 | 3]} ${
+                        isSelected
+                          ? "border-ink bg-paper"
+                          : "border-ink2/70 bg-paper group-hover:bg-paper3"
+                      }`}
+                    >
+                      {isSelected && (
+                        // Croix d'encre tracée dans la case (deux traits légèrement
+                        // irréguliers : le geste du vote papier, pas une icône système)
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="absolute inset-0 h-full w-full p-[3px] text-ink"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2.75}
+                          strokeLinecap="round"
+                          aria-hidden="true"
+                        >
+                          <motion.path
+                            d="M6 6.5 L18 17.5"
+                            initial={reduceMotion ? false : { pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: reduceMotion ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
+                          />
+                          <motion.path
+                            d="M18 6 L6.5 18"
+                            initial={reduceMotion ? false : { pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{
+                              duration: reduceMotion ? 0 : 0.16,
+                              delay: reduceMotion ? 0 : 0.1,
+                              ease: [0.16, 1, 0.3, 1],
+                            }}
+                          />
+                        </svg>
+                      )}
+                    </span>
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Légende : hauteur fixe (pas de décalage), redondante avec les aria-label */}
+          <div aria-hidden="true" className="mt-3 h-6 text-center text-sm font-medium text-ink2">
+            {captionIdx !== null ? choices[captionIdx] : ""}
+          </div>
         </div>
 
         {/* Navigation + explication */}

@@ -6,17 +6,14 @@ import type { QuestionDef } from "./utils/scoring";
 import QuestionEnhanced from "./components/QuestionEnhanced";
 import PoleFaceoff from "./components/PoleFaceoff";
 import Footer from "./components/Footer";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { calculatePoleScores } from "./utils/scoring";
 import { evaluateBadges } from "./utils/badges";
-import { decodeResults } from "./utils/shareResults";
-import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode } from "./utils/analytics";
+import { decodeResults, sanitizeAnswers } from "./utils/shareResults";
+import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode, trackEvent } from "./utils/analytics";
 
 // Heroicons
 import { UserGroupIcon } from "@heroicons/react/24/solid";
-
-// ResultEnhanced embarque recharts + html2canvas : chargement différé pour
-// ne pas alourdir le bundle initial (écran d'accueil / questions).
-const ResultEnhanced = lazy(() => import("./components/ResultEnhanced"));
 
 // ---- Seeded RNG + date Paris ----
 function fnv1a(str: string): number {
@@ -61,7 +58,8 @@ function parisDayKey(d = new Date()): string {
 
 function getDailySeed(): { key: string; seed: number } {
   const urlSeed = new URLSearchParams(window.location.search).get("seed");
-  const key = urlSeed ?? parisDayKey();
+  // Le paramètre d'URL est borné : entrée non fiable, on évite une clé démesurée.
+  const key = urlSeed !== null ? urlSeed.slice(0, 64) : parisDayKey();
   return { key, seed: fnv1a(key) };
 }
 
@@ -79,10 +77,16 @@ function readSavedProgress(): SavedProgress | null {
     const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object" && parsed.answers && typeof parsed.answers === "object") {
-      return parsed as SavedProgress;
-    }
-    return null;
+    if (!parsed || typeof parsed !== "object") return null;
+    // Entrée non fiable : mêmes règles d'assainissement que le partage URL
+    // (ids de questions connus, entiers 0–6 uniquement).
+    const answers = sanitizeAnswers(parsed.answers);
+    if (!answers) return null;
+    return {
+      answers,
+      seedKey: typeof parsed.seedKey === "string" ? parsed.seedKey : "",
+      savedAtISO: typeof parsed.savedAtISO === "string" ? parsed.savedAtISO : "",
+    };
   } catch {
     // localStorage indisponible (navigation privée, quota, etc.)
     return null;
@@ -120,6 +124,17 @@ const App: React.FC = () => {
   const [sharedResultsName, setSharedResultsName] = useState<string | undefined>(undefined);
   const [isViewingSharedResults, setIsViewingSharedResults] = useState(false);
   const [savedProgress, setSavedProgress] = useState<SavedProgress | null>(null);
+  // Incrémenté par « Réessayer » du garde-fou : recrée le composant paresseux
+  // ci-dessous pour retenter réellement l'import dynamique (chunk invalidé, réseau).
+  const [resultsRetryKey, setResultsRetryKey] = useState(0);
+
+  // ResultEnhanced embarque recharts + html2canvas : chargement différé pour ne pas
+  // alourdir le bundle initial. Recréé à chaque `resultsRetryKey` afin qu'un nouvel
+  // essai relance vraiment l'import (React.lazy met en cache la promesse rejetée).
+  const ResultEnhanced = useMemo(
+    () => lazy(() => import("./components/ResultEnhanced")),
+    [resultsRetryKey]
+  );
 
   // Initialiser analytics au chargement de l'app
   useEffect(() => {
@@ -147,7 +162,7 @@ const App: React.FC = () => {
     const resultsParam = urlParams.get('results');
 
     if (resultsParam) {
-      const decodedResults = decodeResults(resultsParam);
+      const decodedResults = decodeResults(resultsParam, urlParams.get('name'));
 
       if (decodedResults) {
         // Charger les résultats partagés
@@ -155,12 +170,6 @@ const App: React.FC = () => {
         setSharedResultsName(decodedResults.name);
         setSubmitted(true);
         setIsViewingSharedResults(true);
-
-        console.log('[Shared Results] Loaded results from URL', {
-          name: decodedResults.name,
-          timestamp: decodedResults.timestamp,
-          questionsCount: Object.keys(decodedResults.answers).length,
-        });
       } else {
         console.error('[Shared Results] Failed to decode results from URL');
       }
@@ -172,11 +181,19 @@ const App: React.FC = () => {
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex((i) => i + 1);
     } else {
+      // On NE vide PAS encore la progression : tant que le chunk résultats n'est
+      // pas monté (échec d'import possible), elle doit survivre à un rechargement.
       setSubmitted(true);
-      clearSavedProgress();
       // Track la complétion du test
       trackTestCompleted();
     }
+  };
+
+  // Appelé quand ResultEnhanced est monté avec succès : la progression n'est
+  // effacée qu'à ce moment (jamais en consultant des résultats partagés).
+  const handleResultsReady = () => {
+    if (isViewingSharedResults) return;
+    clearSavedProgress();
   };
 
   const handleBack = () => setCurrentIndex((i) => Math.max(0, i - 1));
@@ -219,7 +236,8 @@ const App: React.FC = () => {
   if (explorerMode) {
     return (
       <div className="min-h-dvh w-full bg-paper text-ink flex flex-col px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 overflow-y-auto pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-        <div className="flex-1 flex items-start justify-center">
+        <SkipLink />
+        <main id="main-content" tabIndex={-1} className="flex-1 flex items-start justify-center focus:outline-none">
           <div className="w-full card text-ink p-4 sm:p-6 md:p-8 max-w-screen-sm sm:max-w-2xl md:max-w-3xl lg:max-w-5xl space-y-4 sm:space-y-6">
             {/* Header avec retour */}
             <div className="flex items-start justify-between gap-3 border-b border-rule pb-4">
@@ -240,18 +258,24 @@ const App: React.FC = () => {
             </div>
 
             {/* Utilisation de ResultEnhanced en mode explorateur */}
-            <Suspense fallback={<ResultFallback />}>
-              <ResultEnhanced
-                poleScores={{}}
-                questions={questions}
-                badges={[]}
-                onRestart={handleRestart}
-                currentAnswers={{}}
-                explorerMode={true}
-              />
-            </Suspense>
+            <ErrorBoundary
+              onReset={() => setResultsRetryKey((k) => k + 1)}
+              title="Impossible de charger l'explorateur"
+              description="Le chargement des profils a échoué (réseau ou mise à jour du site). Réessayez ou rechargez la page."
+            >
+              <Suspense fallback={<ResultFallback />}>
+                <ResultEnhanced
+                  poleScores={{}}
+                  questions={questions}
+                  badges={[]}
+                  onRestart={handleRestart}
+                  currentAnswers={{}}
+                  explorerMode={true}
+                />
+              </Suspense>
+            </ErrorBoundary>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -263,6 +287,7 @@ const App: React.FC = () => {
   if (!hasStarted && !isViewingSharedResults) {
     return (
       <div className="relative min-h-dvh w-full bg-paper text-ink overflow-x-clip pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+        <SkipLink />
 
         {/* Masthead : nameplate « Polarity Quiz » */}
         <header className="relative z-10 border-b-2 border-ink">
@@ -277,6 +302,7 @@ const App: React.FC = () => {
         </header>
 
         {/* Hero : aéré, l'animation est la pièce maîtresse */}
+        <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <section className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
           <div className="flex min-h-[72dvh] flex-col justify-center py-14 sm:py-20 space-y-10 sm:space-y-14">
 
@@ -339,6 +365,20 @@ const App: React.FC = () => {
             <p className="text-center text-xs sm:text-sm text-ink2 tabular-nums">
               {questions.length} questions · environ 15 minutes
             </p>
+
+            {/* Soutien, discret sur l'accueil (l'appui principal vit sur la page de résultats) */}
+            <p className="text-center text-xs text-ink2">
+              Gratuit et sans publicité ·{" "}
+              <a
+                href="https://ko-fi.com/lukaaasss"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent("support_kofi_home", "/events/support-kofi-home")}
+                className="underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink rounded"
+              >
+                soutenir le projet
+              </a>
+            </p>
           </div>
         </section>
 
@@ -359,6 +399,7 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+        </main>
 
         {/* Footer */}
         <div className="relative z-10">
@@ -373,11 +414,12 @@ const App: React.FC = () => {
   // ──────────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-dvh w-full bg-paper text-ink flex flex-col px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 overflow-y-auto pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-      <div className="flex-1 flex items-start justify-center">
+      <SkipLink />
+      <main id="main-content" tabIndex={-1} className="flex-1 flex items-start justify-center focus:outline-none">
         <div className="w-full card text-ink p-4 sm:p-6 md:p-8 max-w-screen-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
           {/* Barre de progression sticky (cachée si on consulte des résultats partagés) */}
           {!isViewingSharedResults && (
-            <div className="sticky top-0 z-10 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 pt-0.5 pb-2 bg-paper2">
+            <div aria-hidden="true" className="sticky top-0 z-10 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 pt-0.5 pb-2 bg-paper2">
               <div className="h-px bg-rule overflow-hidden">
                 <div
                   className="h-full bg-ink transition-[width] duration-500 ease-out"
@@ -438,20 +480,40 @@ const App: React.FC = () => {
               answeredIdx={answers[questions[currentIndex]?.id] ?? null}
             />
           ) : (
-            <Suspense fallback={<ResultFallback />}>
-              <ResultEnhanced
-                poleScores={poleScores}
-                questions={questions}
-                badges={unlockedBadges}
-                onRestart={handleRestart}
-                currentAnswers={answers}
-              />
-            </Suspense>
+            <ErrorBoundary
+              onReset={() => setResultsRetryKey((k) => k + 1)}
+              title="Impossible de charger les résultats"
+              description="Le chargement a échoué (réseau ou mise à jour du site). Vos réponses restent enregistrées sur cet appareil : réessayez ou rechargez la page."
+            >
+              <Suspense fallback={<ResultFallback />}>
+                <ResultEnhanced
+                  poleScores={poleScores}
+                  questions={questions}
+                  badges={unlockedBadges}
+                  onRestart={handleRestart}
+                  currentAnswers={answers}
+                  onReady={handleResultsReady}
+                />
+              </Suspense>
+            </ErrorBoundary>
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
+  );
+}
+
+// Lien d'évitement clavier : masqué visuellement, révélé au focus (première
+// tabulation), il amène directement au contenu principal en sautant la navigation.
+function SkipLink() {
+  return (
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 btn-ink px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink"
+    >
+      Aller au contenu
+    </a>
   );
 }
 

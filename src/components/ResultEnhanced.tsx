@@ -1,5 +1,5 @@
 // src/components/ResultEnhanced.tsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { QuestionDef, calculatePoleScores } from "../utils/scoring";
 import { saveProfile, listProfiles, deleteProfile, SavedProfile } from "../utils/profiles";
 import {
@@ -16,10 +16,9 @@ import { ideologicalAxes } from "../data/axisexplaination";
 import type { Badge } from "../data/badges";
 import { evaluateBadges } from "../utils/badges";
 import { referenceProfiles } from "../data/referenceProfiles";
-import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon } from "@heroicons/react/24/solid";
-import html2canvas from "html2canvas";
-import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI } from "../utils/shareResults";
-import { trackShare } from "../utils/analytics";
+import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI, sanitizeShareName } from "../utils/shareResults";
+import { trackShare, trackEvent } from "../utils/analytics";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Tooltip Radar amélioré
@@ -72,6 +71,10 @@ export type ResultProps = {
   onRestart: () => void;
   currentAnswers: Record<string, number>;
   explorerMode?: boolean; // Mode exploration sans résultats utilisateur
+  // Appelé une fois le composant monté avec succès. Sert à App pour n'effacer la
+  // progression sauvegardée qu'une fois les résultats réellement affichés (si le
+  // chunk échoue à charger, la progression survit à un rechargement).
+  onReady?: () => void;
 };
 
 const LEFT_COLOR = "#C62828";
@@ -164,6 +167,8 @@ function LeanIndicator({ value, showLabels = false }: { value: number; showLabel
   return (
     <div className="w-full">
       <div
+        role="img"
+        aria-label={`Positionnement gauche-droite : ${Math.round(pos)} sur 100 (0 = gauche, 100 = droite)`}
         className="relative h-1.5 rounded-full"
         style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
       >
@@ -190,6 +195,7 @@ export default function ResultEnhanced({
   badges,
   currentAnswers,
   explorerMode = false,
+  onReady,
 }: ResultProps) {
   const [activeTab, setActiveTab] = useState<"results" | "explained" | "diagram" | "profiles">(
     explorerMode ? "diagram" : "results"
@@ -203,8 +209,36 @@ export default function ResultEnhanced({
   const [linkCopied, setLinkCopied] = useState(false);
   const [saveName, setSaveName] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   // Badge dont la description est dépliée (tap/clic : le survol seul excluait le mobile)
   const [expandedBadgeId, setExpandedBadgeId] = useState<string | null>(null);
+  const shareMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Signale à App que les résultats sont montés (chunk chargé) : App peut alors
+  // effacer la progression sauvegardée en toute sûreté.
+  useEffect(() => {
+    onReady?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fermer le menu de partage à Échap ou au clic hors du menu (usage clavier + mobile).
+  useEffect(() => {
+    if (!showShareMenu) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowShareMenu(false);
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(e.target as Node)) {
+        setShowShareMenu(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [showShareMenu]);
 
   // Ordre stable des axes (sortIndex), scores toujours consultés par id d'axe.
   // En mode explorateur, on utilise tous les axes.
@@ -231,11 +265,21 @@ export default function ResultEnhanced({
   const handleSaveCurrentProfile = () => {
     const name = saveName.trim();
     if (!name) return;
-    saveProfile({ name, answers: currentAnswers });
+    const ok = saveProfile({ name, answers: currentAnswers });
     setSavedProfiles(listProfiles());
-    setSaveName("");
-    setProfileSaved(true);
-    setTimeout(() => setProfileSaved(false), 2000);
+    if (ok) {
+      // Succès réel : on vide le champ et on confirme.
+      setSaveError(false);
+      setSaveName("");
+      setProfileSaved(true);
+      setTimeout(() => setProfileSaved(false), 2000);
+    } else {
+      // Stockage local indisponible (navigation privée, quota) : on prévient
+      // sans effacer la saisie, pour laisser l'utilisateur réessayer.
+      setProfileSaved(false);
+      setSaveError(true);
+      setTimeout(() => setSaveError(false), 4000);
+    }
   };
 
   // Supprimer un profil
@@ -266,6 +310,10 @@ export default function ResultEnhanced({
     setDisableAnimations(true);
 
     try {
+      // html2canvas (~200 Ko) ne sert qu'à l'export : chargé à la demande
+      // pour ne pas alourdir le chunk résultats.
+      const { default: html2canvas } = await import("html2canvas");
+
       // Attendre un cycle de rendu pour que la désactivation prenne effet
       await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -383,8 +431,9 @@ export default function ResultEnhanced({
       "⚠️ Ce nom sera visible dans l'URL et par toute personne consultant le lien."
     );
 
-    // Si l'utilisateur annule ou entre une chaîne vide, partager anonymement
-    return name?.trim() || undefined;
+    // Si l'utilisateur annule ou entre une chaîne vide, partager anonymement.
+    // Le nom est borné et nettoyé (il finit dans une URL publique).
+    return sanitizeShareName(name);
   };
 
   const handleCopyLink = async () => {
@@ -403,24 +452,21 @@ export default function ResultEnhanced({
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
     trackShare('twitter');
-    const shareWindow = window.open(getTwitterShareURL(shareURL, name), '_blank');
-    if (shareWindow) shareWindow.opener = null;
+    window.open(getTwitterShareURL(shareURL, name), '_blank', 'noopener,noreferrer');
   };
 
   const handleShareWhatsApp = () => {
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
     trackShare('whatsapp');
-    const shareWindow = window.open(getWhatsAppShareURL(shareURL, name), '_blank');
-    if (shareWindow) shareWindow.opener = null;
+    window.open(getWhatsAppShareURL(shareURL, name), '_blank', 'noopener,noreferrer');
   };
 
   const handleShareFacebook = () => {
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
     trackShare('facebook');
-    const shareWindow = window.open(getFacebookShareURL(shareURL), '_blank');
-    if (shareWindow) shareWindow.opener = null;
+    window.open(getFacebookShareURL(shareURL), '_blank', 'noopener,noreferrer');
   };
 
   const handleShareDiscord = async () => {
@@ -606,7 +652,7 @@ export default function ResultEnhanced({
         <div className={disableAnimations ? 'pb-8' : 'animate-fadeIn pb-8'} id="results-card">
           <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
             <h2 className="text-3xl sm:text-4xl font-semibold text-ink">Vos résultats</h2>
-            <div className="flex gap-2 relative">
+            <div className="flex gap-2 relative" ref={shareMenuRef}>
               {/* Bouton Télécharger */}
               <button
                 onClick={handleExportImage}
@@ -620,6 +666,8 @@ export default function ResultEnhanced({
               {/* Bouton Partager */}
               <button
                 onClick={handleShare}
+                aria-haspopup="menu"
+                aria-expanded={showShareMenu}
                 className="btn-ink flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ShareIcon className="w-5 h-5" />
@@ -897,7 +945,27 @@ export default function ResultEnhanced({
             )}
           </div>
 
-          <div className="text-center mt-10">
+          {/* Soutien : le test est gratuit et sans pub ; l'appui au moment où
+              l'utilisateur vient de recevoir ses résultats. Lien sortant simple,
+              aucun script tiers (la CSP reste intacte). */}
+          <div className="mt-10 pt-8 border-t border-rule text-center">
+            <p className="text-sm text-ink2 mb-4 [text-wrap:balance]">
+              Ce test est gratuit, sans publicité et sans compte. S'il vous a été utile,
+              vous pouvez soutenir son développement.
+            </p>
+            <a
+              href="https://ko-fi.com/lukaaasss"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("support_kofi", "/events/support-kofi")}
+              className="btn-outline inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+            >
+              <HeartIcon className="w-4 h-4" aria-hidden="true" />
+              Soutenir le projet
+            </a>
+          </div>
+
+          <div className="text-center mt-8">
             <button
               onClick={onRestart}
               className="btn-ink px-7 py-3 text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
@@ -1001,6 +1069,11 @@ export default function ResultEnhanced({
               <p className="mt-2 text-xs text-ink2">
                 Stocké uniquement dans votre navigateur, pour retrouver et comparer vos résultats dans le temps.
               </p>
+              {saveError && (
+                <p role="status" className="mt-2 text-xs text-ink2">
+                  Stockage local indisponible (navigation privée ou espace saturé) : le profil n'a pas pu être enregistré.
+                </p>
+              )}
             </div>
           )}
 
@@ -1042,7 +1115,11 @@ export default function ResultEnhanced({
           )}
 
           {/* Graphique radar */}
-          <div className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-paper2 rounded-xl border border-rule p-4">
+          <div
+            role="img"
+            aria-label={`Radar de positionnement sur les ${axes.length} axes idéologiques ; les valeurs détaillées sont listées au-dessus.`}
+            className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-paper2 rounded-xl border border-rule p-4"
+          >
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 data={multiRadarData}

@@ -1,15 +1,95 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+
+/**
+ * Piège le focus à l'intérieur d'une modale ouverte (WCAG 2.4.3 / APG Dialog) et
+ * restitue le focus au bouton déclencheur à la fermeture, quelle qu'en soit la
+ * cause (Échap, clic sur l'overlay, bouton Fermer).
+ *
+ * Retourne la ref à poser sur le conteneur du dialog.
+ */
+function useModalFocusTrap(
+  isOpen: boolean,
+  triggerRef: React.RefObject<HTMLButtonElement>
+) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () =>
+      Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+        (el) => el.offsetParent !== null
+      );
+
+    // À l'ouverture, on déplace le focus dans la modale (le bouton Fermer en
+    // premier ; à défaut, le conteneur du dialog lui-même).
+    const initial = getFocusable();
+    (initial[0] ?? dialog).focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const items = getFocusable();
+      if (items.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      // Restitue le focus au bouton qui a ouvert la modale.
+      triggerRef.current?.focus();
+    };
+  }, [isOpen, triggerRef]);
+
+  return dialogRef;
+}
 
 export default function Footer() {
   const [showLegal, setShowLegal] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+
+  // Boutons déclencheurs, pour restituer le focus à la fermeture des modales.
+  const legalTriggerRef = useRef<HTMLButtonElement>(null);
+  const privacyTriggerRef = useRef<HTMLButtonElement>(null);
+
+  const legalDialogRef = useModalFocusTrap(showLegal, legalTriggerRef);
+  const privacyDialogRef = useModalFocusTrap(showPrivacy, privacyTriggerRef);
+
+  // Fermer la modale ouverte avec Échap (attendu au clavier sur un dialogue).
+  useEffect(() => {
+    if (!showLegal && !showPrivacy) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowLegal(false);
+        setShowPrivacy(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [showLegal, showPrivacy]);
 
   return (
     <>
       <footer className="text-center text-ink/70 text-xs py-6 border-t border-ink/10 mt-8">
         <div className="flex flex-wrap justify-center gap-4">
           <button
+            ref={legalTriggerRef}
             onClick={() => setShowLegal(true)}
             className="underline hover:text-ink/90 transition"
           >
@@ -17,6 +97,7 @@ export default function Footer() {
           </button>
           <span className="text-ink/30">•</span>
           <button
+            ref={privacyTriggerRef}
             onClick={() => setShowPrivacy(true)}
             className="underline hover:text-ink/90 transition"
           >
@@ -35,11 +116,16 @@ export default function Footer() {
           onClick={() => setShowLegal(false)}
         >
           <div
+            ref={legalDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="legal-modal-title"
+            tabIndex={-1}
             className="bg-paper border border-ink/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-ink">Mentions Légales</h2>
+              <h2 id="legal-modal-title" className="text-2xl sm:text-3xl font-bold text-ink">Mentions Légales</h2>
               <button
                 onClick={() => setShowLegal(false)}
                 className="p-2 hover:bg-ink/10 rounded-lg transition"
@@ -135,11 +221,16 @@ export default function Footer() {
           onClick={() => setShowPrivacy(false)}
         >
           <div
+            ref={privacyDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="privacy-modal-title"
+            tabIndex={-1}
             className="bg-paper border border-ink/20 rounded-2xl p-6 sm:p-8 max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-ink">
+              <h2 id="privacy-modal-title" className="text-2xl sm:text-3xl font-bold text-ink">
                 Politique de Confidentialité
               </h2>
               <button
@@ -153,7 +244,7 @@ export default function Footer() {
 
             <div className="space-y-6 text-ink/90 text-sm sm:text-base">
               <div className="bg-green-700/10 border border-green-500/30 rounded-lg p-4">
-                <p className="text-green-700 font-semibold mb-2">
+                <p className="text-green-800 font-semibold mb-2">
                   ✅ Votre vie privée est respectée
                 </p>
                 <p className="text-sm text-ink/80">
@@ -221,7 +312,7 @@ export default function Footer() {
                   <li>Toute personne avec le lien peut voir les résultats partagés</li>
                 </ul>
                 <div className="mt-3 bg-yellow-700/10 border border-yellow-500/30 rounded-lg p-3">
-                  <p className="text-yellow-700 text-sm">
+                  <p className="text-yellow-800 text-sm">
                     ⚠️ <strong>Attention :</strong> Si vous partagez un lien avec votre nom,
                     celui-ci sera visible par toute personne accédant au lien.
                   </p>

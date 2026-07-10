@@ -1,0 +1,6 @@
+# Polarity Quiz — SPA statique, une seule page indexable.
+User-agent: *
+Allow: /
+
+# Renseigner l'URL absolue du sitemap une fois le domaine de production choisi :
+# Sitemap: https://VOTRE-DOMAINE/sitemap.xml

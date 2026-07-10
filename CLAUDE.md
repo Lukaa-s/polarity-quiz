@@ -15,6 +15,7 @@ npm run preview          # Serve the production build locally
 npm run typecheck        # tsc --noEmit (strict)
 npm run test             # Vitest (data-sync test suite)
 npm run optimize:badges  # Re-compress src/badges/*.png via sharp (512px, ≤150 KB)
+npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-icon.png via sharp
 ```
 
 ## Architecture
@@ -32,7 +33,7 @@ npm run optimize:badges  # Re-compress src/badges/*.png via sharp (512px, ≤150
 - **Daily seed**: questions are shuffled deterministically per Paris-timezone day (or `?seed=` URL param) using FNV-1a + Mulberry32. The shuffle only affects presentation order, never scoring.
 - **Answers**: `Record<string, number>` where key = question id, value = 0–6 (0 = "Tout à fait d'accord", 6 = "Pas du tout d'accord", 3 = neutral).
 - **Progress persistence**: answers are saved to localStorage under `pq_progress_v1` on every answer; cleared on submit and on voluntary restart. Resume repositions on the first unanswered question in the current day's order.
-- Shared-results URLs encode answers in a base64 `?results=` param (`shareResults.ts`).
+- Shared-results URLs use a compact `?results=v2_<digits>` param — one char per question in `questions.json` file order (0–6, `-` = unanswered), plus an optional `&name=` param (`shareResults.ts`). Legacy base64-JSON links still decode. Everything read from the URL is untrusted: answers are filtered to known question ids / integers 0–6, the name is sanitized and capped. `share-results.test.ts` locks the format.
 
 ### Scoring (`src/utils/scoring.ts`)
 
@@ -77,5 +78,9 @@ Run `npm run test` after ANY change to the data files. The suite locks the data 
 
 - Answer indices run 0–6 (7 choices); scoring inverts right-favored questions
 - Results are computed live from answers; no server/API
-- GoatCounter analytics is opt-in: `index.html` still has the `YOUR-CODE` placeholder; `analytics.ts` no-ops until it is replaced
+- GoatCounter analytics is **active** (code `polarity-quiz`, script in `index.html`); `analytics.ts` auto-detects it and tracks events (start, completion, shares, Ko-fi clicks). The CSP in `vercel.json` allows `https://gc.zgo.at` (script-src) and `https://*.goatcounter.com` (connect-src) — keep both aligned with the script tag if the code or domain ever changes
+- Support links point to `https://ko-fi.com/lukaaasss` (plain outbound links, no third-party script): a salient block at the end of the results tab (`ResultEnhanced.tsx`) and a discreet line on the welcome screen (`App.tsx`)
+- Security headers incl. CSP live in `vercel.json` — adding any new external origin (font, analytics…) requires updating the CSP there
+- SEO/share assets live in `public/` (`favicon.svg`, `og-image.png`, `robots.txt`); `og:url`/`og:image` in `index.html` point to the placeholder domain `polarity-quiz.vercel.app`, to replace once the production domain is final
+- `html2canvas` is dynamically imported inside the export handler (own chunk, loaded on click); recharts stays in the lazy ResultEnhanced chunk
 - Legacy iteration docs are archived in `docs/archive/`

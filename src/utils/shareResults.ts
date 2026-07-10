@@ -1,6 +1,20 @@
 /**
  * Utilitaires pour partager les résultats via URL
+ *
+ * Deux formats de paramètre `?results=` coexistent :
+ * - v2 (émis) : "v2_" + un caractère par question dans l'ordre de questions.json
+ *   ("0"–"6" = réponse, "-" = non répondue). ~110 caractères au lieu de ~2 200
+ *   pour l'ancien JSON base64 : l'URL survit aux messageries qui tronquent.
+ *   Le nom éventuel voyage dans le paramètre `name` séparé.
+ * - legacy (toujours décodé) : JSON base64 { answers, name, timestamp }, pour
+ *   ne pas casser les liens déjà partagés.
+ *
+ * Tout ce qui vient de l'URL est une entrée non fiable : les réponses sont
+ * filtrées (ids de questions connus, entiers 0–6 uniquement) et le nom est
+ * borné et nettoyé avant d'atteindre le rendu ou le scoring.
  */
+
+import questionsData from "../data/questions.json";
 
 export type SharedResults = {
   answers: Record<string, number>;
@@ -8,38 +22,92 @@ export type SharedResults = {
   timestamp?: number;
 };
 
-/**
- * Encode les résultats en base64 pour partage via URL
- */
-export function encodeResults(answers: Record<string, number>, name?: string): string {
-  const data: SharedResults = {
-    answers,
-    name,
-    timestamp: Date.now(),
-  };
+// Ordre canonique = ordre du fichier questions.json (stable, versionné).
+const QUESTION_IDS: string[] = (questionsData as { id: string }[]).map((q) => q.id);
+const QUESTION_ID_SET = new Set(QUESTION_IDS);
 
-  const jsonString = JSON.stringify(data);
-  // Encoder en base64 (compatible navigateur)
-  const base64 = btoa(encodeURIComponent(jsonString));
-  return base64;
+const V2_PREFIX = "v2_";
+const MAX_NAME_LENGTH = 40;
+// Garde-fou contre les payloads legacy anormalement gros (le vrai fait ~2,2 Ko).
+const MAX_LEGACY_ENCODED_LENGTH = 16384;
+
+/** Nom affichable : borné, sans caractères de contrôle ni espaces parasites. */
+export function sanitizeShareName(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  // eslint-disable-next-line no-control-regex
+  const cleaned = raw.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, MAX_NAME_LENGTH);
+  return cleaned || undefined;
 }
 
 /**
- * Décode les résultats depuis l'URL
+ * Ne conserve que des réponses valides : id de question connu, entier 0–6.
+ * Exporté pour réutilisation par les autres entrées non fiables (progression et
+ * profils sauvegardés dans localStorage), afin d'appliquer le même filtrage.
  */
-export function decodeResults(encoded: string): SharedResults | null {
+export function sanitizeAnswers(raw: unknown): Record<string, number> | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const out: Record<string, number> = {};
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!QUESTION_ID_SET.has(key)) continue;
+    if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 6) continue;
+    out[key] = value;
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+/**
+ * Encode les réponses au format compact v2 (voir en-tête du fichier).
+ */
+export function encodeResults(answers: Record<string, number>): string {
+  const digits = QUESTION_IDS.map((id) => {
+    const v = answers[id];
+    return typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= 6 ? String(v) : "-";
+  }).join("");
+  return `${V2_PREFIX}${digits}`;
+}
+
+function decodeResultsV2(encoded: string, name?: string): SharedResults | null {
+  const digits = encoded.slice(V2_PREFIX.length);
+  if (digits.length === 0 || digits.length > QUESTION_IDS.length) return null;
+  if (!/^[0-6-]+$/.test(digits)) return null;
+
+  const answers: Record<string, number> = {};
+  for (let i = 0; i < digits.length; i++) {
+    if (digits[i] === "-") continue;
+    answers[QUESTION_IDS[i]] = Number(digits[i]);
+  }
+  if (Object.keys(answers).length === 0) return null;
+
+  return { answers, name: sanitizeShareName(name) };
+}
+
+function decodeResultsLegacy(encoded: string): SharedResults | null {
+  if (encoded.length > MAX_LEGACY_ENCODED_LENGTH) return null;
+  const jsonString = decodeURIComponent(atob(encoded));
+  const data = JSON.parse(jsonString) as Record<string, unknown>;
+
+  const answers = sanitizeAnswers(data?.answers);
+  if (!answers) return null;
+
+  return {
+    answers,
+    name: sanitizeShareName(data?.name),
+    timestamp: typeof data?.timestamp === "number" ? data.timestamp : undefined,
+  };
+}
+
+/**
+ * Décode les résultats depuis l'URL (format v2 ou legacy base64).
+ * @param nameParam Valeur du paramètre `?name=` (format v2 uniquement)
+ */
+export function decodeResults(encoded: string, nameParam?: string | null): SharedResults | null {
   try {
-    const jsonString = decodeURIComponent(atob(encoded));
-    const data = JSON.parse(jsonString) as SharedResults;
-
-    // Validation basique
-    if (!data.answers || typeof data.answers !== 'object') {
-      return null;
+    if (encoded.startsWith(V2_PREFIX)) {
+      return decodeResultsV2(encoded, nameParam ?? undefined);
     }
-
-    return data;
+    return decodeResultsLegacy(encoded);
   } catch (error) {
-    console.error('Erreur lors du décodage des résultats:', error);
+    console.error("Erreur lors du décodage des résultats:", error);
     return null;
   }
 }
@@ -48,9 +116,10 @@ export function decodeResults(encoded: string): SharedResults | null {
  * Génère l'URL de partage complète
  */
 export function generateShareURL(answers: Record<string, number>, name?: string): string {
-  const encoded = encodeResults(answers, name);
+  const encoded = encodeResults(answers);
+  const safeName = sanitizeShareName(name);
   const baseUrl = window.location.origin + window.location.pathname;
-  return `${baseUrl}?results=${encoded}${name ? `&name=${encodeURIComponent(name)}` : ''}`;
+  return `${baseUrl}?results=${encoded}${safeName ? `&name=${encodeURIComponent(safeName)}` : ""}`;
 }
 
 /**
