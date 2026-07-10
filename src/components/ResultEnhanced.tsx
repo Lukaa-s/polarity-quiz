@@ -10,7 +10,6 @@ import {
   Radar,
   ResponsiveContainer,
   Tooltip,
-  Legend,
 } from "recharts";
 import { ideologicalAxes } from "../data/axisexplaination";
 import type { Badge } from "../data/badges";
@@ -1170,13 +1169,42 @@ export default function ResultEnhanced({
                 })}
 
                 <Tooltip content={<RadarTooltip axisLabelMap={axisLabelMap} />} />
-                <Legend
-                  wrapperStyle={{ color: "#23201A" }}
-                  iconType="circle"
-                />
               </RadarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Légende hors du graphique : la <Legend> interne de recharts prenait
+              sa place DANS le conteneur à hauteur fixe — avec beaucoup de profils
+              sélectionnés, le radar rétrécissait d'autant (surtout sur mobile).
+              Ici elle s'étend librement sous le graphique. */}
+          {(!explorerMode || selectedProfiles.length > 0) && (
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-sm text-ink">
+              {!explorerMode && (
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    className="h-2.5 w-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: USER_COLOR }}
+                  />
+                  Vous
+                </span>
+              )}
+              {selectedProfiles.map((profileId) => {
+                const profile = [...referenceProfiles, ...savedProfiles].find(
+                  (p) => p.id === profileId
+                );
+                if (!profile) return null;
+                return (
+                  <span key={profileId} className="inline-flex items-center gap-1.5">
+                    <span
+                      className="h-2.5 w-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: profileColors[profile.name] }}
+                    />
+                    {profile.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
 
           {selectedProfiles.length === 0 && (
             <p className="text-center text-ink2 text-sm">
