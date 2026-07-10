@@ -17,12 +17,14 @@ const INK2 = "#5C564A";
 const LEFT = "#C62828";
 const RIGHT = "#1565C0";
 
+// « La croix du bulletin » : case de scrutin à l'encre, croix rouge (pôle
+// gauche) / bleue (pôle droit) qui se croisent — même marque que favicon.svg.
 const touchIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
   <rect width="180" height="180" fill="${PAPER}"/>
-  <path d="M90 26 L26 90 L90 154 Z" fill="${LEFT}"/>
-  <path d="M90 26 L154 90 L90 154 Z" fill="${RIGHT}"/>
-  <path d="M90 26 L90 154" stroke="${PAPER}" stroke-width="10"/>
+  <rect x="34" y="34" width="112" height="112" rx="11" fill="none" stroke="${INK}" stroke-width="13"/>
+  <path d="M62 63 L118 117" stroke="${LEFT}" stroke-width="18" stroke-linecap="round"/>
+  <path d="M117 62 L61 116" stroke="${RIGHT}" stroke-width="18" stroke-linecap="round"/>
 </svg>`;
 
 // Polices : librsvg n'embarque pas Fraunces/Libre Franklin, on reste sur les
@@ -39,13 +41,15 @@ const ogSvg = `
 
   <g>
     <text x="530" y="410" text-anchor="end" font-family="serif" font-size="44" font-weight="600" fill="${LEFT}">Égalité</text>
-    <rect x="588" y="382" width="24" height="24" fill="${INK}" transform="rotate(45 600 394)"/>
+    <rect x="578" y="372" width="44" height="44" rx="5" fill="none" stroke="${INK}" stroke-width="4.5"/>
+    <path d="M588 383 L611 405" stroke="${LEFT}" stroke-width="7" stroke-linecap="round"/>
+    <path d="M610.5 382.5 L587.5 404.5" stroke="${RIGHT}" stroke-width="7" stroke-linecap="round"/>
     <text x="670" y="410" text-anchor="start" font-family="serif" font-size="44" font-weight="600" fill="${RIGHT}">Mérite</text>
   </g>
 
   <rect x="24" y="502" width="1152" height="104" fill="${PAPER2}"/>
   <line x1="24" y1="502" x2="1176" y2="502" stroke="${INK2}" stroke-width="1"/>
-  <text x="600" y="565" text-anchor="middle" font-family="sans-serif" font-size="30" fill="${INK2}">101 questions · 14 clivages · gratuit, sans compte</text>
+  <text x="600" y="565" text-anchor="middle" font-family="sans-serif" font-size="30" fill="${INK2}">101 questions · 14 axes idéologiques · gratuit, sans compte</text>
 </svg>`;
 
 await sharp(Buffer.from(touchIconSvg)).png().toFile(path.join(publicDir, "apple-touch-icon.png"));

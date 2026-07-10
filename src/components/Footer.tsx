@@ -139,19 +139,20 @@ export default function Footer() {
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">Éditeur du site</h3>
                 <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
+                  {/* Éditeur non professionnel : anonymat public licite (LCEN art. 6, III-2),
+                      l'identité complète est connue de l'hébergeur. Ne pas ajouter de
+                      nom/adresse ici sans décision explicite du propriétaire. */}
                   <p className="mb-1">
-                    <strong>Nom :</strong> Lukas VAUVERT
+                    Site édité à titre personnel et non professionnel. Conformément à
+                    l'article 6, III-2 de la loi n° 2004-575 du 21 juin 2004 pour la
+                    confiance dans l'économie numérique (LCEN), l'éditeur a transmis ses
+                    coordonnées personnelles à l'hébergeur.
                   </p>
                   <p className="mb-1">
-                    <strong>Adresse :</strong> Avenue Maréchal de Saxe 
-                  </p>
-                  <p className="mb-1">
-                    <strong>Email :</strong>{" "}
+                    <strong>Contact :</strong>{" "}
                     <a href="mailto:polarityquiz@gmail.com" className="text-right hover:underline">
                       polarityquiz@gmail.com
                     </a>
-                  </p>
-                  <p className="text-xs text-ink/70 mt-2">
                   </p>
                 </div>
               </section>

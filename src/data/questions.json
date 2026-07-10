@@ -277,7 +277,7 @@
     "rightPole": "Parlementarisme",
     "favoredPole": "right",
     "weight": 1,
-    "explanation": "Cette position défend l'idée qu'un mandat électoral donne aux représentants une légitimité suffisante pour décider seuls, sans devoir solliciter l'avis des citoyens à chaque étape."
+    "explanation": "Cette position défend l'idée qu'un mandat électoral donne aux représentants une légitimité suffisante pour décider seuls, sans devoir solliciter l'avis des citoyens à chaque étape. D'autres estiment qu'un élu doit rendre des comptes en continu et associer les citoyens aux grandes décisions."
   },
   {
     "id": "q29",
@@ -437,7 +437,7 @@
     "rightPole": "Conservatisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Cette idée considère que les règles collectives peuvent exclure ou stigmatiser des individus, et qu'elles doivent donc pouvoir évoluer pour garantir l'inclusion et l'égalité de traitement."
+    "explanation": "Cette idée considère que les règles collectives peuvent exclure ou stigmatiser des individus, et qu'elles doivent évoluer pour garantir l'égalité de traitement. D'autres jugent que des traditions anciennes structurent une communauté et ne devraient pas être abolies au nom des sensibilités actuelles."
   },
   {
     "id": "q46",
@@ -447,7 +447,7 @@
     "rightPole": "Conservatisme",
     "favoredPole": "left",
     "weight": 1,
-    "explanation": "Cette position considère que les attentes différenciées envers les hommes et les femmes sont apprises et non naturelles, et qu'y renoncer permettrait à chacun de se construire plus librement."
+    "explanation": "Cette position considère que les attentes différenciées envers les hommes et les femmes sont apprises, et qu'y renoncer permettrait à chacun de se construire plus librement. D'autres pensent qu'une part de ces différences est naturelle et que ces repères aident aussi les enfants à grandir."
   },
   {
     "id": "q47",
