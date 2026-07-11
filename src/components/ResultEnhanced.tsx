@@ -18,6 +18,7 @@ import { referenceProfiles } from "../data/referenceProfiles";
 import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI, sanitizeShareName } from "../utils/shareResults";
 import { trackShare, trackEvent } from "../utils/analytics";
+import ShareCard from "./ShareCard";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Tooltip Radar amélioré
@@ -317,7 +318,9 @@ export default function ResultEnhanced({
       // Attendre un cycle de rendu pour que la désactivation prenne effet
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const element = document.getElementById("results-card");
+      // On capture la carte de partage dédiée (format fixe 1080×1350, rendue
+      // hors écran) — pas la page responsive, illisible une fois exportée.
+      const element = document.getElementById("share-card");
       if (!element) {
         alert("Erreur: élément non trouvé");
         setDisableAnimations(false);
@@ -389,7 +392,7 @@ export default function ResultEnhanced({
         },
         // Callback pour corriger le rendu des textes
         onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.getElementById("results-card");
+          const clonedElement = clonedDoc.getElementById("share-card");
           if (clonedElement) {
             // Forcer le rendu complet des textes
             const allText = clonedElement.querySelectorAll('div, span, p');
@@ -417,7 +420,7 @@ export default function ResultEnhanced({
       // Mobile : feuille de partage native (enregistrer dans Photos, poster
       // sur un réseau…) — le lien <a download> ne déclenche rien sur beaucoup
       // de versions d'iOS. Fallback : téléchargement classique via blob URL.
-      const file = new File([blob], "mes-resultats-politiques.png", { type: "image/png" });
+      const file = new File([blob], "mon-profil-politique.png", { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: "Mes résultats Polarity Quiz" });
@@ -430,7 +433,7 @@ export default function ResultEnhanced({
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = "mes-resultats-politiques.png";
+      link.download = "mon-profil-politique.png";
       link.href = url;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
@@ -581,6 +584,29 @@ export default function ResultEnhanced({
       .sort((a, b) => a.distance - b.distance);
   }, [poleScores, explorerMode, questions]);
 
+  // Données de la carte de partage exportable (format fixe 1080×1350, cf.
+  // ShareCard.tsx) : top 3 des personnalités, jauges compactes, badges.
+  const shareCardData = useMemo(() => {
+    if (explorerMode) return null;
+    return {
+      top3: sortedReferenceProfiles.slice(0, 3).map((p) => ({
+        name: p.name,
+        similarity: Math.round(100 - p.distance),
+      })),
+      gauges: axes.map((a) => {
+        const { left, right } = poleScores[a.id];
+        const total = left + right || 1;
+        const pctLeft = Math.round((left / total) * 100);
+        return {
+          id: a.id,
+          shortLabel: RADAR_SHORT_LABELS[a.axis] ?? a.axis,
+          pctLeft,
+          pctRight: 100 - pctLeft,
+        };
+      }),
+    };
+  }, [explorerMode, sortedReferenceProfiles, axes, poleScores]);
+
   // Données radar avec profils sélectionnés
   const multiRadarData = useMemo(() => {
     const data = axes.map((a) => {
@@ -665,6 +691,19 @@ export default function ResultEnhanced({
 
   return (
     <div className="space-y-6 font-body">
+      {/* Carte de partage : rendue hors écran en permanence, capturée par
+          l'export image. Ne pas la masquer via display:none ou la classe
+          "hidden" — elle doit être rendue pour html2canvas, et ignoreElements
+          saute la classe hidden. */}
+      {shareCardData && (
+        <div
+          aria-hidden="true"
+          style={{ position: "fixed", left: -12000, top: 0, pointerEvents: "none" }}
+        >
+          <ShareCard top3={shareCardData.top3} gauges={shareCardData.gauges} badges={badges} />
+        </div>
+      )}
+
       {/* Onglets */}
       <div className="border-b border-rule">
         <div className="flex gap-6 overflow-x-auto no-scrollbar -mb-px">
