@@ -57,8 +57,13 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               Polarity Quiz
             </span>
           </div>
+          {/* Date du test façon « une » de journal — pas de slogan. */}
           <span className="font-body font-medium text-ink2" style={{ fontSize: 24 }}>
-            Mon profil politique
+            {new Date().toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </span>
         </div>
         <div style={{ height: 2, backgroundColor: "#23201A" }} />
@@ -181,6 +186,14 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
                     >
                       {b.label}
                     </span>
+                    {b.rarity != null && (
+                      <span
+                        className="font-body text-ink2 tabular-nums"
+                        style={{ fontSize: 14, marginTop: 3 }}
+                      >
+                        ~{b.rarity} %
+                      </span>
+                    )}
                   </div>
                 ))}
                 {extraBadges > 0 && (

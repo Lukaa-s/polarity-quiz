@@ -5,6 +5,8 @@ export type Badge = {
   label: string;
   description?: string;
   icon?: string;
+  /** % estimé de profils qui obtiennent le badge (cf. ESTIMATED_RARITY). */
+  rarity?: number;
   /**
    * test() reçoit :
    * - answers[q.id] = idx ∈ [0..6]
@@ -649,8 +651,78 @@ const rawBadges: Badge[] = [
   // … ajoute ici d’autres badges avec la même logique idx/axisScores …
 ];
 
-// Icônes résolues en URLs bundlées (valables en production).
+// Rareté estimée de chaque badge (% de profils qui l'obtiennent).
+// ESTIMATIONS À LA MAIN, pas des mesures : déduites de la sévérité des
+// conditions (seuils ≥ 75 %, conditions cumulées…) et du public attendu d'un
+// quiz politique en ligne (jeune, plutôt urbain). À remplacer par de vraies
+// statistiques quand le volume de tests le permettra (events GoatCounter).
+const ESTIMATED_RARITY: Record<string, number> = {
+  // Réponse forte à une question unique — fréquents à moyens
+  pro_nuclear: 18,
+  vegan: 7,
+  pro_europeen: 38,
+  euro_sceptique: 22,
+  pro_lgbt: 33,
+  eugeniste_pragmatique: 34,
+  legaliseur: 28,
+  cosmonaute: 31,
+  rationaliste_pur: 36,
+  anti_censure_absolue: 41,
+  chasseur_de_fakes: 46,
+  oeil_de_camera: 30,
+  referendumiste: 43,
+  elitiste: 17,
+  action_directe: 39,
+  // Deux questions cumulées — moyens à rares
+  restrictionniste: 13,
+  hors_champ: 8,
+  anticarceral: 9,
+  authoritaire: 4,
+  // Style de réponse global
+  hesitant: 32,
+  decisif: 6,
+  equilibriste: 7,
+  assertive: 2,
+  inclassable: 3,
+  // Un axe dominé à ≥ 70-75 %
+  eco_warrior: 16,
+  mondialiste: 12,
+  technosceptique: 7,
+  techno_prophete: 11,
+  liberal: 8,
+  etat_stratege: 13,
+  collectiviste_social: 15,
+  bastion_du_proprietaire: 6,
+  conservateur_culturel: 7,
+  progressiste_moral: 26,
+  decentralisateur: 19,
+  voix_du_parlement: 5,
+  sentinelle_de_lordre: 10,
+  protecteur: 9,
+  spiritualiste: 5,
+  gardien_de_la_laicite: 29,
+  reformiste_tranquille: 12,
+  porte_flambeau_revolution: 8,
+  artisan_du_travail: 10,
+  proprietaire_de_ses_jours: 13,
+  promethee_productiviste: 5,
+  souverainiste: 11,
+  capitaine_dindustrie: 6,
+  anarchiste: 4,
+  // Conditions croisées sur plusieurs axes — rares
+  communiste: 9,
+  egalitariste: 12,
+  social_liberal: 14,
+  dissident_tranquille: 21,
+  constructiviste: 18,
+  productiviste_vert: 8,
+  libre_par_principe: 5,
+  anarchiste_poetique: 3,
+};
+
+// Icônes résolues en URLs bundlées (valables en production) + rareté estimée.
 export const badges: Badge[] = rawBadges.map((b) => ({
   ...b,
   icon: resolveIcon(b.icon),
+  rarity: ESTIMATED_RARITY[b.id],
 }));

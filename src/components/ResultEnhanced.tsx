@@ -1015,6 +1015,11 @@ export default function ResultEnhanced({
                       <span className="mt-2 text-xs sm:text-sm text-ink text-center font-medium leading-normal">
                         {badge.label}
                       </span>
+                      {badge.rarity != null && (
+                        <span className="mt-0.5 text-[11px] text-ink2 tabular-nums">
+                          ~{badge.rarity} % des profils
+                        </span>
+                      )}
                       {expanded && (
                         <span className="mt-1 text-xs text-ink2 text-center leading-normal">
                           {badge.description}
