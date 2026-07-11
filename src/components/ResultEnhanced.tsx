@@ -309,9 +309,10 @@ export default function ResultEnhanced({
     setDisableAnimations(true);
 
     try {
-      // html2canvas (~200 Ko) ne sert qu'à l'export : chargé à la demande
-      // pour ne pas alourdir le chunk résultats.
-      const { default: html2canvas } = await import("html2canvas");
+      // html2canvas-pro (fork maintenu de html2canvas : supporte les couleurs
+      // oklch() de tokens.css, que l'original ne parse pas) ne sert qu'à
+      // l'export : chargé à la demande pour ne pas alourdir le chunk résultats.
+      const { default: html2canvas } = await import("html2canvas-pro");
 
       // Attendre un cycle de rendu pour que la désactivation prenne effet
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -323,21 +324,25 @@ export default function ResultEnhanced({
         return;
       }
 
-      // Attendre que toutes les images soient chargées
+      // Attendre que toutes les images soient chargées. Les badges sont en
+      // loading="lazy" : hors viewport ils ne se chargent JAMAIS et cette
+      // attente bloquait indéfiniment (bouton « Export… » figé — systématique
+      // sur mobile où la carte est très haute). On force le chargement, avec
+      // un garde-fou de 8 s au cas où une image ne répond pas.
       const images = element.querySelectorAll("img");
-      await Promise.all(
-        Array.from(images).map(
-          (img) =>
-            new Promise((resolve) => {
-              if (img.complete) {
-                resolve(true);
-              } else {
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(true);
-              }
-            })
-        )
-      );
+      await Promise.race([
+        Promise.all(
+          Array.from(images).map((img) => {
+            img.loading = "eager";
+            if (img.complete) return Promise.resolve(true);
+            return new Promise((resolve) => {
+              img.onload = () => resolve(true);
+              img.onerror = () => resolve(true);
+            });
+          })
+        ),
+        new Promise((resolve) => setTimeout(resolve, 8000)),
+      ]);
 
       // Attendre un peu plus pour s'assurer que tout est rendu sans animations
       await new Promise((resolve) => setTimeout(resolve, 300));
@@ -354,9 +359,15 @@ export default function ResultEnhanced({
         (htmlEl.style as CSSStyleDeclaration & { webkitBackdropFilter?: string }).webkitBackdropFilter = 'none';
       });
 
+      // iOS Safari plafonne la surface d'un canvas (~16,7 M pixels) : la carte
+      // de résultats mobile est très haute, un scale fixe de 2 dépasse la
+      // limite → canvas silencieusement vide. On plafonne par la surface.
+      const area = element.offsetWidth * element.offsetHeight;
+      const scale = Math.min(2, Math.sqrt(14_000_000 / area));
+
       const canvas = await html2canvas(element, {
         backgroundColor: "#F6F3EC",
-        scale: 2,
+        scale,
         logging: false, // Désactiver le logging
         useCORS: true,
         allowTaint: true,
@@ -370,9 +381,10 @@ export default function ResultEnhanced({
         imageTimeout: 0,
         // Ignorer certains éléments problématiques
         ignoreElements: (element) => {
-          // Ignorer les tooltips et éléments cachés
+          // Ignorer les tooltips, éléments cachés et boutons d'action
           return element.classList.contains('opacity-0') ||
-                 element.classList.contains('hidden');
+                 element.classList.contains('hidden') ||
+                 element.hasAttribute('data-export-exclude');
         },
         // Callback pour corriger le rendu des textes
         onclone: (clonedDoc) => {
@@ -394,10 +406,33 @@ export default function ResultEnhanced({
         element.style.cssText = style;
       });
 
+      // toBlob plutôt que toDataURL : iOS Safari ignore silencieusement les
+      // liens download vers des data URLs de plusieurs Mo.
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      if (!blob) throw new Error("canvas vide (limite de taille du navigateur)");
+
+      // Mobile : feuille de partage native (enregistrer dans Photos, poster
+      // sur un réseau…) — le lien <a download> ne déclenche rien sur beaucoup
+      // de versions d'iOS. Fallback : téléchargement classique via blob URL.
+      const file = new File([blob], "mes-resultats-politiques.png", { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "Mes résultats Polarity Quiz" });
+          return;
+        } catch (err) {
+          if ((err as DOMException).name === "AbortError") return; // annulé par l'utilisateur
+          // Autre refus (contexte, permission…) : on retombe sur le téléchargement
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `mes-resultats-politiques.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.download = "mes-resultats-politiques.png";
+      link.href = url;
       link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10_000);
     } catch (error) {
       console.error("Erreur lors de l'export:", error);
       alert("Erreur lors de l'export de l'image");
@@ -651,11 +686,16 @@ export default function ResultEnhanced({
         <div className={disableAnimations ? 'pb-8' : 'animate-fadeIn pb-8'} id="results-card">
           <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
             <h2 className="text-3xl sm:text-4xl font-semibold text-ink">Vos résultats</h2>
-            <div className="flex gap-2 relative" ref={shareMenuRef}>
+            {/* data-export-exclude : ces boutons n'ont pas de sens dans l'image
+                exportée (le bouton Télécharger vide y apparaissait figé). */}
+            <div className="flex gap-2 relative" data-export-exclude ref={shareMenuRef}>
               {/* Bouton Télécharger */}
               <button
                 onClick={handleExportImage}
                 disabled={isExporting}
+                /* Sur mobile le libellé est masqué (icône seule) : sans aria-label
+                   le bouton n'a aucun nom accessible. */
+                aria-label={isExporting ? "Export en cours…" : "Télécharger l'image de mes résultats"}
                 className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ArrowDownTrayIcon className="w-5 h-5" />

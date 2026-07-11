@@ -24,7 +24,7 @@ npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-ic
 
 1. **Welcome screen** — hero with PoleFaceoff, honest length notice ("101 questions · ~15 min"), and a "Reprendre le test" banner when an unfinished run exists in localStorage
 2. **Question flow** — sequential display via `QuestionEnhanced.tsx` (7-point ink-intensity Likert scale, focus management, aria-live progress)
-3. **Results** — `ResultEnhanced.tsx`, loaded via `React.lazy()` (recharts + html2canvas stay out of the initial bundle)
+3. **Results** — `ResultEnhanced.tsx`, loaded via `React.lazy()` (recharts + html2canvas-pro stay out of the initial bundle)
 
 `Question.tsx` and `Result.tsx` were removed (dead legacy versions) — only the `*Enhanced` components exist.
 
@@ -82,5 +82,5 @@ Run `npm run test` after ANY change to the data files. The suite locks the data 
 - Support links point to `https://ko-fi.com/lukaaasss` (plain outbound links, no third-party script): a salient block at the end of the results tab (`ResultEnhanced.tsx`) and a discreet line on the welcome screen (`App.tsx`)
 - Security headers incl. CSP live in `vercel.json` — adding any new external origin (font, analytics…) requires updating the CSP there
 - SEO/share assets live in `public/` (`favicon.svg`, `og-image.png`, `robots.txt`, `sitemap.xml`); the production domain is `https://polarity-quiz.fr` — `og:url`/`og:image`/canonical in `index.html`, the `Sitemap:` line in `robots.txt` and `sitemap.xml` all reference it and must stay in sync if it ever changes
-- `html2canvas` is dynamically imported inside the export handler (own chunk, loaded on click); recharts stays in the lazy ResultEnhanced chunk
+- `html2canvas-pro` (maintained fork — the original html2canvas chokes on the oklch() colors of tokens.css) is dynamically imported inside the export handler (own chunk, loaded on click); recharts stays in the lazy ResultEnhanced chunk. On mobile the export goes through `navigator.share` (native share sheet), falling back to a blob download
 - Legacy iteration docs are archived in `docs/archive/`
