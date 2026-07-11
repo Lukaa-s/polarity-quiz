@@ -991,7 +991,10 @@ export default function ResultEnhanced({
               </p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 items-start justify-items-center">
-                {badges.map((badge, idx) => {
+                {/* Tri par rareté croissante : les trophées les plus rares d'abord */}
+                {[...badges]
+                  .sort((a, b) => (a.rarity ?? 999) - (b.rarity ?? 999))
+                  .map((badge, idx) => {
                   const expanded = expandedBadgeId === badge.id;
                   return (
                     <button

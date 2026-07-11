@@ -36,7 +36,11 @@ function Mark({ size }: { size: number }) {
 
 export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
   const hero = top3[0];
-  const shownBadges = badges.slice(0, 5);
+  // Les 5 badges les PLUS RARES obtenus (rareté croissante) : ce sont eux
+  // qui donnent envie de se comparer, pas les 5 premiers déclarés.
+  const shownBadges = [...badges]
+    .sort((a, b) => (a.rarity ?? 999) - (b.rarity ?? 999))
+    .slice(0, 5);
   const extraBadges = badges.length - shownBadges.length;
 
   return (
