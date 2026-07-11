@@ -1,0 +1,507 @@
+[
+  {
+    "id": "q1",
+    "text": "Employees should get a vote on major company decisions and share in the profits.",
+    "explanation": "Some argue that the people who keep a company running should have a say in how it's run and share directly in its success. Others say it's only fair that whoever invested money or founded the company keeps control, even without working there day to day."
+  },
+  {
+    "id": "q2",
+    "text": "Owning ten apartments to rent out is perfectly legitimate, as long as you pay your taxes on it.",
+    "explanation": "Some see nothing wrong with owning multiple properties as long as the law is followed. Others argue this locks people out of housing and helps drive up rents, especially in big cities."
+  },
+  {
+    "id": "q3",
+    "text": "Everyone should be free to accumulate as much wealth and property as they want, with no cap imposed by the state.",
+    "explanation": "Some believe everyone should be free to build as much wealth as they want, without state-imposed limits. Others argue unlimited accumulation widens inequality and that the largest fortunes should be capped."
+  },
+  {
+    "id": "q4",
+    "text": "If a building sits empty for years, the local council should be able to requisition it to house homeless people, even against the owner's wishes.",
+    "explanation": "Some say meeting urgent needs matters more than leaving a place empty in the name of property rights. Others insist private property stays private, and the state shouldn't seize it, even temporarily."
+  },
+  {
+    "id": "q5",
+    "text": "Being able to own your home, your savings and your belongings is the foundation of freedom: without that, you always depend on someone else.",
+    "explanation": "Some believe owning and passing on property is essential to staying free and independent. Others say this freedom shouldn't stop us from curbing abuses or guaranteeing everyone a decent minimum to live on."
+  },
+  {
+    "id": "q6",
+    "text": "To keep prices low, competition between several companies works better than a state-controlled monopoly.",
+    "explanation": "The idea is that competition pushes companies to improve and lower prices to attract customers. Others worry it drives quality down or leaves the most vulnerable without services no company finds profitable enough to offer."
+  },
+  {
+    "id": "q7",
+    "text": "In a crisis, the state should be able to cap the price of essentials like electricity, bread or petrol to protect the public.",
+    "explanation": "Some see temporary price freezes on essentials as necessary to stop the poorest from going without. Others counter that this can trigger shortages, queues, or discourage suppliers from producing at all."
+  },
+  {
+    "id": "q8",
+    "text": "Healthcare and education would be better run by private companies than by the state.",
+    "explanation": "Supporters believe private providers would offer more choice, shorter waits, and services better matched to needs. Others fear this would widen the gap in access to healthcare and education between rich and poor."
+  },
+  {
+    "id": "q9",
+    "text": "A CEO should be free to set their own pay, even if it creates huge gaps with their employees.",
+    "explanation": "Some argue that if an executive bears the risk and responsibility, it's only fair they set their own pay. Others point out that CEO-to-worker pay gaps have grown sharply, raising doubts about how fair they really are."
+  },
+  {
+    "id": "q10",
+    "text": "The state should more often break up companies that have become too dominant, starting with the tech giants.",
+    "explanation": "Some argue that an overly dominant company, like the big tech platforms, can stifle competition and dictate terms to consumers and small suppliers. Others say a company shouldn't be penalized just for becoming the best in its field."
+  },
+  {
+    "id": "q11",
+    "text": "Energy, railways and water should belong to the state, not to private companies.",
+    "explanation": "Some believe essential services like water, energy and transport are too important to leave to private companies and should stay in state hands. Others argue private management is often more efficient and better suited to people's needs."
+  },
+  {
+    "id": "q12",
+    "text": "The biggest fortunes are usually built on the exploitation of other people's labor.",
+    "explanation": "The idea here is that amassing immense wealth rarely happens without relying on other people's labor, often within unequal power relationships. Others say great fortunes can simply reward innovation or risk-taking that benefited everyone."
+  },
+  {
+    "id": "q13",
+    "text": "A fortune earned legally, without fraud, should never be capped or hit with extra taxes.",
+    "explanation": "For many, wealth earned through legal work, without fraud or clear exploitation, raises no moral issue. Others point out that fortunes can be perfectly legal while still resting on mechanisms that are unjust or harmful to society."
+  },
+  {
+    "id": "q14",
+    "text": "Without the lure of profit, there would be no great inventions and no progress: money is what drives people to create.",
+    "explanation": "Some see the pursuit of profit as a powerful engine of creativity and progress: the hope of getting rich drives people to take risks, innovate, and improve others' lives. Others think chasing profit too hard diverts innovation away from the common good."
+  },
+  {
+    "id": "q15",
+    "text": "Someone who takes the risk of starting a business deserves to become very rich if it succeeds.",
+    "explanation": "This view values the courage to start a business, often without a safety net and with heavy responsibilities, seeing success as a fair reward. Others argue one person's massive enrichment rarely matches the collective effort that made it possible."
+  },
+  {
+    "id": "q16",
+    "text": "A company should exist to serve people first, not to enrich its owners.",
+    "explanation": "This view holds that a company's first role is social: producing what's useful, meeting needs, building community. Others see it primarily as a private investment tool, one whose efficiency depends on the freedom to make a profit."
+  },
+  {
+    "id": "q17",
+    "text": "Cutting the working week to 30 hours for everyone would be progress, even if it means producing less wealth.",
+    "explanation": "Cutting working hours, even at the cost of lower output, would give everyone more free time, rest and social life. Others believe working more remains essential to economic dynamism and collective progress."
+  },
+  {
+    "id": "q18",
+    "text": "Someone who cares for the sick or cleans for a living should be paid more than a trader or an influencer.",
+    "explanation": "This claims that jobs essential to society, like caregiving or cleaning, deserve better pay than roles that earn a lot but offer little direct usefulness. Others believe pay should mainly reward responsibility, scarce skills or economic success."
+  },
+  {
+    "id": "q19",
+    "text": "Collecting trash or working on a factory line is work you can be proud of, not just a condition to escape.",
+    "explanation": "This view honors the dignity of every job, even the hardest or least recognized ones, seeing pride in concrete usefulness. Others believe such working conditions should be abolished or automated rather than glorified."
+  },
+  {
+    "id": "q20",
+    "text": "What earns respect is the effort you put into your work, not the money you make from it.",
+    "explanation": "This view holds that merit comes mainly from personal effort, not financial results. Others believe what matters most are concrete outcomes: value created, wealth generated, or performance achieved."
+  },
+  {
+    "id": "q21",
+    "text": "Work is, above all, what gives life meaning.",
+    "explanation": "Some believe work structures our lives: it gives us rhythm, purpose, and a place in society. Others believe meaning can just as easily be found elsewhere: in art, relationships or personal pursuits."
+  },
+  {
+    "id": "q22",
+    "text": "An authority should only be considered legitimate if it can be criticized and replaced at any time, whether it's an elected official, a boss or a teacher.",
+    "explanation": "Some believe power only deserves obedience if it stays accountable and temporary, since prolonged authority tends to impose itself unchallenged. Others believe society needs stable figures to function, even if they aren't constantly questioned."
+  },
+  {
+    "id": "q23",
+    "text": "In a war or a health crisis, only a strong central authority can make fast decisions that serve everyone.",
+    "explanation": "When crisis strikes, many believe a strong decision-making center prevents chaos and enables coherent action. But others note that such concentrated power can lack transparency and impose questionable measures without real debate."
+  },
+  {
+    "id": "q24",
+    "text": "Concentrating power in the hands of a few, whether in a company or a government, usually ends up threatening the common good.",
+    "explanation": "Some fear that delegating too much responsibility to a few creates lasting imbalances, even abuse. Others believe a tighter leadership structure can enable efficiency and long-term vision, especially in uncertain times."
+  },
+  {
+    "id": "q25",
+    "text": "A law, even an imperfect one, must apply to everyone: letting each person decide whether to follow it opens the door to chaos.",
+    "explanation": "To ensure order and predictability, some prefer rules to be followed even when imperfect. Others believe blindly accepting questionable laws only blocks progress and justice."
+  },
+  {
+    "id": "q26",
+    "text": "Without a leader, a group always ends up paralyzed or torn apart.",
+    "explanation": "A leaderless structure can promote equality, but some believe it risks stalling or getting bogged down without clear direction. Others put their faith in collective autonomy and rules decided together, with no hierarchy."
+  },
+  {
+    "id": "q27",
+    "text": "School should also teach children to respect authority and discipline, not just to think for themselves.",
+    "explanation": "Some believe schools must also shape individuals who can follow rules and accept authority, qualities essential to life in society. Others believe schools should above all foster critical thinking and independence in children."
+  },
+  {
+    "id": "q28",
+    "text": "An elected representative should be able to govern without regularly consulting the public.",
+    "explanation": "This view holds that winning an election gives representatives enough legitimacy to decide alone, without seeking public input at every step. Others believe elected officials must stay accountable continuously and involve citizens in major decisions."
+  },
+  {
+    "id": "q29",
+    "text": "Major laws, like those on labor, taxes or the environment, should be put to a direct vote of citizens.",
+    "explanation": "This view favors referendums or other forms of direct democracy to decide the country's major directions, rather than leaving those choices to elected officials alone."
+  },
+  {
+    "id": "q30",
+    "text": "When a clear majority of the public backs a measure, elected officials should adopt it, even if they personally oppose it.",
+    "explanation": "This view holds that representatives aren't there to rule by personal conviction, but to carry out the clearly expressed will of the majority, whether through referendums, large-scale polls or public mobilization."
+  },
+  {
+    "id": "q31",
+    "text": "Voting every few years isn't enough: without referendums or regular consultations, citizens have almost no real power.",
+    "explanation": "This critique targets representative systems where public participation is limited to periodic elections, and calls for more continuous involvement through local assemblies, petitions or citizen-initiated referendums."
+  },
+  {
+    "id": "q32",
+    "text": "When votes and direct consultations multiply, it's the most mobilized groups that end up deciding for everyone else.",
+    "explanation": "This critique suggests participatory processes amplify the voice of organized or highly mobilized groups, who don't necessarily reflect general opinion, risking biased public decisions."
+  },
+  {
+    "id": "q33",
+    "text": "Major public decisions are better made by representatives advised by experts than by a direct vote of citizens.",
+    "explanation": "Some argue citizens don't always have the time or information to settle complex issues, and that representatives backed by experts decide better. Others believe this distances decisions from the people they affect and underestimates citizens' judgment."
+  },
+  {
+    "id": "q34",
+    "text": "A good leader must sometimes go against public opinion, which often favors immediate comfort over the common good.",
+    "explanation": "This claims that governing sometimes requires going against prevailing opinion, when it reflects short-term interests rather than a lasting vision of the common good."
+  },
+  {
+    "id": "q35",
+    "text": "Banning wildcat strikes, factory occupations or unauthorized protests means crushing movements that have often advanced our rights.",
+    "explanation": "This claims that some rights were won through actions on the edge of legality, and that tightly regulating protest movements neutralizes their power to bring change."
+  },
+  {
+    "id": "q36",
+    "text": "As long as major economic and political institutions stay in the same hands, no reform can truly change society.",
+    "explanation": "This view holds that power structures, like big corporations, banks and political institutions, protect their own interests and block any deep change. Real transformation would require replacing them."
+  },
+  {
+    "id": "q37",
+    "text": "Slow but legal change is better than a fast revolution, even if the revolution would solve problems more quickly.",
+    "explanation": "This holds that stability and legality matter more than speed. Even if a revolution could fix problems faster, the risks and instability it brings make it less desirable. Others believe urgent situations sometimes justify radical breaks."
+  },
+  {
+    "id": "q38",
+    "text": "To change society, we should focus above all on education and culture, not street movements.",
+    "explanation": "This view holds that lasting progress comes from shifting mindsets through schools, media and the arts, rather than through confrontation or shows of force."
+  },
+  {
+    "id": "q39",
+    "text": "A stable society, even an imperfect one, is better than a revolutionary break that risks destroying everything.",
+    "explanation": "This view holds that an imperfect but stable society beats a rupture with unpredictable consequences; revolutions have often produced violence, instability or new authoritarian regimes. Others believe some injustices demand radical transformation."
+  },
+  {
+    "id": "q40",
+    "text": "Faced with social or environmental emergencies, we need to radically change our system rather than attempt gradual reforms.",
+    "explanation": "This view holds that today's serious crises demand a deep, rapid transformation of the system, since partial fixes fall short. Others believe gradual reforms are more realistic and help avoid abrupt social fallout."
+  },
+  {
+    "id": "q41",
+    "text": "Our society has become too tolerant of behavior that breaks shared rules.",
+    "explanation": "This view holds that excusing certain behavior in the name of social or cultural understanding weakens respect for shared rules. Others believe this narrative exaggerates the problem and mostly serves to resist social change."
+  },
+  {
+    "id": "q43",
+    "text": "A child needs a father and a mother: two men or two women can't offer the same balance.",
+    "explanation": "This view holds that having both a father and a mother provides complementary guidance essential to a child's development, and same-sex parenting can't offer the same balance. Others believe parental love and attention matter most, regardless of gender."
+  },
+  {
+    "id": "q44",
+    "text": "To fight discrimination, it's better to highlight differences (background, religion, orientation) than to ignore them in the name of universalism.",
+    "explanation": "This view holds that formal neutrality isn't enough: minority identities need active recognition and representation. Others believe highlighting differences undermines the universal project of shared citizenship."
+  },
+  {
+    "id": "q45",
+    "text": "Even an age-old tradition, like reserving certain jobs or religious roles for men, should disappear if it demeans people.",
+    "explanation": "This view holds that collective rules can exclude or stigmatize people, and must evolve to guarantee equal treatment. Others believe age-old traditions hold a community together and shouldn't be abolished for present-day sensibilities."
+  },
+  {
+    "id": "q46",
+    "text": "What we expect from girls and boys (girls being gentle, boys being tough) isn't natural at all: these are stereotypes to move past.",
+    "explanation": "This view holds that differing expectations for men and women are learned, and letting go of them would let everyone grow more freely. Others believe some of these differences are natural and that such guideposts also help children grow up."
+  },
+  {
+    "id": "q47",
+    "text": "Affirmative action (quotas, hiring preferences) can be justified to correct inequalities.",
+    "explanation": "Some see this as necessary to correct long-standing inequalities and open opportunities to underrepresented groups. Others see it as unfair, arguing a position should always go to the most qualified person, regardless of identity."
+  },
+  {
+    "id": "q48",
+    "text": "Schools should focus less on gender, identity and diversity, and get back to the basics.",
+    "explanation": "Some believe identity, gender and diversity topics have taken up too much space in education, at the expense of fundamentals like reading, writing and math. Others believe these subjects are essential civic education for informed citizens."
+  },
+  {
+    "id": "q49",
+    "text": "It's absurd that a simple line drawn on a map decides who has the right to live where.",
+    "explanation": "Some see borders as arbitrary lines that shouldn't limit people's freedom to move between countries. Others believe controlling entry is essential to protecting a country's identity, security or balance."
+  },
+  {
+    "id": "q50",
+    "text": "Our country gives too much welfare support to recently arrived immigrants.",
+    "explanation": "Some believe overly generous aid invites abuse and strains public finances. Others argue this support remains limited, responds to often precarious situations, and that a dignified welcome is a moral and human duty."
+  },
+  {
+    "id": "q51",
+    "text": "No international or European treaty should be imposed on a country against the will of its people.",
+    "explanation": "Some believe no treaty, European or international, should be forced on a state against its people's will. Others believe accepting shared rules is necessary to tackle global challenges that go beyond national borders."
+  },
+  {
+    "id": "q52",
+    "text": "As long as there are poor people in our country, public money shouldn't fund aid abroad.",
+    "explanation": "Some believe the state's first responsibility is to its own citizens, especially the most vulnerable. Others believe a developed country also has a duty of solidarity toward the world's most struggling populations."
+  },
+  {
+    "id": "q53",
+    "text": "Refusing to help a people in danger just because it's not our problem is a form of cowardice.",
+    "explanation": "This view holds that solidarity shouldn't stop at borders, especially in serious crises. Others believe a country can't carry the world's problems and must focus on its own priorities first."
+  },
+  {
+    "id": "q54",
+    "text": "On issues like climate change or pandemics, states should accept binding international rules.",
+    "explanation": "Some believe global challenges require a coordinated response, even if it means limiting government independence somewhat. Others believe each country must keep full control over its own decisions, even during a global emergency."
+  },
+  {
+    "id": "q55",
+    "text": "The state shouldn't spend any public money on religion, not even to maintain religious buildings.",
+    "explanation": "This view calls for a strict financial separation between church and state. Others note that local authorities are often legally required to maintain historic religious buildings, and see this as worth preserving for its cultural value."
+  },
+  {
+    "id": "q56",
+    "text": "It's dangerous for the law to enshrine religious prohibitions, for example on abortion or blasphemy.",
+    "explanation": "This view holds that law must rest on rational principles shared by all, not be dictated by any one faith. Others believe certain religious values, like respect for life or solidarity, can usefully inspire legislation."
+  },
+  {
+    "id": "q57",
+    "text": "A society that loses all religious faith ends up replacing it with other beliefs (money, power, extreme ideologies), often worse ones.",
+    "explanation": "Some believe religious faith provides a moral foundation nothing else can lastingly replace, and without it, society turns to new forms of idolatry: money, power, ideology. Others believe a secular society can organize around shared values."
+  },
+  {
+    "id": "q58",
+    "text": "Religions hold back gender equality, LGBT+ rights and scientific progress: they should be viewed with caution.",
+    "explanation": "This critique argues certain religious doctrines oppose equality or scientific progress. Others point out this doesn't apply to all religions, and that faith can coexist with modern rights."
+  },
+  {
+    "id": "q59",
+    "text": "In losing its religious bearings, today's society is also losing its moral compass and drifting off course.",
+    "explanation": "Some believe religion is an indispensable moral foundation, and losing it weakens shared values and behavior. Others believe society can stay ethical and stable without religious reference points."
+  },
+  {
+    "id": "q60",
+    "text": "Even in a secular country, religion plays a positive and irreplaceable role in social bonds and life's meaning.",
+    "explanation": "This view holds that religion, without interfering with the state, can strengthen social cohesion and personal fulfillment. Others believe these roles are better left to neutral institutions or individual reflection."
+  },
+  {
+    "id": "q61",
+    "text": "Harsher sentences are needed for justice to be respected.",
+    "explanation": "Some believe overly lenient justice loses its deterrent power, and that toughness is needed to maintain order and trust in the system. Others believe justice works best through prevention, fairness and rehabilitation."
+  },
+  {
+    "id": "q62",
+    "text": "When offenses go unpunished, people reoffend: a sense of impunity breeds violence.",
+    "explanation": "This holds that unanswered offenses fuel a culture of transgression. Others point out that violence often has social, economic or psychological roots, and that fear of punishment isn't always a deterrent."
+  },
+  {
+    "id": "q63",
+    "text": "Some crimes should be punished with no possibility of early release.",
+    "explanation": "This view holds that the most serious crimes, like murder or sexual assault, should carry non-negotiable sentences. Others believe no sentence should ever rule out the possibility of change or forgiveness."
+  },
+  {
+    "id": "q64",
+    "text": "A trial has done its job once the victim is heard and the offender admits wrongdoing, even without a harsh sentence.",
+    "explanation": "This approach favors restorative justice, which seeks to repair harm and restore dialogue between victim and offender. Others argue only a firm sentence can deliver justice and mark the line that must not be crossed."
+  },
+  {
+    "id": "q65",
+    "text": "A justice system that fails to rehabilitate people has failed at its mission.",
+    "explanation": "This view holds that a sentence's purpose should be helping someone find their place back in society. Others believe justice must above all punish the wrong committed, even if it doesn't lead to rehabilitation."
+  },
+  {
+    "id": "q66",
+    "text": "A repeat rapist doesn't deserve talk of \"rehabilitation\" — he should be locked up for life.",
+    "explanation": "This view holds that some acts reveal lasting dangerousness, and that protecting society must come first. Others believe no one should ever be considered beyond redemption, even repeat offenders."
+  },
+  {
+    "id": "q67",
+    "text": "Prison often turns inmates into more hardened criminals than when they went in.",
+    "explanation": "This critique targets the destructive effects of incarceration: violence, isolation, loss of direction. Others believe prison remains a necessary tool for stopping dangerous behavior."
+  },
+  {
+    "id": "q68",
+    "text": "For most offenses, alternative sentences (community service, therapy, restitution) should replace prison.",
+    "explanation": "This view favors more constructive forms of justice aimed at repairing harm rather than punishing. Others believe such alternatives often lack firmness and can trivialize offenses."
+  },
+  {
+    "id": "q69",
+    "text": "Saving the climate will inevitably require strong constraints: less driving, less flying, less meat, less disposable stuff.",
+    "explanation": "This view holds that protecting the climate will impose real constraints on our lifestyles: less driving, flying and meat. Others believe technological innovation will cut our environmental impact without upending our habits."
+  },
+  {
+    "id": "q70",
+    "text": "In the name of the environment, we shouldn't hold back innovative industries: that would mean sacrificing our economy and our jobs.",
+    "explanation": "This view holds that stopping or slowing progress in sectors like energy, automotive or industry can seriously harm growth and jobs. Others believe limiting certain activities is necessary to protect the planet, even at an economic cost."
+  },
+  {
+    "id": "q71",
+    "text": "Green capitalism is an illusion: you can't save the environment with a model built on growth and consumption.",
+    "explanation": "Some believe the green solutions offered by businesses and governments never actually challenge the destructive logic underneath. Others believe ecology and economic growth can be reconciled."
+  },
+  {
+    "id": "q72",
+    "text": "Protecting the planet must come before economic growth and jobs, no compromise.",
+    "explanation": "Some believe environmental protection must be the absolute priority, even at the cost of growth or jobs, since no compromise is acceptable given the climate emergency. Others believe jobs, growth and the ecological transition can go hand in hand."
+  },
+  {
+    "id": "q73",
+    "text": "Cutting back on our comforts (cars, flights, meat) isn't necessary to address the climate crisis.",
+    "explanation": "This view holds that innovation and better organized production will address the climate crisis without giving up our comforts. Others believe real cuts to the most emitting habits are inevitable, whether chosen or organized collectively."
+  },
+  {
+    "id": "q74",
+    "text": "Just like in the past, technological progress will eventually solve the ecological crisis without us having to change our way of life.",
+    "explanation": "This reasoning bets on innovation and humanity's ability to adapt, as has happened with other challenges throughout history. Others point out that some ecological problems require deep changes, not just technical ones."
+  },
+  {
+    "id": "q75",
+    "text": "Monitoring private communications is essential to prevent terrorist attacks.",
+    "explanation": "This view holds that collective security comes before individual privacy, and that surveillance measures protect the public. Others believe privacy is a fundamental right that shouldn't be sacrificed, even for security."
+  },
+  {
+    "id": "q76a",
+    "text": "Freedom of speech also means the right to blaspheme, caricature or shock, even when it makes people uncomfortable.",
+    "explanation": "This defends an absolute right to speak without censorship, even if it offends. Others believe insulting speech can damage social cohesion and should be regulated."
+  },
+  {
+    "id": "q76b",
+    "text": "The spread of false information should be limited, even if that means restricting free speech a little.",
+    "explanation": "This view holds that limiting disinformation is necessary to prevent manipulation and confusion. Others believe even mistaken ideas must be free to circulate to preserve freedom of opinion."
+  },
+  {
+    "id": "q77",
+    "text": "More frequent ID checks on public transport and in public places are a good thing, even if they burden freedom of movement.",
+    "explanation": "This holds that such checks can prevent crime and reassure the public. Others believe these practices infringe on freedom of movement and risk stigmatizing certain groups."
+  },
+  {
+    "id": "q78",
+    "text": "Police should be free to use force more readily to maintain order.",
+    "explanation": "This view holds that firmness is needed to avoid chaos and ensure public safety. Others believe excessive use of force can lead to abuse and erode trust in institutions."
+  },
+  {
+    "id": "q79",
+    "text": "Constantly filming public spaces with surveillance cameras is worthwhile, even at the cost of our privacy.",
+    "explanation": "Some see constant surveillance of public spaces as a welcome development that deters crime and helps investigations. Others believe privacy is a fundamental right that shouldn't be sacrificed for security."
+  },
+  {
+    "id": "q80",
+    "text": "A state of emergency should be able to temporarily suspend certain freedoms to deal with a serious threat.",
+    "explanation": "Some believe restrictive measures are justified in exceptional situations to protect the public. Others fear this opens the door to authoritarian overreach and lasting damage to civil rights."
+  },
+  {
+    "id": "q81",
+    "text": "Artificial intelligence will destroy more jobs than it creates.",
+    "explanation": "This view warns of massive job losses caused by automation and AI. Others believe these innovations create new economic opportunities and improve overall well-being."
+  },
+  {
+    "id": "q82",
+    "text": "We shouldn't hand major decisions (court rulings, hiring, loans) over to algorithms that no one truly understands.",
+    "explanation": "This view holds that handing decisions as important as criminal justice, hiring or loans to opaque algorithms is dangerous. Others believe these systems, despite their complexity, offer effective solutions that can be kept in check."
+  },
+  {
+    "id": "q83",
+    "text": "Genetically modifying humans — choosing a baby's genes or creating \"designer children\" — leads to unacceptable abuses.",
+    "explanation": "This view worries about the moral and social risks of genetic manipulation. Others believe these advances are essential for treating serious diseases and improving the human condition."
+  },
+  {
+    "id": "q84",
+    "text": "Social media does more harm than good overall: it isolates people, fuels addiction and breeds hatred.",
+    "explanation": "Some point to well-documented harms: social isolation despite constant connection, addiction to notifications, and the spread of hateful content. Others believe social media enables free speech and drives civic action."
+  },
+  {
+    "id": "q86",
+    "text": "New technologies must be strictly regulated, or they will lead to mass surveillance and manipulation.",
+    "explanation": "Some favor strong oversight to protect citizens from technological abuse. Others fear too much regulation would stifle innovation and its potential benefits."
+  },
+  {
+    "id": "q88",
+    "text": "Emerging technologies, like artificial intelligence, should be developed without restrictions in order to stay competitive.",
+    "explanation": "This holds that overly strict rules would hold back research and growth. Others call for greater caution to avoid societal and ethical risks."
+  },
+  {
+    "id": "q89",
+    "text": "Nuclear power is an energy of the future that should be massively expanded to address the climate emergency.",
+    "explanation": "Some believe nuclear power is essential for producing stable, large-scale, low-carbon electricity. Others point to the risk of accidents, extremely long-lived waste, and the high cost of this technology."
+  },
+  {
+    "id": "q90",
+    "text": "Raising, killing or exploiting animals for food, entertainment or research is a form of barbarism that should be abolished.",
+    "explanation": "Some believe deeply rooted practices must be questioned if they cause unjustifiable suffering, even to animals. Others defend these practices as a matter of tradition, culture or human necessity."
+  },
+  {
+    "id": "q91",
+    "text": "The European Union is a good thing, one we should strengthen rather than unravel.",
+    "explanation": "Some defend the European project as a framework for cooperation beyond national interests. Others criticize it as a loss of sovereignty, or a technocratic body disconnected from ordinary people."
+  },
+  {
+    "id": "q92",
+    "text": "LGBTQ+ people must be free to live and express themselves openly, with no compromise or exceptions.",
+    "explanation": "Some believe full recognition of LGBTQ+ rights and identities is non-negotiable. Others may favor a more traditional vision of society, or support such rights only with reservations."
+  },
+  {
+    "id": "q93",
+    "text": "Selecting or modifying an embryo's genes to spare it a serious disease is perfectly legitimate.",
+    "explanation": "Some believe modern medicine should prevent certain suffering at the root. Others fear a slide toward eugenics that would reduce human diversity to medical or social norms."
+  },
+  {
+    "id": "q94",
+    "text": "Every adult should be free to use the drug of their choice; it's not the state's place to ban it.",
+    "explanation": "Some believe everyone should have full control over their own body, without state interference. Others believe such freedom would lead to abuse, harm public health and weaken the social fabric."
+  },
+  {
+    "id": "q95",
+    "text": "Investing massively in space exploration prepares humanity's future, even if there are still urgent problems to solve on Earth.",
+    "explanation": "Some believe we must prepare for the future, even if that means looking beyond Earth. Others believe resources should be focused on Earth's urgent needs first."
+  },
+  {
+    "id": "q96",
+    "text": "Collective decisions should be based on scientific facts, not on tradition or emotion.",
+    "explanation": "Some believe collective decisions should rely solely on objective data. Others believe history, emotion and cultural sensitivities must also be taken into account."
+  },
+  {
+    "id": "q97",
+    "text": "The state spends too much: taxes should be cut and it should intervene less in the economy.",
+    "explanation": "Some say public spending is excessive and holds the economy back, and that cutting taxes would unleash initiative and boost growth. Others argue the state's redistributive role is essential, and cutting its resources hurts the most vulnerable."
+  },
+  {
+    "id": "q98",
+    "text": "Penalties for animal cruelty should be as harsh as those for violence against humans.",
+    "explanation": "Some want animals' legal protection strengthened to match that of humans. Others consider this equal treatment excessive."
+  },
+  {
+    "id": "q99",
+    "text": "Equality between women and men hasn't been achieved yet: we still need concrete measures like mandatory equal pay or shared parental leave.",
+    "explanation": "Some argue persistent inequalities, especially in pay and parenting duties, justify binding measures. Others believe the law already guarantees formal equality, and everyone should now be treated exactly the same."
+  },
+  {
+    "id": "q100",
+    "text": "Large inheritances should be heavily taxed so everyone starts life with the same chances.",
+    "explanation": "Some say large inheritances perpetuate inequality across generations, and heavy taxation would restore equal opportunity. Others believe everyone should be free to pass on what they built to their children, and that taxing it punishes family over the state."
+  },
+  {
+    "id": "q101",
+    "text": "The pursuit of profit is what has lifted billions of people out of poverty.",
+    "explanation": "Some point out that capitalism-driven growth has massively reduced global poverty over the past two centuries. Others argue that reduction remains insufficient, unevenly spread, and that this growth model is environmentally unsustainable."
+  },
+  {
+    "id": "q102",
+    "text": "A world where no one had to work to survive would be a better world.",
+    "explanation": "This view sees forced labor as a form of alienation, and believes freeing people from the need to work to survive would let everyone flourish. Others see work as a source of meaning, social bonds and collective contribution."
+  },
+  {
+    "id": "q103",
+    "text": "Giving everyone an income with no work requirement would make people passive and dependent on handouts.",
+    "explanation": "Some say a no-strings-attached income removes personal responsibility and weakens the incentive to contribute to society. Others argue a universal income frees people from precarious or degrading jobs, and boosts creativity and civic engagement."
+  }
+]

@@ -7,7 +7,8 @@
 //  - global (main.tsx) : entoure toute l'app ;
 //  - local (App.tsx) : entoure le <Suspense> des résultats, avec `onReset` pour
 //    retenter le chargement sans démonter le reste de l'app.
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, type ContextType, type ErrorInfo, type ReactNode } from "react";
+import { LocaleContext } from "../i18n/LocaleContext";
 
 type Props = {
   children: ReactNode;
@@ -21,6 +22,12 @@ type Props = {
 type State = { hasError: boolean };
 
 export default class ErrorBoundary extends Component<Props, State> {
+  // Composant de classe : on lit la langue via le contexte (pas de hook). La
+  // valeur par défaut du contexte est fonctionnelle (français), donc les
+  // libellés restent valides même si un boundary est rendu hors Provider.
+  static contextType = LocaleContext;
+  declare context: ContextType<typeof LocaleContext>;
+
   state: State = { hasError: false };
 
   static getDerivedStateFromError(): State {
@@ -40,9 +47,10 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (!this.state.hasError) return this.props.children;
 
+    const { t } = this.context;
     const {
-      title = "Une erreur est survenue",
-      description = "Quelque chose n'a pas pu s'afficher. Votre progression enregistrée sur cet appareil est conservée.",
+      title = t("errorboundary.defaultTitle"),
+      description = t("errorboundary.defaultDesc"),
     } = this.props;
 
     return (
@@ -55,13 +63,13 @@ export default class ErrorBoundary extends Component<Props, State> {
               onClick={this.handleRetry}
               className="btn-ink w-full sm:w-auto px-6 py-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
             >
-              Réessayer
+              {t("errorboundary.retry")}
             </button>
             <button
               onClick={() => window.location.reload()}
               className="btn-outline w-full sm:w-auto px-6 py-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
             >
-              Recharger la page
+              {t("errorboundary.reload")}
             </button>
           </div>
         </div>

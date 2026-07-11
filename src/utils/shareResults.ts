@@ -15,6 +15,7 @@
  */
 
 import questionsData from "../data/questions.json";
+import { translate, type Locale } from "../i18n/strings";
 
 export type SharedResults = {
   answers: Record<string, number>;
@@ -136,28 +137,29 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 /**
- * Génère le texte de partage pour les réseaux sociaux
+ * Génère le texte de partage pour les réseaux sociaux (localisé).
+ * Le `locale` par défaut reste « fr » : les appelants historiques (et les liens
+ * générés côté FR) ne changent pas de comportement.
  */
-export function getShareText(name?: string): string {
-  if (name) {
-    return `Découvrez les résultats politiques de ${name} sur Polarity Quiz ! 🗳️`;
-  }
-  return `Découvrez mes résultats politiques sur Polarity Quiz ! 🗳️`;
+export function getShareText(name?: string, locale: Locale = "fr"): string {
+  return name
+    ? translate(locale, "share.text.named", { name })
+    : translate(locale, "share.text.anon");
 }
 
 /**
  * Génère l'URL de partage Twitter/X
  */
-export function getTwitterShareURL(shareURL: string, name?: string): string {
-  const text = getShareText(name);
+export function getTwitterShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
+  const text = getShareText(name, locale);
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareURL)}`;
 }
 
 /**
  * Génère l'URL de partage WhatsApp
  */
-export function getWhatsAppShareURL(shareURL: string, name?: string): string {
-  const text = `${getShareText(name)} ${shareURL}`;
+export function getWhatsAppShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
+  const text = `${getShareText(name, locale)} ${shareURL}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
@@ -171,8 +173,8 @@ export function getFacebookShareURL(shareURL: string): string {
 /**
  * Génère l'URL de partage Discord
  */
-export function getDiscordShareURL(shareURL: string, name?: string): string {
-  const text = getShareText(name);
+export function getDiscordShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
+  const text = getShareText(name, locale);
   // Discord n'a pas d'URL de partage direct, on copie juste le message formaté
   return `${text}\n${shareURL}`;
 }
@@ -180,15 +182,15 @@ export function getDiscordShareURL(shareURL: string, name?: string): string {
 /**
  * Utilise l'API Web Share native (mobile principalement)
  */
-export async function shareViaWebAPI(shareURL: string, name?: string): Promise<boolean> {
+export async function shareViaWebAPI(shareURL: string, name?: string, locale: Locale = "fr"): Promise<boolean> {
   if (!navigator.share) {
     return false; // API non supportée
   }
 
   try {
     await navigator.share({
-      title: 'Polarity Quiz - Résultats',
-      text: getShareText(name),
+      title: translate(locale, "share.webTitle"),
+      text: getShareText(name, locale),
       url: shareURL,
     });
     return true;

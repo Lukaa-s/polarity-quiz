@@ -1,0 +1,226 @@
+{
+  "pro_nuclear": {
+    "label": "Pro-Nuclear",
+    "description": "You actively support nuclear power"
+  },
+  "vegan": {
+    "label": "Animal Ally",
+    "description": "You categorically reject animal exploitation."
+  },
+  "assertive": {
+    "label": "Dead Certain",
+    "description": "At least 75% of your answers were either \"Strongly Agree\" or \"Strongly Disagree\"."
+  },
+  "eco_warrior": {
+    "label": "Eco-Warrior",
+    "description": "Your radical ecology score is ≥ 75%."
+  },
+  "equilibriste": {
+    "label": "Tightrope Walker",
+    "description": "You stayed moderate in at least 75% of your answers."
+  },
+  "mondialiste": {
+    "label": "Citizen of the World",
+    "description": "You're ultra-internationalist (≥ 75% left on the 'Scale of Sovereignty' axis)."
+  },
+  "technosceptique": {
+    "label": "Informed Skeptic",
+    "description": "You're wary of new technology (≥ 75% on the techno-skeptic side)."
+  },
+  "techno_prophete": {
+    "label": "Techno-Prophet",
+    "description": "You deeply believe technical progress can solve humanity's biggest problems."
+  },
+  "authoritaire": {
+    "label": "Authoritarian",
+    "description": "You believe a strong society requires firm authority."
+  },
+  "inclassable": {
+    "label": "Unclassifiable",
+    "description": "You're hard to pin down: no axis dominates above 65%."
+  },
+  "communiste": {
+    "label": "Communist",
+    "description": "You combine strong anti-capitalism, a clear preference for state intervention, and a collectivist view of property."
+  },
+  "anarchiste_poetique": {
+    "label": "Poetic Anarchist",
+    "description": "You want a world without bosses — but also a gentler, fairer one."
+  },
+  "liberal": {
+    "label": "Unapologetic Free-Marketeer",
+    "description": "You trust the market more than the state."
+  },
+  "reformiste_tranquille": {
+    "label": "Quiet Reformist",
+    "description": "You reject upheaval, but want to improve things step by step."
+  },
+  "spiritualiste": {
+    "label": "Modern Spiritualist",
+    "description": "You believe faith can still guide society."
+  },
+  "decisif": {
+    "label": "Decisive",
+    "description": "You never answered neutrally: every question tipped you one way or the other."
+  },
+  "protecteur": {
+    "label": "Protector",
+    "description": "You clearly prioritize security over individual freedoms."
+  },
+  "libre_par_principe": {
+    "label": "Free on Principle",
+    "description": "You reject authority, imposed rules, and repression, in the name of fundamental freedom."
+  },
+  "collectiviste_social": {
+    "label": "Social Collectivist",
+    "description": "You favor solidarity, redistribution, and economic equality."
+  },
+  "souverainiste": {
+    "label": "Sovereigntist",
+    "description": "You're committed to national independence and popular sovereignty."
+  },
+  "productiviste_vert": {
+    "label": "Green Productivist",
+    "description": "You combine faith in growth with ecological awareness."
+  },
+  "social_liberal": {
+    "label": "Social Liberal",
+    "description": "You seem to balance social protection with a market economy."
+  },
+  "etat_stratege": {
+    "label": "State Strategist",
+    "description": "You want a strong state that steers the economy and plans for the future."
+  },
+  "egalitariste": {
+    "label": "Egalitarian",
+    "description": "You place a high value on equality — economic, social, or political."
+  },
+  "conservateur_culturel": {
+    "label": "Conservative",
+    "description": "You want to preserve tradition and moral order."
+  },
+  "hesitant": {
+    "label": "Fence-Sitter",
+    "description": "You answered \"Neither Agree nor Disagree\" on at least 8 questions."
+  },
+  "decentralisateur": {
+    "label": "Direct Democrat",
+    "description": "You want citizens to decide more directly, instead of delegating everything to elected officials. (Democracy ≥ 75% on the participatory side)"
+  },
+  "progressiste_moral": {
+    "label": "Moral Progressive",
+    "description": "You challenge traditional norms around morals, family, or religion."
+  },
+  "dissident_tranquille": {
+    "label": "Quiet Dissident",
+    "description": "You reject the established order, without provocation or radicalism."
+  },
+  "constructiviste": {
+    "label": "Constructivist",
+    "description": "You believe social, economic, and political rules are made to be rethought."
+  },
+  "anarchiste": {
+    "label": "Anarchist",
+    "description": "You want to abolish bosses, top-down orders, and all vertical domination. (Anarchism ≥ 85%)"
+  },
+  "pro_europeen": {
+    "label": "Committed European",
+    "description": "You see the European Union as a legitimate political project with a future worth building."
+  },
+  "pro_lgbt": {
+    "label": "Ally",
+    "description": "You unambiguously defend the rights and freedoms of LGBTQ+ people."
+  },
+  "eugeniste_pragmatique": {
+    "label": "Genomic Medicine",
+    "description": "You consider genetic selection legitimate when it spares a child a serious illness."
+  },
+  "legaliseur": {
+    "label": "Pro-Legalization",
+    "description": "You support drug legalization in the name of individual freedom and common sense."
+  },
+  "cosmonaute": {
+    "label": "Committed Cosmonaut",
+    "description": "You see space as an opportunity, a necessity, or a horizon for humanity."
+  },
+  "rationaliste_pur": {
+    "label": "Pure Rationalist",
+    "description": "You believe scientific reason alone should guide collective decisions."
+  },
+  "anti_censure_absolue": {
+    "label": "Absolute Anti-Censorship",
+    "description": "For you, free speech includes the right to shock."
+  },
+  "chasseur_de_fakes": {
+    "label": "Fake News Hunter",
+    "description": "Curbing disinformation is, for you, a necessity."
+  },
+  "oeil_de_camera": {
+    "label": "Camera Eye",
+    "description": "You trust video surveillance to prevent crime."
+  },
+  "hors_champ": {
+    "label": "Off-Camera",
+    "description": "You reject a permanent state of emergency and a society under constant surveillance."
+  },
+  "restrictionniste": {
+    "label": "Restrictionist",
+    "description": "You want to tighten immigration policy and prioritize aid for citizens first."
+  },
+  "referendumiste": {
+    "label": "Referendum Advocate",
+    "description": "You want major laws put to a direct popular vote."
+  },
+  "elitiste": {
+    "label": "Trusts the Experts",
+    "description": "You'd rather major decisions be made by representatives surrounded by experts than by direct vote."
+  },
+  "action_directe": {
+    "label": "Direct Action",
+    "description": "For you, radical breaks and mobilization can be necessary."
+  },
+  "anticarceral": {
+    "label": "Anti-Incarceration",
+    "description": "You favor repair and alternatives to prison."
+  },
+  "euro_sceptique": {
+    "label": "Euroskeptic",
+    "description": "You strongly doubt the EU's political project."
+  },
+  "bastion_du_proprietaire": {
+    "label": "Guardian of Property",
+    "description": "You see private property as an essential safeguard of freedom. (Property ≥ 75%)"
+  },
+  "capitaine_dindustrie": {
+    "label": "Wealth Builder",
+    "description": "You trust investors and entrepreneurs to drive the economy forward. (Economic purpose ≥ 75% right)"
+  },
+  "voix_du_parlement": {
+    "label": "Faith in Parliament",
+    "description": "You believe electing representatives to decide on everyone's behalf is the best guarantee of an effective democracy. (Democracy ≥ 75% on the parliamentary side)"
+  },
+  "sentinelle_de_lordre": {
+    "label": "Sentinel of Order",
+    "description": "Punishment should protect and deter above all else. (Justice ≥ 75% on the punitive side)"
+  },
+  "artisan_du_travail": {
+    "label": "Dignity Through Effort",
+    "description": "You see work as a central value, giving each person meaning, recognition, and dignity. (Work ≥ 75% on the workist side)"
+  },
+  "promethee_productiviste": {
+    "label": "Apostle of Abundance",
+    "description": "For you, producing and growing are the best ways to meet ecological challenges, without sacrificing comfort or human momentum. (Ecology ≥ 75% on the productivist side)"
+  },
+  "porte_flambeau_revolution": {
+    "label": "Torchbearer of Revolution",
+    "description": "You carry the banner of radical change high, ready to overturn the established order to build a new horizon. (Social change ≥ 75% on the revolution side)"
+  },
+  "gardien_de_la_laicite": {
+    "label": "Guardian of Secularism",
+    "description": "You defend a strict separation between religion and public life, to guarantee equality for all, believers and non-believers alike. (Religion ≥ 75% on the secularist side)"
+  },
+  "proprietaire_de_ses_jours": {
+    "label": "Owner of Your Own Time",
+    "description": "Every day is yours, shaped by your own wishes and your own pace, far from imposed schedules."
+  }
+}

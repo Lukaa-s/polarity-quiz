@@ -55,9 +55,20 @@ npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-ic
 - **`axisexplaination.tsx`** — the 14 axes: `id` (stable join key), `sortIndex` (display order everywhere), labels, left/right pole explanations
 - **`referenceProfiles.ts`** — 22 political figures with full answer sets (must cover every question id). `excludeFromMatching: true` keeps historical totalitarian profiles (Hitler, Staline) out of the "closest personalities" ranking while staying browsable in the explorer.
 
-### Tests (`src/__tests__/data-sync.test.ts`)
+### Internationalization (`src/i18n/`)
 
-Run `npm run test` after ANY change to the data files. The suite locks the data joins: every question axis resolves to a known axis id, poles match axis labels, every profile covers exactly the current question ids, badges only read valid axis ids, every badge is reachable, no badge fires on empty answers.
+Bilingual FR/EN as an **id-keyed display overlay on top of canonical French data**. French is the source of truth; scoring and every data join stay keyed by stable ids and **never change with locale**.
+
+- **`strings.ts`** — UI copy dictionary `STRINGS = { fr, en }`. `en` is typed `Record<StringKey, string>`, so the compiler forces both tables to carry the exact same keys. Values interpolate `{var}` via `translate()`; some carry `**bold**`/`` `code` `` for `<RichText />`. **To add a UI string**: add the key to `fr` and its translation to `en` (TS fails the build if you forget one).
+- **`LocaleContext.tsx`** — `useLocale() → { locale, setLocale, t }`. Resolution order: `?lang=` → `localStorage pq_lang_v1` → `navigator.language` → `fr`. `setLocale` keeps `?lang` in the URL without touching `?results=`/`?seed=`.
+- **`data.ts`** — hooks returning canonical shapes so a component can swap a direct import for the hook: `useLocalizedQuestions/Axes/Badges/Profiles` (+ pure `localize*`). Questions/axes/badges are **overlays**: EN JSON (`questions.en.json`, `axes.en.json`, `badges.en.json`, all keyed/covering the exact FR ids) supplies only display labels; missing entries fall back to FR field-by-field. Badges keep FR `test`/`icon`/`rarity`; only `label`/`description` localize.
+- **Profiles are the exception — a DISTINCT roster, not a translation.** `useLocalizedProfiles()` returns `referenceProfiles` (22 FR figures) in `fr` and **`referenceProfilesEn` (14 anglophone figures with their OWN answers)** in `en`. The EN roster (`referenceProfiles.en.ts`) is assembled from `profiles-en/part1–4.ts` + Obama (answers reused by reference from the FR profile). Their answers are coded against the same question ids, so the comparator/radar/ranking score identically.
+- **`RADAR_SHORT_LABELS`** in `ResultEnhanced.tsx` is keyed by **axis id** per locale (`{ fr, en }`), since full axis labels differ between languages.
+- **Share invariants**: the `?results=v2_…` URL format is locale-independent and locked by `share-results.test.ts` — do not change it. Only the *message text* of tweets/WhatsApp/Discord/native share is localized (share-text keys in `strings.ts`, threaded through a `locale` arg in `shareResults.ts`).
+
+### Tests (`src/__tests__/`)
+
+Run `npm run test` after ANY change to the data files. `data-sync.test.ts` locks the FR joins: every question axis resolves to a known axis id, poles match axis labels, every profile covers exactly the current question ids, badges only read valid axis ids, every badge is reachable, no badge fires on empty answers. `i18n-sync.test.ts` locks the overlays: `questions.en.json`/`axes.en.json`/`badges.en.json` cover exactly the FR ids, every EN roster profile covers the 101 ids with integers 0–6, EN ids/colors are unique (14 profiles), and `STRINGS.fr`/`STRINGS.en` carry identical keys.
 
 ### Styling
 

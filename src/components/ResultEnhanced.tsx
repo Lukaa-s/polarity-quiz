@@ -11,13 +11,14 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { ideologicalAxes } from "../data/axisexplaination";
 import type { Badge } from "../data/badges";
 import { evaluateBadges } from "../utils/badges";
-import { referenceProfiles } from "../data/referenceProfiles";
 import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI, sanitizeShareName } from "../utils/shareResults";
 import { trackShare, trackEvent } from "../utils/analytics";
+import { useLocale } from "../i18n/LocaleContext";
+import type { Locale } from "../i18n/strings";
+import { useLocalizedAxes, useLocalizedBadges, useLocalizedProfiles } from "../i18n/data";
 import ShareCard from "./ShareCard";
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -28,6 +29,7 @@ type RadarTooltipProps = {
   label?: string;
   payload?: any[];
   axisLabelMap: Map<string, { left: string; right: string }>;
+  fallbackMeta: { left: string; right: string };
 };
 
 const RadarTooltip: React.FC<RadarTooltipProps> = ({
@@ -35,10 +37,11 @@ const RadarTooltip: React.FC<RadarTooltipProps> = ({
   label,
   payload,
   axisLabelMap,
+  fallbackMeta,
 }) => {
   if (!active || !payload?.length) return null;
 
-  const meta = axisLabelMap.get(String(label)) ?? { left: "Gauche", right: "Droite" };
+  const meta = axisLabelMap.get(String(label)) ?? fallbackMeta;
 
   return (
     <div className="rounded-[4px] border border-ink/15 bg-paper px-4 py-3 text-sm text-ink shadow-xl">
@@ -87,21 +90,41 @@ const MAX_COMPARE = 4;
 
 // Libellés courts pour les axes du radar (le tooltip garde le nom complet).
 // Évite tout chevauchement / coupe des longs intitulés autour du cercle.
-const RADAR_SHORT_LABELS: Record<string, string> = {
-  "Vision du progrès sociétal": "Progrès sociétal",
-  "Organisation du pouvoir": "Pouvoir",
-  "Rôle de l’État dans l’économie": "État & économie",
-  "Modèle écologique": "Écologie",
-  "Finalité de l’activité économique": "Finalité éco.",
-  "Modèle de propriété": "Propriété",
-  "Forme de démocratie": "Démocratie",
-  "Objectif du système judiciaire": "Justice",
-  "Échelle de souveraineté": "Souveraineté",
-  "Place du religieux dans la vie publique": "Religion",
-  "Rapport au changement social": "Changement social",
-  "Sens et fonction du travail": "Travail",
-  "Équilibre entre liberté et sécurité": "Liberté & sécurité",
-  "Progrès technologique et enjeux sociaux": "Technologie",
+// Re-keyé par ID d'axe (stable dans les deux langues) et fourni par locale : les
+// libellés complets diffèrent entre FR et EN, mais l'id reste la clé de jointure.
+const RADAR_SHORT_LABELS: Record<Locale, Record<string, string>> = {
+  fr: {
+    progress: "Progrès sociétal",
+    power: "Pouvoir",
+    state_vs_market: "État & économie",
+    ecology: "Écologie",
+    economic_goal: "Finalité éco.",
+    property: "Propriété",
+    democracy: "Démocratie",
+    justice: "Justice",
+    sovereignty: "Souveraineté",
+    religion: "Religion",
+    reform: "Changement social",
+    work: "Travail",
+    freedom_vs_security: "Liberté & sécurité",
+    technology: "Technologie",
+  },
+  en: {
+    progress: "Societal Progress",
+    power: "Power",
+    state_vs_market: "State & Economy",
+    ecology: "Ecology",
+    economic_goal: "Economic Purpose",
+    property: "Ownership",
+    democracy: "Democracy",
+    justice: "Justice",
+    sovereignty: "Sovereignty",
+    religion: "Religion",
+    reform: "Social Change",
+    work: "Work",
+    freedom_vs_security: "Freedom & Security",
+    technology: "Technology",
+  },
 };
 
 // Initiales encre (monogramme), sans bulle colorée.
@@ -136,10 +159,11 @@ function wrapLabel(label: string, max = 18): string[] {
 }
 
 // Tick personnalisé pour PolarAngleAxis : libellés courts, ≤ 2 lignes, sans chevauchement.
+// `shortLabelMap` mappe le libellé complet d'axe (localisé) vers sa version courte.
 function RadarAxisTick(props: any) {
-  const { x, y, cy, payload, textAnchor } = props;
+  const { x, y, cy, payload, textAnchor, shortLabelMap } = props;
   const full = String(payload?.value ?? "");
-  const label = RADAR_SHORT_LABELS[full] ?? full;
+  const label: string = (shortLabelMap as Map<string, string> | undefined)?.get(full) ?? full;
   const lines = wrapLabel(label, 16);
   const isTop = y < cy;
   const dyStart = lines.length > 1 ? (isTop ? -(lines.length - 1) * 11 : 0) : 0;
@@ -163,12 +187,13 @@ function RadarAxisTick(props: any) {
 
 // Indicateur de positionnement gauche↔droite : la couleur y est signifiante.
 function LeanIndicator({ value, showLabels = false }: { value: number; showLabels?: boolean }) {
+  const { t } = useLocale();
   const pos = Math.max(0, Math.min(100, value));
   return (
     <div className="w-full">
       <div
         role="img"
-        aria-label={`Positionnement gauche-droite : ${Math.round(pos)} sur 100 (0 = gauche, 100 = droite)`}
+        aria-label={t("result.lean.aria", { value: Math.round(pos) })}
         className="relative h-1.5 rounded-full"
         style={{ background: `linear-gradient(90deg, ${LEFT_COLOR} 0%, #D8D2C4 50%, ${RIGHT_COLOR} 100%)` }}
       >
@@ -180,8 +205,8 @@ function LeanIndicator({ value, showLabels = false }: { value: number; showLabel
       </div>
       {showLabels && (
         <div className="mt-1.5 flex justify-between text-[0.65rem] uppercase tracking-[0.15em] text-ink2">
-          <span>Gauche</span>
-          <span>Droite</span>
+          <span>{t("result.lean.left")}</span>
+          <span>{t("result.lean.right")}</span>
         </div>
       )}
     </div>
@@ -214,6 +239,26 @@ export default function ResultEnhanced({
   const [expandedBadgeId, setExpandedBadgeId] = useState<string | null>(null);
   const shareMenuRef = useRef<HTMLDivElement | null>(null);
 
+  // ── Surcouche i18n ───────────────────────────────────────────────────────
+  // Les DONNÉES restent jointes par id (scoring inchangé). Ici on récupère les
+  // libellés localisés : axes (même forme qu'ideologicalAxes), roster de profils
+  // (FR 22 / EN 14 distinct), et la Map des badges (id → label/description).
+  const { t, locale } = useLocale();
+  const localizedAxes = useLocalizedAxes();
+  const localizedProfiles = useLocalizedProfiles();
+  const localizedBadges = useLocalizedBadges();
+  const youLabel = t("result.you");
+  const shortById = RADAR_SHORT_LABELS[locale] ?? RADAR_SHORT_LABELS.fr;
+
+  // Le prop `badges` reçu est la liste FR ÉVALUÉE (test/icon/rarity). On superpose
+  // seulement label/description localisés via cette Map par id (rarity partagée).
+  const badgeById = useMemo(
+    () => new Map(localizedBadges.map((b) => [b.id, b])),
+    [localizedBadges]
+  );
+  const localizeBadge = (b: Badge): Badge => badgeById.get(b.id) ?? b;
+  const displayBadges = useMemo(() => badges.map(localizeBadge), [badges, badgeById]);
+
   // Signale à App que les résultats sont montés (chunk chargé) : App peut alors
   // effacer la progression sauvegardée en toute sûreté.
   useEffect(() => {
@@ -243,8 +288,8 @@ export default function ResultEnhanced({
   // Ordre stable des axes (sortIndex), scores toujours consultés par id d'axe.
   // En mode explorateur, on utilise tous les axes.
   const sortedAxisDefs = useMemo(
-    () => [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex),
-    []
+    () => [...localizedAxes].sort((a, b) => a.sortIndex - b.sortIndex),
+    [localizedAxes]
   );
   const axes = explorerMode
     ? sortedAxisDefs
@@ -253,12 +298,18 @@ export default function ResultEnhanced({
   const axisLabelMap = useMemo(
     () =>
       new Map(
-        ideologicalAxes.map((a) => [
+        localizedAxes.map((a) => [
           a.axis,
           { left: a.left.label, right: a.right.label },
         ])
       ),
-    []
+    [localizedAxes]
+  );
+
+  // Libellé complet d'axe (localisé) → libellé court, pour les ticks du radar.
+  const radarShortByLabel = useMemo(
+    () => new Map(localizedAxes.map((a) => [a.axis, shortById[a.id] ?? a.axis])),
+    [localizedAxes, shortById]
   );
 
   // Sauvegarder les réponses courantes comme profil local (localStorage)
@@ -284,7 +335,7 @@ export default function ResultEnhanced({
 
   // Supprimer un profil
   const handleDeleteProfile = (id: string) => {
-    if (confirm("Supprimer ce profil ?")) {
+    if (confirm(t("result.deleteConfirm"))) {
       deleteProfile(id);
       setSavedProfiles(listProfiles());
       setSelectedProfiles(selectedProfiles.filter((p) => p !== id));
@@ -322,7 +373,7 @@ export default function ResultEnhanced({
       // hors écran) — pas la page responsive, illisible une fois exportée.
       const element = document.getElementById("share-card");
       if (!element) {
-        alert("Erreur: élément non trouvé");
+        alert(t("result.export.notFound"));
         setDisableAnimations(false);
         return;
       }
@@ -420,10 +471,10 @@ export default function ResultEnhanced({
       // Mobile : feuille de partage native (enregistrer dans Photos, poster
       // sur un réseau…) — le lien <a download> ne déclenche rien sur beaucoup
       // de versions d'iOS. Fallback : téléchargement classique via blob URL.
-      const file = new File([blob], "mon-profil-politique.png", { type: "image/png" });
+      const file = new File([blob], t("result.export.fileName"), { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: "Mes résultats Polarity Quiz" });
+          await navigator.share({ files: [file], title: t("result.export.shareTitle") });
           return;
         } catch (err) {
           if ((err as DOMException).name === "AbortError") return; // annulé par l'utilisateur
@@ -433,7 +484,7 @@ export default function ResultEnhanced({
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = "mon-profil-politique.png";
+      link.download = t("result.export.fileName");
       link.href = url;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
@@ -442,7 +493,7 @@ export default function ResultEnhanced({
       // Message détaillé : sans lui, impossible de diagnostiquer les pannes
       // spécifiques à un appareil (limites canvas iOS, refus de partage…).
       const detail = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
-      alert(`Erreur lors de l'export de l'image.\n\nDétail technique : ${detail}`);
+      alert(t("result.export.error", { detail }));
     } finally {
       // Réactiver les animations après l'export
       setDisableAnimations(false);
@@ -457,20 +508,13 @@ export default function ResultEnhanced({
 
   // Demander un nom optionnel avec avertissement de confidentialité
   const promptForShareName = (): string | undefined => {
-    const userWantsName = confirm(
-      "Voulez-vous ajouter votre nom aux résultats partagés ?\n\n" +
-      "⚠️ ATTENTION : Si vous ajoutez un nom, il sera visible par toute personne ayant accès au lien.\n\n" +
-      "Cliquez sur 'OK' pour ajouter un nom, ou 'Annuler' pour partager anonymement."
-    );
+    const userWantsName = confirm(t("result.shareName.confirm"));
 
     if (!userWantsName) {
       return undefined; // Partage anonyme
     }
 
-    const name = prompt(
-      "Entrez le nom à afficher dans les résultats partagés :\n\n" +
-      "⚠️ Ce nom sera visible dans l'URL et par toute personne consultant le lien."
-    );
+    const name = prompt(t("result.shareName.prompt"));
 
     // Si l'utilisateur annule ou entre une chaîne vide, partager anonymement.
     // Le nom est borné et nettoyé (il finit dans une URL publique).
@@ -493,14 +537,14 @@ export default function ResultEnhanced({
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
     trackShare('twitter');
-    window.open(getTwitterShareURL(shareURL, name), '_blank', 'noopener,noreferrer');
+    window.open(getTwitterShareURL(shareURL, name, locale), '_blank', 'noopener,noreferrer');
   };
 
   const handleShareWhatsApp = () => {
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
     trackShare('whatsapp');
-    window.open(getWhatsAppShareURL(shareURL, name), '_blank', 'noopener,noreferrer');
+    window.open(getWhatsAppShareURL(shareURL, name, locale), '_blank', 'noopener,noreferrer');
   };
 
   const handleShareFacebook = () => {
@@ -513,7 +557,7 @@ export default function ResultEnhanced({
   const handleShareDiscord = async () => {
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
-    const discordMessage = getDiscordShareURL(shareURL, name);
+    const discordMessage = getDiscordShareURL(shareURL, name, locale);
     const success = await copyToClipboard(discordMessage);
 
     if (success) {
@@ -526,7 +570,7 @@ export default function ResultEnhanced({
   const handleShareNative = async () => {
     const name = promptForShareName();
     const shareURL = generateShareURL(currentAnswers, name);
-    const success = await shareViaWebAPI(shareURL, name);
+    const success = await shareViaWebAPI(shareURL, name, locale);
 
     if (success) {
       trackShare('native');
@@ -543,11 +587,11 @@ export default function ResultEnhanced({
 
   // Fonction helper pour obtenir le label de compatibilité
   const getCompatibilityLabel = (score: number): string => {
-    if (score >= 90) return "Très compatible";
-    if (score >= 75) return "Compatible";
-    if (score >= 60) return "Quelques divergences";
-    if (score >= 40) return "Positions différentes";
-    return "Opposé";
+    if (score >= 90) return t("result.compat.veryHigh");
+    if (score >= 75) return t("result.compat.high");
+    if (score >= 60) return t("result.compat.some");
+    if (score >= 40) return t("result.compat.diff");
+    return t("result.compat.opposed");
   };
 
   // Distance = écart moyen (en points de %) entre les positions de l'utilisateur
@@ -578,11 +622,11 @@ export default function ResultEnhanced({
   // restent consultables dans l'annuaire mais sont exclus du classement.
   const sortedReferenceProfiles = useMemo(() => {
     if (explorerMode) return []; // Pas utilisé en mode explorateur
-    return referenceProfiles
+    return localizedProfiles
       .filter((p) => !p.excludeFromMatching)
       .map((p) => ({ ...p, distance: calculateDistance(p) }))
       .sort((a, b) => a.distance - b.distance);
-  }, [poleScores, explorerMode, questions]);
+  }, [poleScores, explorerMode, questions, localizedProfiles]);
 
   // Données de la carte de partage exportable (format fixe 1080×1350, cf.
   // ShareCard.tsx) : top 3 des personnalités, jauges compactes, badges.
@@ -599,13 +643,13 @@ export default function ResultEnhanced({
         const pctLeft = Math.round((left / total) * 100);
         return {
           id: a.id,
-          shortLabel: RADAR_SHORT_LABELS[a.axis] ?? a.axis,
+          shortLabel: shortById[a.id] ?? a.axis,
           pctLeft,
           pctRight: 100 - pctLeft,
         };
       }),
     };
-  }, [explorerMode, sortedReferenceProfiles, axes, poleScores]);
+  }, [explorerMode, sortedReferenceProfiles, axes, poleScores, shortById]);
 
   // Données radar avec profils sélectionnés
   const multiRadarData = useMemo(() => {
@@ -616,11 +660,11 @@ export default function ResultEnhanced({
       if (!explorerMode && poleScores[a.id]) {
         const { left, right } = poleScores[a.id];
         const total = left + right || 1;
-        result.Vous = Math.round((left / total) * 100);
+        result[youLabel] = Math.round((left / total) * 100);
       }
 
       selectedProfiles.forEach((profileId) => {
-        const profile = [...referenceProfiles, ...savedProfiles].find(
+        const profile = [...localizedProfiles, ...savedProfiles].find(
           (p) => p.id === profileId
         );
         if (profile) {
@@ -636,29 +680,29 @@ export default function ResultEnhanced({
       return result;
     });
     return data;
-  }, [selectedProfiles, poleScores, savedProfiles, explorerMode, axes, questions]);
+  }, [selectedProfiles, poleScores, savedProfiles, explorerMode, axes, questions, localizedProfiles, youLabel]);
 
   const profileColors = useMemo(() => {
     const colors: Record<string, string> = {};
 
     // Ajouter "Vous" seulement en mode normal
     if (!explorerMode) {
-      colors.Vous = USER_COLOR;
+      colors[youLabel] = USER_COLOR;
     }
 
     selectedProfiles.forEach((id, idx) => {
-      const profile = [...referenceProfiles, ...savedProfiles].find((p) => p.id === id);
+      const profile = [...localizedProfiles, ...savedProfiles].find((p) => p.id === id);
       if (profile) {
         colors[profile.name] = RADAR_PALETTE[idx % RADAR_PALETTE.length];
       }
     });
     return colors;
-  }, [selectedProfiles, savedProfiles, explorerMode]);
+  }, [selectedProfiles, savedProfiles, explorerMode, localizedProfiles, youLabel]);
 
   // Penchant global gauche↔droite de chaque profil de référence (0 = gauche, 100 = droite).
   const profileLean = useMemo(() => {
     const map: Record<string, number> = {};
-    referenceProfiles.forEach((p) => {
+    localizedProfiles.forEach((p) => {
       const s = calculatePoleScores(p.answers, questions);
       let l = 0;
       let r = 0;
@@ -669,24 +713,24 @@ export default function ResultEnhanced({
       map[p.id] = l + r > 0 ? (r / (l + r)) * 100 : 50;
     });
     return map;
-  }, [questions]);
+  }, [questions, localizedProfiles]);
 
   // Profils de référence triés de gauche à droite (effet « hémicycle »).
   const profilesByLean = useMemo(
-    () => [...referenceProfiles].sort((a, b) => (profileLean[a.id] ?? 50) - (profileLean[b.id] ?? 50)),
-    [profileLean]
+    () => [...localizedProfiles].sort((a, b) => (profileLean[a.id] ?? 50) - (profileLean[b.id] ?? 50)),
+    [profileLean, localizedProfiles]
   );
 
   const tabs = explorerMode
     ? [
-        { key: "profiles", label: "Profils politiques" },
-        { key: "diagram", label: "Comparateur" },
-        { key: "explained", label: "Explications" },
+        { key: "profiles", label: t("result.tab.profiles") },
+        { key: "diagram", label: t("result.tab.compare") },
+        { key: "explained", label: t("result.tab.explained") },
       ]
     : [
-        { key: "results", label: "Résultats" },
-        { key: "diagram", label: "Comparateur" },
-        { key: "explained", label: "Explications" },
+        { key: "results", label: t("result.tab.results") },
+        { key: "diagram", label: t("result.tab.compare") },
+        { key: "explained", label: t("result.tab.explained") },
       ];
 
   return (
@@ -700,7 +744,7 @@ export default function ResultEnhanced({
           aria-hidden="true"
           style={{ position: "fixed", left: -12000, top: 0, pointerEvents: "none" }}
         >
-          <ShareCard top3={shareCardData.top3} gauges={shareCardData.gauges} badges={badges} />
+          <ShareCard top3={shareCardData.top3} gauges={shareCardData.gauges} badges={displayBadges} />
         </div>
       )}
 
@@ -728,7 +772,7 @@ export default function ResultEnhanced({
       {activeTab === "results" && (
         <div className={disableAnimations ? 'pb-8' : 'animate-fadeIn pb-8'} id="results-card">
           <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-ink">Vos résultats</h2>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-ink">{t("result.heading")}</h2>
             {/* data-export-exclude : ces boutons n'ont pas de sens dans l'image
                 exportée (le bouton Télécharger vide y apparaissait figé). */}
             <div className="flex gap-2 relative" data-export-exclude ref={shareMenuRef}>
@@ -738,11 +782,11 @@ export default function ResultEnhanced({
                 disabled={isExporting}
                 /* Sur mobile le libellé est masqué (icône seule) : sans aria-label
                    le bouton n'a aucun nom accessible. */
-                aria-label={isExporting ? "Export en cours…" : "Télécharger l'image de mes résultats"}
+                aria-label={isExporting ? t("result.export.inProgress") : t("result.export.aria")}
                 className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ArrowDownTrayIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">{isExporting ? "Export…" : "Télécharger"}</span>
+                <span className="hidden sm:inline">{isExporting ? t("result.export.loading") : t("result.export.download")}</span>
               </button>
 
               {/* Bouton Partager */}
@@ -753,15 +797,15 @@ export default function ResultEnhanced({
                 className="btn-ink flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
                 <ShareIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">Partager</span>
-                <span className="sm:hidden">Partager</span>
+                <span className="hidden sm:inline">{t("result.share.button")}</span>
+                <span className="sm:hidden">{t("result.share.button")}</span>
               </button>
 
               {/* Menu de partage (dropdown) */}
               {showShareMenu && (
                 <div className="absolute top-full right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-paper2 border border-rule rounded-xl shadow-lg overflow-hidden z-50">
                   <div className="p-3 border-b border-ink/10">
-                    <p className="text-sm font-semibold text-ink">Partager mes résultats</p>
+                    <p className="text-sm font-semibold text-ink">{t("result.share.menuTitle")}</p>
                   </div>
 
                   {/* Copier le lien */}
@@ -772,14 +816,14 @@ export default function ResultEnhanced({
                     {linkCopied ? (
                       <>
                         <CheckIcon className="w-5 h-5 text-green-700" />
-                        <span className="text-sm text-green-700">Lien copié !</span>
+                        <span className="text-sm text-green-700">{t("result.share.copied")}</span>
                       </>
                     ) : (
                       <>
                         <ShareIcon className="w-5 h-5 text-ink/80" />
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-ink">Copier le lien</p>
-                          <p className="text-xs text-ink/60">Partager directement</p>
+                          <p className="text-sm font-medium text-ink">{t("result.share.copyLink")}</p>
+                          <p className="text-xs text-ink/60">{t("result.share.copyLinkSub")}</p>
                         </div>
                       </>
                     )}
@@ -795,7 +839,7 @@ export default function ResultEnhanced({
                     </svg>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-ink">Twitter / X</p>
-                      <p className="text-xs text-ink/60">Tweeter mes résultats</p>
+                      <p className="text-xs text-ink/60">{t("result.share.twitterSub")}</p>
                     </div>
                   </button>
 
@@ -809,7 +853,7 @@ export default function ResultEnhanced({
                     </svg>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-ink">WhatsApp</p>
-                      <p className="text-xs text-ink/60">Envoyer sur WhatsApp</p>
+                      <p className="text-xs text-ink/60">{t("result.share.whatsappSub")}</p>
                     </div>
                   </button>
 
@@ -823,7 +867,7 @@ export default function ResultEnhanced({
                     </svg>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-ink">Discord</p>
-                      <p className="text-xs text-ink/60">Copier pour Discord</p>
+                      <p className="text-xs text-ink/60">{t("result.share.discordSub")}</p>
                     </div>
                   </button>
 
@@ -837,7 +881,7 @@ export default function ResultEnhanced({
                     </svg>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-ink">Facebook</p>
-                      <p className="text-xs text-ink/60">Partager sur Facebook</p>
+                      <p className="text-xs text-ink/60">{t("result.share.facebookSub")}</p>
                     </div>
                   </button>
 
@@ -850,8 +894,8 @@ export default function ResultEnhanced({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-ink">Partager...</p>
-                      <p className="text-xs text-ink/60">SMS, Telegram, etc.</p>
+                      <p className="text-sm font-medium text-ink">{t("result.share.native")}</p>
+                      <p className="text-xs text-ink/60">{t("result.share.nativeSub")}</p>
                     </div>
                   </button>
 
@@ -860,7 +904,7 @@ export default function ResultEnhanced({
                     onClick={() => setShowShareMenu(false)}
                     className="w-full px-4 py-2 text-sm text-ink/60 hover:text-ink transition border-t border-ink/10"
                   >
-                    Fermer
+                    {t("result.share.close")}
                   </button>
                 </div>
               )}
@@ -870,12 +914,11 @@ export default function ResultEnhanced({
           {/* Top 3 des personnalités les plus proches */}
           <div className="mb-8 bg-paper2 rounded-md p-5 border border-rule">
             <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
-              Vos 3 personnalités les plus proches
+              {t("result.top3.title")}
             </h3>
             <div className="rule mb-3 mt-3" />
             <p className="text-xs text-ink2 leading-normal mb-4">
-              Score fondé sur l'écart moyen entre vos positions et les siennes, axe par axe.
-              Ce n'est pas une mesure scientifique exacte.
+              {t("result.top3.disclaimer")}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-rule border border-rule rounded-md overflow-hidden">
               {sortedReferenceProfiles.slice(0, 3).map((profile, idx) => {
@@ -979,20 +1022,20 @@ export default function ResultEnhanced({
           {/* Badges */}
           <div className="mt-10 pt-8 border-t border-rule">
             <h2 className="text-lg sm:text-xl font-semibold mb-1 text-center text-ink">
-              Badges obtenus
+              {t("result.badges.title")}
             </h2>
             <p className="text-xs text-ink2 text-center mb-5">
-              Touchez un badge pour afficher sa signification.
+              {t("result.badges.hint")}
             </p>
 
-            {badges.length === 0 ? (
+            {displayBadges.length === 0 ? (
               <p className="text-center text-sm text-ink2 py-8 bg-paper2 rounded-md border border-rule">
-                Aucun badge pour l'instant. Réessaie avec d'autres réponses.
+                {t("result.badges.empty")}
               </p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 items-start justify-items-center">
                 {/* Tri par rareté croissante : les trophées les plus rares d'abord */}
-                {[...badges]
+                {[...displayBadges]
                   .sort((a, b) => (a.rarity ?? 999) - (b.rarity ?? 999))
                   .map((badge, idx) => {
                   const expanded = expandedBadgeId === badge.id;
@@ -1020,7 +1063,7 @@ export default function ResultEnhanced({
                       </span>
                       {badge.rarity != null && (
                         <span className="mt-0.5 text-[11px] text-ink2 tabular-nums">
-                          ~{badge.rarity} % des profils
+                          {t("result.badges.rarity", { rarity: badge.rarity })}
                         </span>
                       )}
                       {expanded && (
@@ -1040,8 +1083,7 @@ export default function ResultEnhanced({
               aucun script tiers (la CSP reste intacte). */}
           <div className="mt-10 pt-8 border-t border-rule text-center">
             <p className="text-sm text-ink2 mb-4 [text-wrap:balance]">
-              Ce test est gratuit, sans publicité et sans compte. S'il vous a été utile,
-              vous pouvez soutenir son développement.
+              {t("result.support.text")}
             </p>
             <a
               href="https://ko-fi.com/lukaaasss"
@@ -1051,7 +1093,7 @@ export default function ResultEnhanced({
               className="btn-outline inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
             >
               <HeartIcon className="w-4 h-4" aria-hidden="true" />
-              Soutenir le projet
+              {t("result.support.button")}
             </a>
           </div>
 
@@ -1060,7 +1102,7 @@ export default function ResultEnhanced({
               onClick={onRestart}
               className="btn-ink px-7 py-3 text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
             >
-              Recommencer le test
+              {t("result.restart")}
             </button>
           </div>
         </div>
@@ -1071,10 +1113,10 @@ export default function ResultEnhanced({
         <div className="animate-fadeIn space-y-6">
           <div>
             <h3 className="font-display text-2xl sm:text-3xl text-ink font-semibold">
-              Comparateur de profils
+              {t("result.compare.title")}
             </h3>
             <p className="text-sm text-ink2 mt-1">
-              Choisissez jusqu'à {MAX_COMPARE} figures à superposer sur le diagramme.
+              {t("result.compare.subtitle", { max: MAX_COMPARE })}
             </p>
           </div>
 
@@ -1083,7 +1125,7 @@ export default function ResultEnhanced({
             <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-rule">
               <h4 className="flex items-center gap-2 text-xs font-semibold text-ink2 uppercase tracking-[0.15em]">
                 <UserGroupIcon className="w-4 h-4" />
-                Figures politiques
+                {t("result.compare.figures")}
               </h4>
               <span className="text-xs text-ink2 tabular-nums">{selectedProfiles.length}/{MAX_COMPARE}</span>
             </div>
@@ -1134,7 +1176,7 @@ export default function ResultEnhanced({
           {!explorerMode && (
             <div className="bg-paper2 rounded-xl p-4 border border-rule">
               <h4 className="text-xs font-semibold text-ink2 mb-3 uppercase tracking-[0.15em]">
-                Sauvegarder mon profil
+                {t("result.save.title")}
               </h4>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
@@ -1144,7 +1186,7 @@ export default function ResultEnhanced({
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleSaveCurrentProfile();
                   }}
-                  placeholder="Nom du profil (ex. Moi)"
+                  placeholder={t("result.save.placeholder")}
                   maxLength={40}
                   className="flex-1 rounded-md border border-rule bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink2/70 focus:outline-none focus:ring-2 focus:ring-ink"
                 />
@@ -1153,15 +1195,15 @@ export default function ResultEnhanced({
                   disabled={!saveName.trim()}
                   className="btn-outline px-4 py-2 text-sm font-medium disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                 >
-                  {profileSaved ? "Sauvegardé ✓" : "Sauvegarder"}
+                  {profileSaved ? t("result.save.saved") : t("result.save.button")}
                 </button>
               </div>
               <p className="mt-2 text-xs text-ink2">
-                Stocké uniquement dans votre navigateur, pour retrouver et comparer vos résultats dans le temps.
+                {t("result.save.hint")}
               </p>
               {saveError && (
                 <p role="status" className="mt-2 text-xs text-ink2">
-                  Stockage local indisponible (navigation privée ou espace saturé) : le profil n'a pas pu être enregistré.
+                  {t("result.save.error")}
                 </p>
               )}
             </div>
@@ -1171,7 +1213,7 @@ export default function ResultEnhanced({
           {savedProfiles.length > 0 && (
             <div className="bg-paper2 rounded-xl p-4 border border-rule">
               <h4 className="text-xs font-semibold text-ink2 mb-3 uppercase tracking-[0.15em]">
-                Vos profils sauvegardés
+                {t("result.saved.title")}
               </h4>
               <div className="space-y-2">
                 {savedProfiles.map((profile) => (
@@ -1189,7 +1231,7 @@ export default function ResultEnhanced({
                     >
                       {profile.name}
                       <span className="ml-2 text-xs opacity-60">
-                        {new Date(profile.createdAtISO).toLocaleDateString()}
+                        {new Date(profile.createdAtISO).toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR")}
                       </span>
                     </button>
                     <button
@@ -1207,7 +1249,7 @@ export default function ResultEnhanced({
           {/* Graphique radar */}
           <div
             role="img"
-            aria-label={`Radar de positionnement sur les ${axes.length} axes idéologiques ; les valeurs détaillées sont listées au-dessus.`}
+            aria-label={t("result.radar.aria", { count: axes.length })}
             className="w-full h-80 sm:h-96 md:h-[32rem] px-2 sm:px-4 md:px-6 min-w-0 bg-paper2 rounded-xl border border-rule p-4"
           >
             <ResponsiveContainer width="100%" height="100%">
@@ -1218,7 +1260,7 @@ export default function ResultEnhanced({
                 <PolarGrid stroke="rgba(35,32,26,0.15)" />
                 <PolarAngleAxis
                   dataKey="axis"
-                  tick={<RadarAxisTick />}
+                  tick={<RadarAxisTick shortLabelMap={radarShortByLabel} />}
                 />
                 <PolarRadiusAxis
                   domain={[0, 100]}
@@ -1229,8 +1271,8 @@ export default function ResultEnhanced({
                 {/* Radar pour "Vous" - seulement en mode normal */}
                 {!explorerMode && (
                   <Radar
-                    name="Vous"
-                    dataKey="Vous"
+                    name={youLabel}
+                    dataKey={youLabel}
                     stroke={USER_COLOR}
                     fill={USER_COLOR}
                     fillOpacity={0.18}
@@ -1241,7 +1283,7 @@ export default function ResultEnhanced({
 
                 {/* Radars pour les profils sélectionnés */}
                 {selectedProfiles.map((profileId) => {
-                  const profile = [...referenceProfiles, ...savedProfiles].find(
+                  const profile = [...localizedProfiles, ...savedProfiles].find(
                     (p) => p.id === profileId
                   );
                   if (!profile) return null;
@@ -1259,7 +1301,14 @@ export default function ResultEnhanced({
                   );
                 })}
 
-                <Tooltip content={<RadarTooltip axisLabelMap={axisLabelMap} />} />
+                <Tooltip
+                  content={
+                    <RadarTooltip
+                      axisLabelMap={axisLabelMap}
+                      fallbackMeta={{ left: t("result.lean.left"), right: t("result.lean.right") }}
+                    />
+                  }
+                />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -1276,11 +1325,11 @@ export default function ResultEnhanced({
                     className="h-2.5 w-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: USER_COLOR }}
                   />
-                  Vous
+                  {youLabel}
                 </span>
               )}
               {selectedProfiles.map((profileId) => {
-                const profile = [...referenceProfiles, ...savedProfiles].find(
+                const profile = [...localizedProfiles, ...savedProfiles].find(
                   (p) => p.id === profileId
                 );
                 if (!profile) return null;
@@ -1299,7 +1348,7 @@ export default function ResultEnhanced({
 
           {selectedProfiles.length === 0 && (
             <p className="text-center text-ink2 text-sm">
-              Sélectionnez des profils ci-dessus pour les comparer sur le graphique.
+              {t("result.compare.hint")}
             </p>
           )}
         </div>
@@ -1313,10 +1362,10 @@ export default function ResultEnhanced({
               {/* En-tête de l'annuaire */}
               <div>
                 <h3 className="font-display text-2xl sm:text-3xl font-semibold text-ink">
-                  Annuaire des figures politiques
+                  {t("result.directory.title")}
                 </h3>
                 <p className="text-ink2 text-sm mt-1">
-                  Classées de gauche à droite. Choisissez une figure pour voir ses positions, axes et badges.
+                  {t("result.directory.subtitle")}
                 </p>
                 <div className="mt-4 max-w-md">
                   <LeanIndicator value={50} showLabels />
@@ -1340,7 +1389,7 @@ export default function ResultEnhanced({
                           {profile.name}
                         </span>
                         <span className="hidden sm:inline shrink-0 text-sm text-ink2 group-hover:text-ink transition">
-                          Voir →
+                          {t("result.directory.see")}
                         </span>
                       </span>
                       <span className="block text-xs sm:text-sm text-ink2 line-clamp-1 mb-2.5">
@@ -1358,11 +1407,11 @@ export default function ResultEnhanced({
             <>
               {/* Vue détaillée du profil sélectionné */}
               {(() => {
-                const profile = referenceProfiles.find((p) => p.id === selectedPoliticalProfile);
+                const profile = localizedProfiles.find((p) => p.id === selectedPoliticalProfile);
                 if (!profile) return null;
 
                 const profileScores = calculatePoleScores(profile.answers, questions);
-                const profileBadges = evaluateBadges(profile.answers, questions, profileScores);
+                const profileBadges = evaluateBadges(profile.answers, questions, profileScores).map(localizeBadge);
 
                 return (
                   <div className="space-y-6">
@@ -1371,7 +1420,7 @@ export default function ResultEnhanced({
                       onClick={() => setSelectedPoliticalProfile(null)}
                       className="btn-outline inline-flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
                     >
-                      ← Retour à la liste
+                      {t("result.directory.back")}
                     </button>
 
                     {/* Carte d'en-tête (papier/encre, monogramme sobre) */}
@@ -1392,7 +1441,7 @@ export default function ResultEnhanced({
 
                     {/* Positions sur les axes */}
                     <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
-                      <h3 className="text-xl font-bold mb-4 text-ink">Positions sur les axes</h3>
+                      <h3 className="text-xl font-bold mb-4 text-ink">{t("result.directory.positions")}</h3>
                       <div className="space-y-6">
                         {sortedAxisDefs.map((axisInfo) => {
                           const axisScore = profileScores[axisInfo.id];
@@ -1436,7 +1485,7 @@ export default function ResultEnhanced({
                     {profileBadges.length > 0 && (
                       <div className="rounded-2xl border border-rule bg-paper2 p-6 shadow-sm">
                         <h3 className="text-xl font-semibold mb-4 text-center text-ink">
-                          Badges obtenus
+                          {t("result.badges.title")}
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 items-start justify-items-center">
                           {profileBadges.map((badge, idx) => {
@@ -1486,24 +1535,20 @@ export default function ResultEnhanced({
       {activeTab === "explained" && (
         <div className="space-y-6 sm:space-y-8 animate-fadeIn">
           <h2 className="text-2xl sm:text-3xl font-semibold text-center text-ink">
-            Explication des axes
+            {t("result.explained.title")}
           </h2>
           <p className="text-sm sm:text-base text-ink/85 max-w-prose mx-auto px-1 leading-relaxed">
-            Les positions en <span style={{ color: LEFT_COLOR }} className="font-semibold">rouge</span> sont
-            associées à la gauche, et celles en{" "}
-            <span style={{ color: RIGHT_COLOR }} className="font-semibold">bleu</span> à la droite, selon des codes
-            politiques classiques, mais avec de nombreuses exceptions.
+            {t("result.explained.intro.before")}
+            <span style={{ color: LEFT_COLOR }} className="font-semibold">{t("result.color.red")}</span>
+            {t("result.explained.intro.mid")}
+            <span style={{ color: RIGHT_COLOR }} className="font-semibold">{t("result.color.blue")}</span>
+            {t("result.explained.intro.after")}
             <br /><br />
-            Certaines idées dites "de gauche" peuvent être reprises par la droite, et inversement : par exemple, un
-            discours d'ordre et de sécurité peut être défendu à gauche au nom de la justice sociale, tandis que des
-            politiques de régulation économique peuvent être soutenues à droite pour protéger la nation ou les
-            petites entreprises.
+            {t("result.explained.intro.p2")}
             <br /><br />
-            Il est aussi possible d'adhérer à des éléments "rouges" et "bleus" d'une même idée : on peut vouloir un
-            État fort qui encadre le marché, tout en refusant la hiérarchie rigide dans l'entreprise.
+            {t("result.explained.intro.p3")}
             <br /><br />
-            Ce test cherche à donner une vision d'ensemble cohérente de vos orientations, mais il ne peut pas
-            refléter toutes les nuances et contradictions qui composent une pensée politique réelle.
+            {t("result.explained.intro.p4")}
           </p>
 
           {sortedAxisDefs
@@ -1557,20 +1602,16 @@ export default function ResultEnhanced({
 
           <div className="border-t border-ink/15 pt-6 sm:pt-10 text-sm sm:text-base text-ink/85 max-w-prose mx-auto px-1">
             <h3 className="text-base sm:text-lg font-semibold text-center mb-2 text-ink">
-              À propos
+              {t("result.explained.aboutTitle")}
             </h3>
             <p className="mb-2">
-              Le code couleur rouge/bleu renvoie aux tendances classiquement
-              associées à la gauche et à la droite.
+              {t("result.explained.about1")}
             </p>
             <p className="mb-2">
-              Mais ces catégories se croisent souvent : certains partis de
-              gauche défendent des idées jugées conservatrices, tandis que des
-              partis de droite reprennent des revendications sociales.
+              {t("result.explained.about2")}
             </p>
             <p>
-              Ce test ne cherche pas à te coller une étiquette, mais à t'aider
-              à comprendre où tu te situes sur différents axes.
+              {t("result.explained.about3")}
             </p>
           </div>
         </div>

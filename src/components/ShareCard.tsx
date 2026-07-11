@@ -6,6 +6,7 @@
  * Rouge #C62828 = pôle gauche, bleu #1565C0 = pôle droit (fonctionnels).
  */
 import type { Badge } from "../data/badges";
+import { useLocale } from "../i18n/LocaleContext";
 
 export type ShareCardGauge = {
   id: string;
@@ -35,6 +36,7 @@ function Mark({ size }: { size: number }) {
 }
 
 export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
+  const { t, locale } = useLocale();
   const hero = top3[0];
   // Les 5 badges les PLUS RARES obtenus (rareté croissante) : ce sont eux
   // qui donnent envie de se comparer, pas les 5 premiers déclarés.
@@ -63,7 +65,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
           </div>
           {/* Date du test façon « une » de journal — pas de slogan. */}
           <span className="font-body font-medium text-ink2" style={{ fontSize: 24 }}>
-            {new Date().toLocaleDateString("fr-FR", {
+            {new Date().toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR", {
               day: "numeric",
               month: "long",
               year: "numeric",
@@ -78,7 +80,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
             className="font-body font-semibold text-ink2"
             style={{ fontSize: 22, letterSpacing: "0.16em", textTransform: "uppercase" }}
           >
-            Plus proche de
+            {t("sharecard.closestTo")}
           </div>
           <div className="flex items-baseline justify-between" style={{ gap: 24, marginTop: 8 }}>
             <span
@@ -115,12 +117,12 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               className="font-body font-semibold text-ink2"
               style={{ fontSize: 20, letterSpacing: "0.16em", textTransform: "uppercase" }}
             >
-              Mes 14 axes
+              {t("sharecard.axes")}
             </span>
             <span className="font-body font-medium text-ink2" style={{ fontSize: 20 }}>
-              <span style={{ color: LEFT_COLOR, fontWeight: 700 }}>■</span> gauche
+              <span style={{ color: LEFT_COLOR, fontWeight: 700 }}>■</span> {t("sharecard.left")}
               <span style={{ margin: "0 10px" }}>·</span>
-              <span style={{ color: RIGHT_COLOR, fontWeight: 700 }}>■</span> droite
+              <span style={{ color: RIGHT_COLOR, fontWeight: 700 }}>■</span> {t("sharecard.right")}
             </span>
           </div>
           <div
@@ -170,7 +172,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
                 className="font-body font-semibold text-ink2"
                 style={{ fontSize: 20, letterSpacing: "0.16em", textTransform: "uppercase", flexShrink: 0 }}
               >
-                Badges
+                {t("sharecard.badges")}
               </span>
               <div className="flex" style={{ gap: 26, flex: 1, minWidth: 0 }}>
                 {shownBadges.map((b) => (
@@ -228,7 +230,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
           <span className="font-body text-ink2" style={{ fontSize: 24 }}>
             <span className="font-semibold text-ink">polarity-quiz.fr</span>
             <span style={{ margin: "0 12px" }}>·</span>
-            101 questions · 14 axes idéologiques · gratuit, sans compte
+            {t("sharecard.footer")}
           </span>
         </div>
       </div>

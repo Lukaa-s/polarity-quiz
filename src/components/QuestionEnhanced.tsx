@@ -8,6 +8,7 @@
  */
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useLocale } from "../i18n/LocaleContext";
 
 export type QuestionProps = {
   question: { id: string; text: string; explanation?: string };
@@ -41,6 +42,7 @@ export default function QuestionEnhanced({
   answeredIdx = null,
 }: QuestionProps) {
   const reduceMotion = useReducedMotion();
+  const { t } = useLocale();
   const [showExplanation, setShowExplanation] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(answeredIdx);
   // Transition en cours (délai d'animation avant de passer à la question suivante) :
@@ -85,9 +87,7 @@ export default function QuestionEnhanced({
 
   const handleRestart = () => {
     if (isAdvancing) return;
-    const confirmed = window.confirm(
-      "Recommencer effacera toutes vos réponses. Voulez-vous vraiment repartir de zéro ?"
-    );
+    const confirmed = window.confirm(t("question.restartConfirm"));
     if (!confirmed) return;
     if (onRestart) onRestart();
     else window.location.reload();
@@ -109,13 +109,13 @@ export default function QuestionEnhanced({
   };
 
   const choices = [
-    "Tout à fait d'accord",
-    "D'accord",
-    "Plutôt d'accord",
-    "Neutre",
-    "Plutôt pas d'accord",
-    "Pas d'accord",
-    "Pas du tout d'accord",
+    t("scale.choice.0"),
+    t("scale.choice.1"),
+    t("scale.choice.2"),
+    t("scale.choice.3"),
+    t("scale.choice.4"),
+    t("scale.choice.5"),
+    t("scale.choice.6"),
   ];
 
   // Navigation aux flèches dans le radiogroup (roving tabindex, avec bouclage).
@@ -150,7 +150,7 @@ export default function QuestionEnhanced({
       <div className="mx-auto w-full max-w-2xl md:max-w-3xl">
         {/* Annonce de progression pour les lecteurs d'écran */}
         <div aria-live="polite" className="sr-only">
-          Question {currentIndex + 1} sur {total}
+          {t("question.progress", { current: currentIndex + 1, total })}
         </div>
 
         {/* En-tête : index éditorial + reprise */}
@@ -166,7 +166,7 @@ export default function QuestionEnhanced({
             disabled={isAdvancing}
             className="text-xs sm:text-sm text-ink2 underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-ink2 disabled:hover:decoration-rule focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
           >
-            Recommencer
+            {t("question.restart")}
           </button>
         </div>
 
@@ -192,8 +192,8 @@ export default function QuestionEnhanced({
             aria-hidden="true"
             className="flex items-baseline justify-between mb-3 text-[11px] sm:text-xs font-medium uppercase tracking-[0.14em] text-ink2"
           >
-            <span>Pas d'accord</span>
-            <span>D'accord</span>
+            <span>{t("scale.anchor.disagree")}</span>
+            <span>{t("scale.anchor.agree")}</span>
           </div>
 
           <div
@@ -317,7 +317,7 @@ export default function QuestionEnhanced({
             disabled={currentIndex === 0 || isAdvancing}
             className="btn-outline px-4 py-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
           >
-            ← Précédent
+            {t("question.previous")}
           </button>
 
           {question.explanation && (
@@ -327,7 +327,7 @@ export default function QuestionEnhanced({
               aria-controls="q-explanation"
               className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-ink2 hover:text-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink rounded"
             >
-              {showExplanation ? "Masquer l'aide" : "Afficher l'aide"}
+              {showExplanation ? t("question.hideHelp") : t("question.showHelp")}
               <svg
                 className={`w-4 h-4 transition-transform ${showExplanation ? "rotate-180" : ""}`}
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"

@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import { useLocale } from "../i18n/LocaleContext";
+import { RichText } from "../i18n/RichText";
+import LanguageToggle from "../i18n/LanguageToggle";
 
 /**
  * Piège le focus à l'intérieur d'une modale ouverte (WCAG 2.4.3 / APG Dialog) et
@@ -61,6 +64,7 @@ function useModalFocusTrap(
 }
 
 export default function Footer() {
+  const { t, locale } = useLocale();
   const [showLegal, setShowLegal] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
@@ -93,7 +97,7 @@ export default function Footer() {
             onClick={() => setShowLegal(true)}
             className="underline hover:text-ink/90 transition"
           >
-            Mentions légales
+            {t("footer.legal")}
           </button>
           <span className="text-ink/30">•</span>
           <button
@@ -101,12 +105,15 @@ export default function Footer() {
             onClick={() => setShowPrivacy(true)}
             className="underline hover:text-ink/90 transition"
           >
-            Politique de confidentialité
+            {t("footer.privacy")}
           </button>
         </div>
         <p className="mt-2 text-ink/70">
-          © {new Date().getFullYear()} Polarity Quiz - Tous droits réservés
+          {t("footer.copyright", { year: new Date().getFullYear() })}
         </p>
+        <div className="mt-3 flex justify-center">
+          <LanguageToggle />
+        </div>
       </footer>
 
       {/* Modal Mentions Légales */}
@@ -125,11 +132,11 @@ export default function Footer() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <h2 id="legal-modal-title" className="text-2xl sm:text-3xl font-bold text-ink">Mentions Légales</h2>
+              <h2 id="legal-modal-title" className="text-2xl sm:text-3xl font-bold text-ink">{t("legal.title")}</h2>
               <button
                 onClick={() => setShowLegal(false)}
                 className="p-2 hover:bg-ink/10 rounded-lg transition"
-                aria-label="Fermer"
+                aria-label={t("footer.close")}
               >
                 <XMarkIcon className="w-6 h-6 text-ink/80" />
               </button>
@@ -137,19 +144,14 @@ export default function Footer() {
 
             <div className="space-y-6 text-ink/90 text-sm sm:text-base">
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Éditeur du site</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("legal.editor.heading")}</h3>
                 <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
                   {/* Éditeur non professionnel : anonymat public licite (LCEN art. 6, III-2),
                       l'identité complète est connue de l'hébergeur. Ne pas ajouter de
                       nom/adresse ici sans décision explicite du propriétaire. */}
+                  <p className="mb-1">{t("legal.editor.body")}</p>
                   <p className="mb-1">
-                    Site édité à titre personnel et non professionnel. Conformément à
-                    l'article 6, III-2 de la loi n° 2004-575 du 21 juin 2004 pour la
-                    confiance dans l'économie numérique (LCEN), l'éditeur a transmis ses
-                    coordonnées personnelles à l'hébergeur.
-                  </p>
-                  <p className="mb-1">
-                    <strong>Contact :</strong>{" "}
+                    <strong>{t("legal.contactLabel")}</strong>{" "}
                     <a href="mailto:polarityquiz@gmail.com" className="text-right hover:underline">
                       polarityquiz@gmail.com
                     </a>
@@ -158,13 +160,13 @@ export default function Footer() {
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Hébergement</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("legal.hosting.heading")}</h3>
                 <div className="bg-ink/5 rounded-lg p-4 border border-ink/10">
                   <p className="mb-1">
-                    <strong>Hébergeur :</strong> Vercel Inc.
+                    <strong>{t("legal.hosting.hostLabel")}</strong> Vercel Inc.
                   </p>
                   <p className="mb-1">
-                    <strong>Adresse :</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, USA
+                    <strong>{t("legal.hosting.addressLabel")}</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, USA
                   </p>
                   <p className="text-xs text-ink/70 mt-2">
                   </p>
@@ -173,33 +175,18 @@ export default function Footer() {
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Propriété intellectuelle
+                  {t("legal.ip.heading")}
                 </h3>
-                <p className="leading-relaxed">
-                  L'ensemble du contenu de ce site (textes, images, graphismes, logo, icônes,
-                  etc.) est la propriété exclusive de l'éditeur, à l'exception des marques,
-                  logos ou contenus appartenant à d'autres sociétés partenaires ou auteurs.
-                </p>
-                <p className="leading-relaxed mt-2">
-                  Toute reproduction, distribution, modification, adaptation, retransmission ou
-                  publication de ces différents éléments est strictement interdite sans l'accord
-                  exprès par écrit de l'éditeur.
-                </p>
+                <p className="leading-relaxed">{t("legal.ip.body1")}</p>
+                <p className="leading-relaxed mt-2">{t("legal.ip.body2")}</p>
               </section>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Limitation de responsabilité
+                  {t("legal.liability.heading")}
                 </h3>
-                <p className="leading-relaxed">
-                  Les informations fournies par ce site le sont à titre indicatif. Ce test de
-                  positionnement politique n'a aucune valeur scientifique ou officielle et ne
-                  constitue en aucun cas un diagnostic ou une analyse professionnelle.
-                </p>
-                <p className="leading-relaxed mt-2">
-                  L'éditeur ne saurait être tenu responsable de l'interprétation faite des
-                  résultats ou de leur utilisation.
-                </p>
+                <p className="leading-relaxed">{t("legal.liability.body1")}</p>
+                <p className="leading-relaxed mt-2">{t("legal.liability.body2")}</p>
               </section>
             </div>
 
@@ -208,7 +195,7 @@ export default function Footer() {
                 onClick={() => setShowLegal(false)}
                 className="px-6 py-3 bg-ink/10 hover:bg-ink/20 rounded-lg transition text-ink font-medium"
               >
-                Fermer
+                {t("footer.close")}
               </button>
             </div>
           </div>
@@ -232,12 +219,12 @@ export default function Footer() {
           >
             <div className="flex items-start justify-between mb-6">
               <h2 id="privacy-modal-title" className="text-2xl sm:text-3xl font-bold text-ink">
-                Politique de Confidentialité
+                {t("privacy.title")}
               </h2>
               <button
                 onClick={() => setShowPrivacy(false)}
                 className="p-2 hover:bg-ink/10 rounded-lg transition"
-                aria-label="Fermer"
+                aria-label={t("footer.close")}
               >
                 <XMarkIcon className="w-6 h-6 text-ink/80" />
               </button>
@@ -246,164 +233,144 @@ export default function Footer() {
             <div className="space-y-6 text-ink/90 text-sm sm:text-base">
               <div className="bg-green-700/10 border border-green-500/30 rounded-lg p-4">
                 <p className="text-green-800 font-semibold mb-2">
-                  ✅ Votre vie privée est respectée
+                  {t("privacy.banner.title")}
                 </p>
                 <p className="text-sm text-ink/80">
-                  Aucune donnée personnelle n'est collectée. Seules des statistiques de
-                  fréquentation anonymes sont mesurées via GoatCounter, sans cookies.
+                  {t("privacy.banner.body")}
                 </p>
               </div>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Données personnelles collectées : aucune
+                  {t("privacy.collected.heading")}
                 </h3>
                 <p className="leading-relaxed">
-                  Cette application ne collecte, ne stocke et ne transmet <strong>aucune donnée
-                  personnelle</strong> sur nos serveurs.
+                  <RichText text={t("privacy.collected.body")} />
                 </p>
                 <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
-                  <li>Pas de compte utilisateur</li>
-                  <li>Pas de demande d'email, nom ou téléphone</li>
-                  <li>Pas de cookies de tracking</li>
-                  <li>Pas de Google Analytics, Facebook Pixel ou autre outil de suivi</li>
-                  <li>Pas de publicité ciblée</li>
+                  <li>{t("privacy.collected.li1")}</li>
+                  <li>{t("privacy.collected.li2")}</li>
+                  <li>{t("privacy.collected.li3")}</li>
+                  <li>{t("privacy.collected.li4")}</li>
+                  <li>{t("privacy.collected.li5")}</li>
                 </ul>
                 <p className="leading-relaxed mt-2 text-sm text-ink/80">
-                  Des statistiques de fréquentation anonymes et agrégées (pages vues, appareils,
-                  tests complétés) sont mesurées via GoatCounter — voir la section « Analyse
-                  d'audience » ci-dessous.
+                  {t("privacy.collected.footnote")}
                 </p>
               </section>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Stockage local (localStorage)
+                  {t("privacy.local.heading")}
                 </h3>
                 <p className="leading-relaxed">
-                  Les résultats de votre test et vos profils sauvegardés sont stockés{" "}
-                  <strong>uniquement dans votre navigateur</strong> via le localStorage.
+                  <RichText text={t("privacy.local.body")} />
                 </p>
                 <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
-                  <li>Ces données ne quittent jamais votre appareil</li>
-                  <li>Elles ne sont jamais transmises à nos serveurs</li>
-                  <li>
-                    Vous pouvez les supprimer à tout moment en vidant le cache de votre navigateur
-                  </li>
+                  <li>{t("privacy.local.li1")}</li>
+                  <li>{t("privacy.local.li2")}</li>
+                  <li>{t("privacy.local.li3")}</li>
                 </ul>
               </section>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Partage de résultats via URL
+                  {t("privacy.share.heading")}
                 </h3>
                 <p className="leading-relaxed">
-                  Lorsque vous partagez vos résultats via le bouton "Partager" :
+                  {t("privacy.share.body")}
                 </p>
                 <ul className="list-disc list-inside mt-2 space-y-1 text-ink/80">
                   <li>
-                    Vos réponses sont encodées directement dans l'URL (paramètre{" "}
-                    <code className="bg-ink/10 px-1 rounded">?results=...</code>)
+                    <RichText text={t("privacy.share.li1")} />
                   </li>
-                  <li>Si vous fournissez un nom, il sera visible dans l'URL partagée</li>
+                  <li>{t("privacy.share.li2")}</li>
                   <li>
-                    <strong>Aucune donnée n'est stockée sur nos serveurs</strong> - le lien
-                    contient tout
+                    <RichText text={t("privacy.share.li3")} />
                   </li>
-                  <li>Toute personne avec le lien peut voir les résultats partagés</li>
+                  <li>{t("privacy.share.li4")}</li>
                 </ul>
                 <div className="mt-3 bg-yellow-700/10 border border-yellow-500/30 rounded-lg p-3">
                   <p className="text-yellow-800 text-sm">
-                    ⚠️ <strong>Attention :</strong> Si vous partagez un lien avec votre nom,
-                    celui-ci sera visible par toute personne accédant au lien.
+                    <RichText text={t("privacy.share.warning")} />
                   </p>
                 </div>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Cookies</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("privacy.cookies.heading")}</h3>
                 <p className="leading-relaxed">
-                  Cette application <strong>n'utilise AUCUN cookie</strong>, ni de première
-                  partie ni de tierce partie.
+                  <RichText text={t("privacy.cookies.body")} />
                 </p>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Analyse d'audience</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("privacy.audience.heading")}</h3>
                 <p className="leading-relaxed mb-2">
-                  Nous utilisons <strong>GoatCounter</strong>, un outil d'analyse respectueux de
-                  la vie privée, pour collecter des statistiques anonymes sur l'utilisation du
-                  site afin d'améliorer votre expérience.
+                  <RichText text={t("privacy.audience.body")} />
                 </p>
                 <p className="leading-relaxed mb-2">
-                  <strong>Données collectées (anonymes) :</strong>
+                  <RichText text={t("privacy.audience.collectedLabel")} />
                 </p>
                 <ul className="list-disc list-inside space-y-1 text-ink/80 text-sm">
-                  <li>Pages visitées</li>
-                  <li>Nombre de tests complétés</li>
-                  <li>Plateforme de partage utilisée (Twitter, WhatsApp, etc.)</li>
-                  <li>Type d'appareil (mobile/desktop)</li>
+                  <li>{t("privacy.audience.collected.li1")}</li>
+                  <li>{t("privacy.audience.collected.li2")}</li>
+                  <li>{t("privacy.audience.collected.li3")}</li>
+                  <li>{t("privacy.audience.collected.li4")}</li>
                 </ul>
                 <p className="leading-relaxed mt-2">
-                  <strong>Données NON collectées :</strong>
+                  <RichText text={t("privacy.audience.notCollectedLabel")} />
                 </p>
                 <ul className="list-disc list-inside space-y-1 text-ink/80 text-sm">
-                  <li>Aucune adresse IP</li>
-                  <li>Aucune donnée personnelle identifiable</li>
-                  <li>Aucun cookie de tracking</li>
-                  <li>Aucun identifiant unique</li>
+                  <li>{t("privacy.audience.notCollected.li1")}</li>
+                  <li>{t("privacy.audience.notCollected.li2")}</li>
+                  <li>{t("privacy.audience.notCollected.li3")}</li>
+                  <li>{t("privacy.audience.notCollected.li4")}</li>
                 </ul>
                 <p className="leading-relaxed mt-3 text-sm">
-                  Ces données sont agrégées et ne permettent pas de vous identifier. Pour en
-                  savoir plus :{" "}
+                  {t("privacy.audience.moreInfo")}{" "}
                   <a
                     href="https://www.goatcounter.com/help/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-right hover:underline"
                   >
-                    Politique de confidentialité GoatCounter
+                    {t("privacy.audience.linkLabel")}
                   </a>
                 </p>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Vos droits</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("privacy.rights.heading")}</h3>
                 <p className="leading-relaxed mb-2">
-                  Vous disposez à tout moment du droit de :
+                  {t("privacy.rights.intro")}
                 </p>
                 <ul className="list-disc list-inside space-y-1 text-ink/80">
                   <li>
-                    <strong>Supprimer vos données locales :</strong> Videz le cache et les
-                    données de navigation de votre navigateur
+                    <RichText text={t("privacy.rights.li1")} />
                   </li>
                   <li>
-                    <strong>Supprimer vos profils sauvegardés :</strong> Utilisez le bouton de
-                    suppression (icône poubelle) sur chaque profil
+                    <RichText text={t("privacy.rights.li2")} />
                   </li>
                   <li>
-                    <strong>Ne pas partager de données :</strong> Vous n'êtes jamais obligé de
-                    partager vos résultats
+                    <RichText text={t("privacy.rights.li3")} />
                   </li>
                 </ul>
               </section>
 
               <section>
                 <h3 className="text-lg font-semibold text-ink mb-2">
-                  Modifications de cette politique
+                  {t("privacy.changes.heading")}
                 </h3>
                 <p className="leading-relaxed">
-                  Nous nous réservons le droit de modifier cette politique de confidentialité à
-                  tout moment. La date de dernière mise à jour sera toujours indiquée en haut de
-                  cette page.
+                  {t("privacy.changes.body")}
                 </p>
               </section>
 
               <section>
-                <h3 className="text-lg font-semibold text-ink mb-2">Contact</h3>
+                <h3 className="text-lg font-semibold text-ink mb-2">{t("privacy.contact.heading")}</h3>
                 <p className="leading-relaxed">
-                  Pour toute question concernant cette politique de confidentialité, vous pouvez
-                  nous contacter à l'adresse :{" "}
+                  {t("privacy.contact.body")}{" "}
                   <a href="mailto:polarityquiz@gmail.com" className="text-right hover:underline">
                     polarityquiz@gmail.com
                   </a>
@@ -412,7 +379,8 @@ export default function Footer() {
 
               <div className="bg-ink/5 rounded-lg p-4 border border-ink/10 text-xs text-ink/70">
                 <p>
-                  <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString("fr-FR")}
+                  <strong>{t("privacy.lastUpdatedLabel")}</strong>{" "}
+                  {new Date().toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR")}
                 </p>
               </div>
             </div>
@@ -422,7 +390,7 @@ export default function Footer() {
                 onClick={() => setShowPrivacy(false)}
                 className="px-6 py-3 bg-ink/10 hover:bg-ink/20 rounded-lg transition text-ink font-medium"
               >
-                Fermer
+                {t("footer.close")}
               </button>
             </div>
           </div>

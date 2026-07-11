@@ -1,8 +1,6 @@
 // src/App.tsx
 import { useState, useMemo, useEffect, lazy, Suspense } from "react";
-import questionsData from "./data/questions.json";
 import { ideologicalAxes } from "./data/axisexplaination";
-import type { QuestionDef } from "./utils/scoring";
 import QuestionEnhanced from "./components/QuestionEnhanced";
 import PoleFaceoff from "./components/PoleFaceoff";
 import Footer from "./components/Footer";
@@ -11,6 +9,9 @@ import { calculatePoleScores } from "./utils/scoring";
 import { evaluateBadges } from "./utils/badges";
 import { decodeResults, sanitizeAnswers } from "./utils/shareResults";
 import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode, trackEvent } from "./utils/analytics";
+import { useLocale } from "./i18n/LocaleContext";
+import { useLocalizedQuestions } from "./i18n/data";
+import LanguageToggle from "./i18n/LanguageToggle";
 
 // Heroicons
 import { UserGroupIcon } from "@heroicons/react/24/solid";
@@ -110,8 +111,17 @@ function clearSavedProgress() {
 }
 
 const App: React.FC = () => {
+  const { t } = useLocale();
   const { key: seedKey, seed } = useMemo(getDailySeed, []);
-  const questions = useMemo(() => shuffleWithSeed(questionsData as QuestionDef[], seed), [seed]);
+  // Questions affichées dans la langue courante (surcouche EN par id, repli FR).
+  // Le mélange déterministe est identique dans les deux langues : l'ordre, les
+  // ids, le scoring et la persistance ne dépendent que de la seed, jamais de la
+  // locale — seuls le texte et l'aide changent.
+  const localizedQuestions = useLocalizedQuestions();
+  const questions = useMemo(
+    () => shuffleWithSeed(localizedQuestions, seed),
+    [seed, localizedQuestions]
+  );
 
   // Constantes dynamiques
   const AXES_COUNT = ideologicalAxes.length;
@@ -246,22 +256,22 @@ const App: React.FC = () => {
                   Polarity Quiz
                 </p>
                 <h1 className="font-display text-2xl sm:text-3xl font-semibold leading-tight">
-                  Explorateur de profils
+                  {t("explorer.title")}
                 </h1>
               </div>
               <button
                 onClick={() => setExplorerMode(false)}
                 className="btn-outline shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink"
               >
-                ← Retour
+                {t("explorer.back")}
               </button>
             </div>
 
             {/* Utilisation de ResultEnhanced en mode explorateur */}
             <ErrorBoundary
               onReset={() => setResultsRetryKey((k) => k + 1)}
-              title="Impossible de charger l'explorateur"
-              description="Le chargement des profils a échoué (réseau ou mise à jour du site). Réessayez ou rechargez la page."
+              title={t("explorer.error.title")}
+              description={t("explorer.error.desc")}
             >
               <Suspense fallback={<ResultFallback />}>
                 <ResultEnhanced
@@ -289,14 +299,17 @@ const App: React.FC = () => {
       <div className="relative min-h-dvh w-full bg-paper text-ink overflow-x-clip pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
         <SkipLink />
 
-        {/* Masthead : nameplate « Polarity Quiz » */}
+        {/* Masthead : nameplate « Polarity Quiz » + sélecteur de langue */}
         <header className="relative z-10 border-b-2 border-ink">
+          <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+            <LanguageToggle />
+          </div>
           <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-6 sm:py-8 text-center">
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-none">
               Polarity Quiz
             </h1>
             <p className="mt-3 text-[0.7rem] sm:text-xs uppercase tracking-[0.25em] text-ink2">
-              Test de positionnement politique
+              {t("masthead.subtitle")}
             </p>
           </div>
         </header>
@@ -308,7 +321,7 @@ const App: React.FC = () => {
 
             {/* La question */}
             <h2 className="text-center font-display font-semibold tracking-tight leading-[1.0] text-4xl sm:text-5xl lg:text-6xl [text-wrap:balance]">
-              Où vous situez-vous&nbsp;?
+              {t("hero.question")}
             </h2>
 
             {/* Face-à-face cinétique : les 2 pôles de chaque clivage */}
@@ -318,20 +331,20 @@ const App: React.FC = () => {
             {savedProgress && (
               <div className="mx-auto w-full max-w-lg rounded-md border border-rule bg-paper2 px-5 py-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-between">
                 <p className="text-sm text-ink2 text-center sm:text-left">
-                  Une progression a été enregistrée sur cet appareil.
+                  {t("resume.notice")}
                 </p>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={handleResumeProgress}
                     className="btn-ink inline-flex justify-center items-center px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
                   >
-                    Reprendre le test ({Object.keys(savedProgress.answers).length}/{questions.length} répondues)
+                    {t("resume.button", { count: Object.keys(savedProgress.answers).length, total: questions.length })}
                   </button>
                   <button
                     onClick={handleDiscardProgress}
                     className="btn-outline inline-flex justify-center items-center px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
                   >
-                    Repartir de zéro
+                    {t("resume.discard")}
                   </button>
                 </div>
               </div>
@@ -346,7 +359,7 @@ const App: React.FC = () => {
                 }}
                 className="btn-ink inline-flex justify-center items-center px-8 sm:px-10 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
               >
-                Commencer le test
+                {t("cta.start")}
               </button>
 
               <button
@@ -357,18 +370,18 @@ const App: React.FC = () => {
                 className="btn-outline inline-flex justify-center items-center gap-2.5 px-7 sm:px-9 py-4 text-base sm:text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink w-full sm:w-auto"
               >
                 <UserGroupIcon className="w-5 h-5" />
-                Explorer les profils
+                {t("cta.explore")}
               </button>
             </div>
 
             {/* Durée honnête du test (nombre de questions réel, pas un nombre en dur) */}
             <p className="text-center text-xs sm:text-sm text-ink2 tabular-nums">
-              {questions.length} questions · environ 15 minutes
+              {t("meta.duration", { count: questions.length })}
             </p>
 
             {/* Soutien, discret sur l'accueil (l'appui principal vit sur la page de résultats) */}
             <p className="text-center text-xs text-ink2">
-              Gratuit et sans publicité ·{" "}
+              {t("support.free")} ·{" "}
               <a
                 href="https://ko-fi.com/lukaaasss"
                 target="_blank"
@@ -376,7 +389,7 @@ const App: React.FC = () => {
                 onClick={() => trackEvent("support_kofi_home", "/events/support-kofi-home")}
                 className="underline underline-offset-4 decoration-rule hover:text-ink hover:decoration-ink transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink rounded"
               >
-                soutenir le projet
+                {t("support.link")}
               </a>
             </p>
           </div>
@@ -387,9 +400,9 @@ const App: React.FC = () => {
           <div className="mx-auto max-w-4xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-9 sm:gap-10">
               {[
-                `${AXES_COUNT} clivages, deux pôles sur chaque idée.`,
-                "Un profil détaillé, nuancé et partageable.",
-                "Sans inscription ni compte à créer.",
+                t("features.axes", { axes: AXES_COUNT }),
+                t("features.profile"),
+                t("features.noAccount"),
               ].map((point) => (
                 <div key={point} className="flex flex-col items-center sm:items-start gap-3 text-center sm:text-left">
                   <span className="block h-2 w-2 rotate-45 bg-ink" aria-hidden="true" />
@@ -437,11 +450,11 @@ const App: React.FC = () => {
               <div className="flex-1">
                 <h2 className="text-lg font-semibold text-ink">
                   {sharedResultsName
-                    ? `Résultats de ${sharedResultsName}`
-                    : "Résultats partagés"}
+                    ? t("shared.heading.named", { name: sharedResultsName })
+                    : t("shared.heading.anon")}
                 </h2>
                 <p className="text-sm text-ink2">
-                  Vous consultez des résultats partagés. Faites votre propre test pour comparer.
+                  {t("shared.notice")}
                 </p>
               </div>
               <button
@@ -454,7 +467,7 @@ const App: React.FC = () => {
                 }}
                 className="btn-outline px-4 py-2 text-sm font-medium shrink-0"
               >
-                Faire mon test
+                {t("shared.cta")}
               </button>
             </div>
           )}
@@ -463,9 +476,9 @@ const App: React.FC = () => {
             <h1 className="text-2xl sm:text-3xl font-semibold">
               {isViewingSharedResults
                 ? sharedResultsName
-                  ? `Résultats de ${sharedResultsName}`
-                  : "Résultats partagés"
-                : "Votre profil politique"}
+                  ? t("shared.heading.named", { name: sharedResultsName })
+                  : t("shared.heading.anon")
+                : t("results.title")}
             </h1>
           )}
 
@@ -482,8 +495,8 @@ const App: React.FC = () => {
           ) : (
             <ErrorBoundary
               onReset={() => setResultsRetryKey((k) => k + 1)}
-              title="Impossible de charger les résultats"
-              description="Le chargement a échoué (réseau ou mise à jour du site). Vos réponses restent enregistrées sur cet appareil : réessayez ou rechargez la page."
+              title={t("results.error.title")}
+              description={t("results.error.desc")}
             >
               <Suspense fallback={<ResultFallback />}>
                 <ResultEnhanced
@@ -507,21 +520,23 @@ const App: React.FC = () => {
 // Lien d'évitement clavier : masqué visuellement, révélé au focus (première
 // tabulation), il amène directement au contenu principal en sautant la navigation.
 function SkipLink() {
+  const { t } = useLocale();
   return (
     <a
       href="#main-content"
       className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 btn-ink px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:ring-ink"
     >
-      Aller au contenu
+      {t("skip.link")}
     </a>
   );
 }
 
 // Fallback simple pendant le chargement différé de ResultEnhanced (recharts + html2canvas)
 function ResultFallback() {
+  const { t } = useLocale();
   return (
     <div className="w-full py-16 text-center text-ink2">
-      Chargement des résultats…
+      {t("results.loading")}
     </div>
   );
 }
