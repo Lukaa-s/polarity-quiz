@@ -359,11 +359,12 @@ export default function ResultEnhanced({
         (htmlEl.style as CSSStyleDeclaration & { webkitBackdropFilter?: string }).webkitBackdropFilter = 'none';
       });
 
-      // iOS Safari plafonne la surface d'un canvas (~16,7 M pixels) : la carte
-      // de résultats mobile est très haute, un scale fixe de 2 dépasse la
-      // limite → canvas silencieusement vide. On plafonne par la surface.
+      // iOS Safari plafonne la surface d'un canvas (~16,7 M pixels) et la
+      // mémoire disponible sur mobile est bien plus basse : la carte de
+      // résultats est très haute, un scale fixe de 2 dépasse les limites →
+      // canvas silencieusement vide. Budget prudent de 8 M pixels.
       const area = element.offsetWidth * element.offsetHeight;
-      const scale = Math.min(2, Math.sqrt(14_000_000 / area));
+      const scale = Math.min(2, Math.sqrt(8_000_000 / area));
 
       const canvas = await html2canvas(element, {
         backgroundColor: "#F6F3EC",
@@ -435,7 +436,10 @@ export default function ResultEnhanced({
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
     } catch (error) {
       console.error("Erreur lors de l'export:", error);
-      alert("Erreur lors de l'export de l'image");
+      // Message détaillé : sans lui, impossible de diagnostiquer les pannes
+      // spécifiques à un appareil (limites canvas iOS, refus de partage…).
+      const detail = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+      alert(`Erreur lors de l'export de l'image.\n\nDétail technique : ${detail}`);
     } finally {
       // Réactiver les animations après l'export
       setDisableAnimations(false);
