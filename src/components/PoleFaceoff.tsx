@@ -1,27 +1,31 @@
 // src/components/PoleFaceoff.tsx
 // Face-à-face cinétique : boucle sur les 14 clivages, chacun avec ses 2 pôles.
 // Principe : 2 pôles par idée, jamais un axe global.
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ideologicalAxes } from "../data/axisexplaination";
+import { useLocalizedAxes } from "../i18n/data";
 
 const LEFT_COLOR = "#C62828";
 const RIGHT_COLOR = "#1565C0";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const AXES = [...ideologicalAxes].sort((a, b) => a.sortIndex - b.sortIndex);
-
 export default function PoleFaceoff() {
   const reduce = useReducedMotion();
+  // Axes localisés (les libellés de pôles suivent la langue courante).
+  const localizedAxes = useLocalizedAxes();
+  const axes = useMemo(
+    () => [...localizedAxes].sort((a, b) => a.sortIndex - b.sortIndex),
+    [localizedAxes]
+  );
   const [i, setI] = useState(0);
 
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setI((n) => (n + 1) % AXES.length), 3200);
+    const id = setInterval(() => setI((n) => (n + 1) % axes.length), 3200);
     return () => clearInterval(id);
-  }, [reduce]);
+  }, [reduce, axes.length]);
 
-  const axis = AXES[i];
+  const axis = axes[i % axes.length];
 
   return (
     <div className="select-none flex min-h-[9rem] sm:min-h-[7rem] items-center justify-center">
