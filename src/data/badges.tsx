@@ -654,8 +654,10 @@ const rawBadges: Badge[] = [
 // Rareté estimée de chaque badge (% de profils qui l'obtiennent).
 // ESTIMATIONS À LA MAIN, pas des mesures : déduites de la sévérité des
 // conditions (seuils ≥ 75 %, conditions cumulées…) et du public attendu d'un
-// quiz politique en ligne (jeune, plutôt urbain). À remplacer par de vraies
-// statistiques quand le volume de tests le permettra (events GoatCounter).
+// quiz politique en ligne (jeune, plutôt urbain). Ce sont des valeurs de
+// REPLI : quand les compteurs publics GoatCounter répondent et que le volume
+// suffit, la rareté réelle mesurée les remplace à l'affichage — voir
+// utils/badgeStats.ts (lecture) et analytics.ts/trackBadgesUnlocked (écriture).
 const ESTIMATED_RARITY: Record<string, number> = {
   // Réponse forte à une question unique — fréquents à moyens
   pro_nuclear: 18,

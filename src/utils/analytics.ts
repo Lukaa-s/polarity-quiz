@@ -77,6 +77,19 @@ export function trackTestCompleted() {
 }
 
 /**
+ * Track les badges débloqués à la complétion : un événement « dénominateur »
+ * (badges-computed) puis un événement par badge. Émis au même instant que
+ * trackTestCompleted, ils alimentent la rareté réelle des badges — voir
+ * utils/badgeStats.ts pour la lecture des compteurs publics.
+ */
+export function trackBadgesUnlocked(badgeIds: string[]) {
+  trackEvent('badges_computed', '/events/badges-computed');
+  for (const id of badgeIds) {
+    trackEvent(`badge_${id}`, `/events/badge-${id}`);
+  }
+}
+
+/**
  * Track le début d'un test
  */
 export function trackTestStarted() {

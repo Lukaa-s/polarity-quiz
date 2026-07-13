@@ -8,7 +8,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { calculatePoleScores } from "./utils/scoring";
 import { evaluateBadges } from "./utils/badges";
 import { decodeResults, sanitizeAnswers } from "./utils/shareResults";
-import { initAnalytics, trackTestStarted, trackTestCompleted, trackExplorerMode, trackEvent } from "./utils/analytics";
+import { initAnalytics, trackTestStarted, trackTestCompleted, trackBadgesUnlocked, trackExplorerMode, trackEvent } from "./utils/analytics";
+import { useLiveBadgeRarities } from "./utils/badgeStats";
 import { useLocale } from "./i18n/LocaleContext";
 import { useLocalizedQuestions } from "./i18n/data";
 import LanguageToggle from "./i18n/LanguageToggle";
@@ -196,6 +197,12 @@ const App: React.FC = () => {
       setSubmitted(true);
       // Track la complétion du test
       trackTestCompleted();
+      // Badges au même instant que la complétion (`answers` ne contient pas
+      // encore la dernière réponse : setState est asynchrone).
+      const finalAnswers = { ...answers, [id]: idx };
+      trackBadgesUnlocked(
+        evaluateBadges(finalAnswers, questions, calculatePoleScores(finalAnswers, questions)).map((b) => b.id)
+      );
     }
   };
 
@@ -239,6 +246,9 @@ const App: React.FC = () => {
 
   const poleScores = useMemo(() => calculatePoleScores(answers, questions), [answers, questions]);
   const unlockedBadges = useMemo(() => evaluateBadges(answers, questions, poleScores), [answers, questions, poleScores]);
+  // Rareté réelle (compteurs GoatCounter) superposée aux estimations ; le tri
+  // par rareté de la grille et de la ShareCard suit automatiquement.
+  const badgesWithLiveRarity = useLiveBadgeRarities(unlockedBadges);
 
   // ──────────────────────────────────────────────────────────────────────────────
   // MODE EXPLORATEUR
@@ -502,7 +512,7 @@ const App: React.FC = () => {
                 <ResultEnhanced
                   poleScores={poleScores}
                   questions={questions}
-                  badges={unlockedBadges}
+                  badges={badgesWithLiveRarity}
                   onRestart={handleRestart}
                   currentAnswers={answers}
                   onReady={handleResultsReady}

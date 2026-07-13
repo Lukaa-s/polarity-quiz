@@ -48,6 +48,7 @@ npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-ic
 - `test({ answers, axisScores })` — **`axisScores` is keyed by axis id** (see comment in the Badge type)
 - All tests must return a real boolean and guard against missing axes/empty answers
 - Badge PNGs in `src/badges/` are optimized (512px, ≤150 KB each); run `npm run optimize:badges` after adding one
+- **Rarity**: `ESTIMATED_RARITY` in `badges.tsx` is a hand-estimated **fallback**. Real rarity is measured via GoatCounter: `trackBadgesUnlocked()` (analytics.ts) fires `/events/badges-computed` (denominator) + `/events/badge-<id>` per unlocked badge at completion; `src/utils/badgeStats.ts` reads the public counters (`/counter/<path>.json`, 12 h localStorage cache, `pq_badge_stats_v1`) and `useLiveBadgeRarities()` overlays them on the badges passed to ResultEnhanced/ShareCard. Requires the GoatCounter setting **« Allow using the visitor counter »** (until enabled, the endpoint answers 403 and estimates are shown). Pure helpers locked by `badge-stats.test.ts`.
 
 ### Data Files
 
@@ -89,7 +90,7 @@ Run `npm run test` after ANY change to the data files. `data-sync.test.ts` locks
 
 - Answer indices run 0–6 (7 choices); scoring inverts right-favored questions
 - Results are computed live from answers; no server/API
-- GoatCounter analytics is **active** (code `polarity-quiz`, script in `index.html`); `analytics.ts` auto-detects it and tracks events (start, completion, shares, Ko-fi clicks). The CSP in `vercel.json` allows `https://gc.zgo.at` (script-src) and `https://*.goatcounter.com` (connect-src) — keep both aligned with the script tag if the code or domain ever changes
+- GoatCounter analytics is **active** (code `polarity-quiz`, script in `index.html`); `analytics.ts` auto-detects it and tracks events (start, completion, badge unlocks + baseline for rarity, shares, Ko-fi clicks). The CSP in `vercel.json` allows `https://gc.zgo.at` (script-src) and `https://*.goatcounter.com` (connect-src) — keep both aligned with the script tag if the code or domain ever changes
 - Support links point to `https://ko-fi.com/lukaaasss` (plain outbound links, no third-party script): a salient block at the end of the results tab (`ResultEnhanced.tsx`) and a discreet line on the welcome screen (`App.tsx`)
 - Security headers incl. CSP live in `vercel.json` — adding any new external origin (font, analytics…) requires updating the CSP there
 - SEO/share assets live in `public/` (`favicon.svg`, `og-image.png`, `robots.txt`, `sitemap.xml`); the production domain is `https://polarity-quiz.fr` — `og:url`/`og:image`/canonical in `index.html`, the `Sitemap:` line in `robots.txt` and `sitemap.xml` all reference it and must stay in sync if it ever changes
