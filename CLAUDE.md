@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Polarity Quiz** is a French political quiz application built with React 18, TypeScript, Vite, and Tailwind CSS. Users answer 101 political questions to discover their ideological position across 14 axes. Results are displayed as percentage breakdowns per axis, a radar chart (recharts), earned badges, and a proximity ranking against 22 reference profiles of political figures.
+**Polarity Quiz** is a French political quiz application built with React 18, TypeScript, Vite, and Tailwind CSS. Users answer 101 political questions to discover their ideological position across 14 axes. Results open on the user's three sharpest divides (pole words), then one **editorial ruler per axis** (hairline + center notch + losange cursor, a SINGLE percentage on the dominant side — deliberately NOT the two-percentage bicolor bar of the PolitiScales genre), a radar chart (recharts), a "landmarks" proximity ranking against reference profiles of political figures, and earned badges (SVG stamps). The share card follows the same order: sharpest divides as hero, closest figure as a byline, rulers, stamps. French copy uses vouvoiement everywhere.
 
 ## Development Commands
 

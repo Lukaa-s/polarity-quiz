@@ -224,20 +224,24 @@ const fr = {
   "result.shareName.prompt":
     "Entrez le nom à afficher dans les résultats partagés :\n\n⚠️ Ce nom sera visible dans l'URL et par toute personne consultant le lien.",
 
-  // ── Résultats : top 3 personnalités ───────────────────────────────────────
-  "result.top3.title": "Vos 3 personnalités les plus proches",
+  // ── Résultats : clivages les plus tranchés ────────────────────────────────
+  "result.sharpest.title": "Vos clivages les plus tranchés",
+  "result.sharpest.hint":
+    "Les trois idées sur lesquelles vos réponses penchent le plus nettement d'un côté.",
+  "result.sharpest.vs": "face à : {pole}",
+  // Description complète d'un axe pour les lecteurs d'écran (la réglette
+  // n'affiche visuellement que le pourcentage dominant).
+  "result.axis.sr": "{axis} : {left} {pctLeft} % · {right} {pctRight} %",
+
+  // ── Résultats : repères (figures les plus proches) ────────────────────────
+  "result.top3.title": "Repères : les figures les plus proches de vos réponses",
   "result.top3.disclaimer":
-    "Score fondé sur l'écart moyen entre vos positions et les siennes, axe par axe. Ce n'est pas une mesure scientifique exacte.",
-  "result.compat.veryHigh": "Très compatible",
-  "result.compat.high": "Compatible",
-  "result.compat.some": "Quelques divergences",
-  "result.compat.diff": "Positions différentes",
-  "result.compat.opposed": "Opposé",
+    "Score fondé sur l'écart moyen entre vos positions et les siennes, axe par axe. Un repère de lecture, pas une mesure scientifique exacte.",
 
   // ── Résultats : badges ────────────────────────────────────────────────────
   "result.badges.title": "Badges obtenus",
   "result.badges.hint": "Touchez un badge pour afficher sa signification.",
-  "result.badges.empty": "Aucun badge pour l'instant. Réessaie avec d'autres réponses.",
+  "result.badges.empty": "Aucun badge pour l'instant. Réessayez avec d'autres réponses.",
   "result.badges.rarity": "~{rarity} % des profils",
 
   // ── Résultats : soutien + relance ─────────────────────────────────────────
@@ -301,10 +305,12 @@ const fr = {
   "result.explained.about2":
     "Mais ces catégories se croisent souvent : certains partis de gauche défendent des idées jugées conservatrices, tandis que des partis de droite reprennent des revendications sociales.",
   "result.explained.about3":
-    "Ce test ne cherche pas à te coller une étiquette, mais à t'aider à comprendre où tu te situes sur différents axes.",
+    "Ce test ne cherche pas à vous coller une étiquette, mais à vous aider à comprendre où vous vous situez sur différents axes.",
 
   // ── Carte de partage (image exportée) ─────────────────────────────────────
-  "sharecard.closestTo": "Plus proche de",
+  "sharecard.sharpest": "Mes clivages les plus tranchés",
+  "sharecard.vs": "face à : {pole}",
+  "sharecard.closest": "Figure la plus proche : {name} · {score}/100",
   "sharecard.axes": "Mes 14 axes",
   "sharecard.left": "gauche",
   "sharecard.right": "droite",
@@ -523,15 +529,17 @@ const en: Record<StringKey, string> = {
   "result.shareName.prompt":
     "Enter the name to show in the shared results:\n\n⚠️ This name will be visible in the URL and to anyone who opens the link.",
 
-  // ── Results: top 3 personalities ──────────────────────────────────────────
-  "result.top3.title": "Your 3 closest personalities",
+  // ── Results: sharpest divides ─────────────────────────────────────────────
+  "result.sharpest.title": "Your sharpest divides",
+  "result.sharpest.hint":
+    "The three ideas where your answers lean most clearly to one side.",
+  "result.sharpest.vs": "versus: {pole}",
+  "result.axis.sr": "{axis}: {left} {pctLeft}% · {right} {pctRight}%",
+
+  // ── Results: landmarks (closest figures) ──────────────────────────────────
+  "result.top3.title": "Landmarks: the figures closest to your answers",
   "result.top3.disclaimer":
-    "Score based on the average gap between your positions and theirs, axis by axis. It is not an exact scientific measure.",
-  "result.compat.veryHigh": "Very compatible",
-  "result.compat.high": "Compatible",
-  "result.compat.some": "A few divergences",
-  "result.compat.diff": "Differing positions",
-  "result.compat.opposed": "Opposed",
+    "Score based on the average gap between your positions and theirs, axis by axis. A reading aid, not an exact scientific measure.",
 
   // ── Results: badges ───────────────────────────────────────────────────────
   "result.badges.title": "Badges earned",
@@ -602,7 +610,9 @@ const en: Record<StringKey, string> = {
     "This test does not seek to pin a label on you, but to help you understand where you stand on different axes.",
 
   // ── Share card (exported image) ───────────────────────────────────────────
-  "sharecard.closestTo": "Closest to",
+  "sharecard.sharpest": "My sharpest divides",
+  "sharecard.vs": "versus: {pole}",
+  "sharecard.closest": "Closest figure: {name} · {score}/100",
   "sharecard.axes": "My 14 axes",
   "sharecard.left": "left",
   "sharecard.right": "right",

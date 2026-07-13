@@ -11,6 +11,8 @@ import { useLocale } from "../i18n/LocaleContext";
 export type ShareCardGauge = {
   id: string;
   shortLabel: string;
+  leftLabel: string;
+  rightLabel: string;
   pctLeft: number;
   pctRight: number;
 };
@@ -38,6 +40,20 @@ function Mark({ size }: { size: number }) {
 export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
   const { t, locale } = useLocale();
   const hero = top3[0];
+  // Les 3 clivages où la position est la plus nette : le héros de la carte.
+  const sharpest = [...gauges]
+    .map((g) => {
+      const side: "left" | "right" = g.pctLeft >= g.pctRight ? "left" : "right";
+      return {
+        ...g,
+        dominantPct: Math.max(g.pctLeft, g.pctRight),
+        dominantLabel: side === "left" ? g.leftLabel : g.rightLabel,
+        otherLabel: side === "left" ? g.rightLabel : g.leftLabel,
+        dominantColor: side === "left" ? LEFT_COLOR : RIGHT_COLOR,
+      };
+    })
+    .sort((a, b) => b.dominantPct - a.dominantPct)
+    .slice(0, 3);
   // Les 5 badges les PLUS RARES obtenus (rareté croissante) : ce sont eux
   // qui donnent envie de se comparer, pas les 5 premiers déclarés.
   const shownBadges = [...badges]
@@ -74,37 +90,46 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
         </div>
         <div style={{ height: 2, backgroundColor: "#23201A" }} />
 
-        {/* Héros : personnalité la plus proche */}
-        <div style={{ paddingTop: 36, paddingBottom: 30 }}>
+        {/* Héros : les clivages les plus tranchés — les mots des pôles,
+            la matière du test, pas un score de compatibilité. */}
+        <div style={{ paddingTop: 32, paddingBottom: 24 }}>
           <div
             className="font-body font-semibold text-ink2"
             style={{ fontSize: 22, letterSpacing: "0.16em", textTransform: "uppercase" }}
           >
-            {t("sharecard.closestTo")}
+            {t("sharecard.sharpest")}
           </div>
-          <div className="flex items-baseline justify-between" style={{ gap: 24, marginTop: 8 }}>
-            <span
-              className="font-display font-semibold text-ink"
-              style={{ fontSize: 60, lineHeight: 1.05 }}
-            >
-              {hero?.name ?? "—"}
-            </span>
-            <span
-              className="font-display font-semibold text-ink tabular-nums"
-              style={{ fontSize: 44, whiteSpace: "nowrap" }}
-            >
-              {hero ? `${hero.similarity}/100` : ""}
-            </span>
-          </div>
-          {top3.length > 1 && (
-            <div className="font-body text-ink2" style={{ fontSize: 25, marginTop: 14 }}>
-              {top3.slice(1, 3).map((p, i) => (
-                <span key={p.name}>
-                  {i > 0 && <span style={{ margin: "0 14px" }}>·</span>}
-                  <span className="font-semibold text-ink">{i + 2}.</span> {p.name}
-                  <span className="tabular-nums"> · {p.similarity}/100</span>
+          <div style={{ marginTop: 6 }}>
+            {sharpest.map((g) => (
+              <div
+                key={g.id}
+                className="flex items-baseline justify-between"
+                style={{ gap: 24, paddingTop: 12, paddingBottom: 12, borderBottom: "1px solid #EDE9DE" }}
+              >
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    className="font-display font-semibold"
+                    style={{ fontSize: 42, lineHeight: 1.08, color: g.dominantColor }}
+                  >
+                    {g.dominantLabel}
+                  </div>
+                  <div className="font-body text-ink2" style={{ fontSize: 20, marginTop: 4 }}>
+                    {g.shortLabel} · {t("sharecard.vs", { pole: g.otherLabel })}
+                  </div>
+                </div>
+                <span
+                  className="font-display font-semibold tabular-nums"
+                  style={{ fontSize: 40, whiteSpace: "nowrap", color: g.dominantColor }}
+                >
+                  {g.dominantPct} %
                 </span>
-              ))}
+              </div>
+            ))}
+          </div>
+          {/* La figure la plus proche passe en signature. */}
+          {hero && (
+            <div className="font-body text-ink2" style={{ fontSize: 23, marginTop: 16 }}>
+              {t("sharecard.closest", { name: hero.name, score: hero.similarity })}
             </div>
           )}
         </div>
@@ -133,33 +158,43 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               rowGap: 17,
             }}
           >
-            {gauges.map((g) => (
+            {gauges.map((g) => {
+              // Même réglette que l'écran de résultats : pôle gauche à gauche,
+              // curseur-losange, un seul pourcentage (couleur = côté dominant).
+              const cursorPos = Math.min(Math.max(g.pctRight, 4), 96);
+              const dominantColor = g.pctLeft >= g.pctRight ? LEFT_COLOR : RIGHT_COLOR;
+              return (
               <div key={g.id}>
-                <div
-                  className="font-body font-semibold text-ink"
-                  style={{ fontSize: 21, marginBottom: 6 }}
-                >
-                  {g.shortLabel}
+                <div className="flex items-baseline justify-between" style={{ marginBottom: 4 }}>
+                  <span className="font-body font-semibold text-ink" style={{ fontSize: 21 }}>
+                    {g.shortLabel}
+                  </span>
+                  <span
+                    className="font-body font-bold tabular-nums"
+                    style={{ fontSize: 19, color: dominantColor }}
+                  >
+                    {Math.max(g.pctLeft, g.pctRight)} %
+                  </span>
                 </div>
-                <div
-                  className="flex overflow-hidden"
-                  style={{ height: 26, borderRadius: 4, border: "1px solid #D8D2C4" }}
-                >
+                <div style={{ position: "relative", height: 22 }}>
+                  <div style={{ position: "absolute", left: 0, right: 0, top: 10, height: 2, backgroundColor: "#23201A" }} />
+                  <div style={{ position: "absolute", left: "50%", top: 5, height: 12, width: 1.5, backgroundColor: "#5E594F" }} />
                   <div
-                    className="flex items-center font-body font-bold text-paper tabular-nums"
-                    style={{ width: `${g.pctLeft}%`, backgroundColor: LEFT_COLOR, fontSize: 16, paddingLeft: 8 }}
-                  >
-                    {g.pctLeft > 14 && `${g.pctLeft}%`}
-                  </div>
-                  <div
-                    className="flex items-center justify-end font-body font-bold text-paper tabular-nums"
-                    style={{ width: `${g.pctRight}%`, backgroundColor: RIGHT_COLOR, fontSize: 16, paddingRight: 8 }}
-                  >
-                    {g.pctRight > 14 && `${g.pctRight}%`}
-                  </div>
+                    style={{
+                      position: "absolute",
+                      top: 4,
+                      left: `${cursorPos}%`,
+                      height: 14,
+                      width: 14,
+                      backgroundColor: "#23201A",
+                      borderRadius: 3,
+                      transform: "translateX(-50%) rotate(45deg)",
+                    }}
+                  />
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

@@ -585,14 +585,32 @@ export default function ResultEnhanced({
     }
   };
 
-  // Fonction helper pour obtenir le label de compatibilité
-  const getCompatibilityLabel = (score: number): string => {
-    if (score >= 90) return t("result.compat.veryHigh");
-    if (score >= 75) return t("result.compat.high");
-    if (score >= 60) return t("result.compat.some");
-    if (score >= 40) return t("result.compat.diff");
-    return t("result.compat.opposed");
-  };
+  // Pourcentages par axe + tri par netteté de la position : alimente la
+  // réglette de chaque axe et le bloc « clivages les plus tranchés ».
+  const axisReadings = useMemo(
+    () =>
+      axes.map((a) => {
+        const { left, right } = poleScores[a.id] ?? { left: 0, right: 0 };
+        const total = left + right || 1;
+        const pctLeft = Math.round((left / total) * 100);
+        const pctRight = 100 - pctLeft;
+        const dominantSide: "left" | "right" = pctLeft >= pctRight ? "left" : "right";
+        return {
+          axis: a,
+          pctLeft,
+          pctRight,
+          dominantSide,
+          dominantPct: Math.max(pctLeft, pctRight),
+          dominantLabel: dominantSide === "left" ? a.left.label : a.right.label,
+          otherLabel: dominantSide === "left" ? a.right.label : a.left.label,
+        };
+      }),
+    [axes, poleScores]
+  );
+  const sharpestReadings = useMemo(
+    () => [...axisReadings].sort((a, b) => b.dominantPct - a.dominantPct).slice(0, 3),
+    [axisReadings]
+  );
 
   // Distance = écart moyen (en points de %) entre les positions de l'utilisateur
   // et celles du profil, sur chaque axe. Similarité affichée = 100 - distance.
@@ -644,6 +662,8 @@ export default function ResultEnhanced({
         return {
           id: a.id,
           shortLabel: shortById[a.id] ?? a.axis,
+          leftLabel: a.left.label,
+          rightLabel: a.right.label,
           pctLeft,
           pctRight: 100 - pctLeft,
         };
@@ -911,8 +931,108 @@ export default function ResultEnhanced({
             </div>
           </div>
 
-          {/* Top 3 des personnalités les plus proches */}
+          {/* Clivages les plus tranchés : la matière du test ouvre les
+              résultats — pas un score de compatibilité. */}
           <div className="mb-8 bg-paper2 rounded-md p-5 border border-rule">
+            <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
+              {t("result.sharpest.title")}
+            </h3>
+            <div className="rule mb-3 mt-3" />
+            <p className="text-xs text-ink2 leading-normal mb-4">
+              {t("result.sharpest.hint")}
+            </p>
+            <div className="space-y-px bg-rule border border-rule rounded-md overflow-hidden">
+              {sharpestReadings.map((r, idx) => (
+                <div
+                  key={r.axis.id}
+                  className="bg-paper p-4 flex items-baseline justify-between gap-4"
+                  style={{
+                    animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.15}s both`,
+                  }}
+                >
+                  <div className="min-w-0">
+                    <div
+                      className="font-display text-xl sm:text-2xl font-semibold leading-tight"
+                      style={{ color: r.dominantSide === "left" ? LEFT_COLOR : RIGHT_COLOR }}
+                    >
+                      {r.dominantLabel}
+                    </div>
+                    <div className="text-xs text-ink2 mt-1 leading-normal">
+                      {r.axis.axis} · {t("result.sharpest.vs", { pole: r.otherLabel })}
+                    </div>
+                  </div>
+                  <span
+                    className="font-display text-2xl sm:text-3xl font-semibold tabular-nums whitespace-nowrap"
+                    style={{ color: r.dominantSide === "left" ? LEFT_COLOR : RIGHT_COLOR }}
+                  >
+                    {r.dominantPct} %
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {axisReadings.map((r, idx) => {
+            // Pôle gauche à gauche de la réglette : plus la position penche à
+            // gauche, plus le curseur s'en approche.
+            const cursorPos = r.pctRight;
+            const labelPos = Math.min(Math.max(cursorPos, 7), 93);
+            const dominantColor = r.dominantSide === "left" ? LEFT_COLOR : RIGHT_COLOR;
+
+            return (
+              <div
+                key={r.axis.id}
+                className="space-y-1 py-3 mb-2 border-b border-rule last:border-b-0"
+                style={{
+                  animation: disableAnimations ? 'none' : `slideIn 0.3s ease-out ${idx * 0.05}s both`,
+                }}
+              >
+                <div className="flex justify-between text-sm sm:text-base font-semibold">
+                  <span className="truncate pr-2" style={{ color: LEFT_COLOR }}>
+                    {r.axis.left.label}
+                  </span>
+                  <span className="truncate pl-2" style={{ color: RIGHT_COLOR }}>
+                    {r.axis.right.label}
+                  </span>
+                </div>
+
+                {/* Réglette éditoriale : cran central, curseur-losange, UN seul
+                    pourcentage du côté dominant — on lit une position sur un
+                    clivage, pas deux moitiés qui somment à 100. */}
+                <div className="relative h-12" aria-hidden="true">
+                  <div className="absolute left-0 right-0 top-[14px] h-px bg-ink" />
+                  <div className="absolute left-1/2 top-[8px] h-[13px] w-px bg-ink2" />
+                  <div
+                    className="absolute top-[7px] h-[15px] w-[15px] bg-ink rounded-[3px]"
+                    style={{ left: `${cursorPos}%`, transform: "translateX(-50%) rotate(45deg)" }}
+                  />
+                  <div
+                    className="absolute top-[30px] text-xs sm:text-sm font-bold tabular-nums"
+                    style={{ left: `${labelPos}%`, transform: "translateX(-50%)", color: dominantColor }}
+                  >
+                    {r.dominantPct} %
+                  </div>
+                </div>
+                <span className="sr-only">
+                  {t("result.axis.sr", {
+                    axis: r.axis.axis,
+                    left: r.axis.left.label,
+                    pctLeft: r.pctLeft,
+                    right: r.axis.right.label,
+                    pctRight: r.pctRight,
+                  })}
+                </span>
+
+                <div className="text-center text-xs text-ink2 leading-relaxed pb-1">
+                  {r.axis.axis}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Repères : les figures les plus proches — un instrument de lecture
+              placé après la matière du test, sans libellés de compatibilité. */}
+          <div className="mt-10 mb-8 bg-paper2 rounded-md p-5 border border-rule">
             <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
               {t("result.top3.title")}
             </h3>
@@ -923,7 +1043,6 @@ export default function ResultEnhanced({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-rule border border-rule rounded-md overflow-hidden">
               {sortedReferenceProfiles.slice(0, 3).map((profile, idx) => {
                 const similarity = Math.round(100 - profile.distance);
-                const compatibilityLabel = getCompatibilityLabel(similarity);
                 return (
                   <div
                     key={profile.id}
@@ -943,24 +1062,19 @@ export default function ResultEnhanced({
                         <div className="text-xs text-ink2 mb-2 leading-normal">
                           {profile.description}
                         </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 h-1.5 bg-rule rounded-full overflow-hidden">
-                              <div
-                                className="h-full rounded-full transition-all duration-500"
-                                style={{
-                                  width: `${similarity}%`,
-                                  backgroundColor: profile.color,
-                                }}
-                              />
-                            </div>
-                            <span className="text-sm font-bold text-ink tabular-nums whitespace-nowrap">
-                              {similarity}/100
-                            </span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-1.5 bg-rule rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${similarity}%`,
+                                backgroundColor: profile.color,
+                              }}
+                            />
                           </div>
-                          <div className="text-xs font-medium text-ink2 leading-normal">
-                            {compatibilityLabel}
-                          </div>
+                          <span className="text-sm font-bold text-ink tabular-nums whitespace-nowrap">
+                            {similarity}/100
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -969,55 +1083,6 @@ export default function ResultEnhanced({
               })}
             </div>
           </div>
-
-          {axes.map((a, idx) => {
-            const { left, right } = poleScores[a.id];
-            const total = left + right || 1;
-            const pctLeft = Math.round((left / total) * 100);
-            const pctRight = 100 - pctLeft;
-            const labels = { left: a.left.label, right: a.right.label };
-
-            return (
-              <div
-                key={a.id}
-                className="space-y-2 py-3 mb-2 border-b border-rule last:border-b-0"
-                style={{
-                  animation: disableAnimations ? 'none' : `slideIn 0.3s ease-out ${idx * 0.05}s both`,
-                }}
-              >
-                <div className="flex justify-between text-sm sm:text-base font-semibold text-ink">
-                  <span className="truncate pr-2">{labels.left}</span>
-                  <span className="truncate pl-2">{labels.right}</span>
-                </div>
-
-                <div className="relative w-full h-7 sm:h-8 rounded-[4px] overflow-hidden border border-rule">
-                  <div
-                    className="grid h-full transition-all duration-500"
-                    style={{
-                      gridTemplateColumns: `${pctLeft}% ${pctRight}%`,
-                    }}
-                  >
-                    <div
-                      className="flex items-center px-2 text-xs sm:text-sm font-bold text-paper tabular-nums transition-all"
-                      style={{ backgroundColor: LEFT_COLOR }}
-                    >
-                      {pctLeft > 10 && `${pctLeft}%`}
-                    </div>
-                    <div
-                      className="flex items-center justify-end px-2 text-xs sm:text-sm font-bold text-paper tabular-nums transition-all"
-                      style={{ backgroundColor: RIGHT_COLOR }}
-                    >
-                      {pctRight > 10 && `${pctRight}%`}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center text-xs text-ink2 leading-relaxed pb-1">
-                  {a.axis}
-                </div>
-              </div>
-            );
-          })}
 
           {/* Badges */}
           <div className="mt-10 pt-8 border-t border-rule">
