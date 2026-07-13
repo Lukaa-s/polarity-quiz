@@ -19,10 +19,11 @@ export type Badge = {
   }) => boolean;
 };
 
-// Résolution des icônes via Vite : les PNG de src/badges/ sont bundlés et
-// reçoivent une URL hashée valable en production (Vercel). Les anciens chemins
-// "../src/badges/x.png" ne marchaient qu'en dev (Vite servait /src/).
-const ICON_URLS = import.meta.glob("../badges/*.png", {
+// Résolution des icônes via Vite : les SVG de src/badges/ (les « tampons du
+// dépouillement », générés par scripts/generate-stamps.mjs depuis
+// scripts/stamps/defs/) sont bundlés et reçoivent une URL hashée valable en
+// production (Vercel).
+const ICON_URLS = import.meta.glob("../badges/*.svg", {
   eager: true,
   query: "?url",
   import: "default",
@@ -40,7 +41,7 @@ const rawBadges: Badge[] = [
     label: "Pro-nucléaire",
     description:
       "Tu soutiens activement le nucléaire",
-    icon: "../src/badges/nuclear.png",
+    icon: "../src/badges/nuclear.svg",
     test: ({ answers }) => {
       const idx = answers["q89"];
       return idx === 0;
@@ -51,7 +52,7 @@ const rawBadges: Badge[] = [
     label: "Ami des bêtes",
     description:
       "Tu refuses catégoriquement l’exploitation animale.",
-    icon: "../src/badges/vegan.png",
+    icon: "../src/badges/vegan.svg",
     test: ({ answers }) => {
       const idx = answers["q90"];
       return idx === 0;
@@ -61,7 +62,7 @@ const rawBadges: Badge[] = [
     id: "assertive",
     label: "Sûr·e de soi",
     description: "Au moins 75 % de tes réponses sont soit « Tout à fait d'accord » soit « Pas du tout d'accord ».",
-    icon: "../src/badges/surdesoi.png",
+    icon: "../src/badges/surdesoi.svg",
     test: ({ answers }) => {
       const all = Object.values(answers);
       if (all.length === 0) return false;
@@ -74,7 +75,7 @@ const rawBadges: Badge[] = [
     id: "eco_warrior",
     label: "Éco-guerrier·e",
     description: "Ton score d'écologie radicale est ≥ 75 %.",
-    icon: "../src/badges/eco-guerrier.png",
+    icon: "../src/badges/eco-guerrier.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["ecology"];
       if (!sc) return false;
@@ -86,7 +87,7 @@ const rawBadges: Badge[] = [
     id: "equilibriste",
     label: "Équilibriste",
     description: "Tu restes modéré·e dans au moins 75 % de tes réponses.",
-    icon: "../src/badges/equilibriste.png",
+    icon: "../src/badges/equilibriste.svg",
     test: ({ answers }) => {
       const all = Object.values(answers);
       if (all.length === 0) return false;
@@ -98,7 +99,7 @@ const rawBadges: Badge[] = [
     id: "mondialiste",
     label: "Citoyen·ne du monde",
     description: "Tu es ultra-internationaliste (≥ 75 % à gauche sur l’axe 'Échelle de souveraineté').",
-    icon: "../src/badges/mondialiste.png",
+    icon: "../src/badges/mondialiste.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["sovereignty"];
       if (!sc) return false;
@@ -110,7 +111,7 @@ const rawBadges: Badge[] = [
     id: "technosceptique",
     label: "Technosceptique averti·e",
     description: "Tu es méfiant·e envers les nouvelles technologies (≥ 75 % côté technosceptique).",
-    icon: "../src/badges/technosceptique.png",
+    icon: "../src/badges/technosceptique.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["technology"];
       if (!sc) return false;
@@ -122,7 +123,7 @@ const rawBadges: Badge[] = [
     id: "techno_prophete",
     label: "Techno-prophète",
     description: "Tu crois profondément au progrès technique pour résoudre les grands problèmes.",
-    icon: "../src/badges/technophile.png",
+    icon: "../src/badges/technophile.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["technology"];
       if (!sc) return false;
@@ -134,7 +135,7 @@ const rawBadges: Badge[] = [
     id: "authoritaire",
     label: "Autoritaire",
     description: "Tu estimes qu’une société forte passe par une autorité affirmée.",
-    icon: "../src/badges/authoritaire.png",
+    icon: "../src/badges/authoritaire.svg",
     test: ({ answers }) => {
       return (
         answers["q25"] <= 1 &&
@@ -147,7 +148,7 @@ const rawBadges: Badge[] = [
     id: "inclassable",
     label: "Inclassable",
     description: "Tu es difficile à ranger : aucun axe n’a une domination > 65 %.",
-    icon: "../src/badges/inclassable.png",
+    icon: "../src/badges/inclassable.svg",
     test: ({ axisScores }) => {
       const values = Object.values(axisScores);
       if (values.length === 0) return false;
@@ -163,7 +164,7 @@ const rawBadges: Badge[] = [
     id: "communiste",
     label: "Communiste",
     description: "Tu combines un anticapitalisme fort, une préférence nette pour l'intervention de l'État, et une vision collectiviste de la propriété.",
-    icon: "../src/badges/communiste.png",
+    icon: "../src/badges/communiste.svg",
     test: ({ axisScores }) => {
       const eco = axisScores["economic_goal"];
       const etat = axisScores["state_vs_market"];
@@ -181,7 +182,7 @@ const rawBadges: Badge[] = [
     id: "anarchiste_poetique",
     label: "Anarchiste poétique",
     description: "Tu veux un monde sans chefs, mais aussi plus doux et plus juste.",
-    icon: "../src/badges/anarchiste-poetique.png",
+    icon: "../src/badges/anarchiste-poetique.svg",
     test: ({ axisScores, answers }) => {
       const pow = axisScores["power"];
       return (
@@ -195,7 +196,7 @@ const rawBadges: Badge[] = [
     id: "liberal",
     label: "Libéral·e assumé·e",
     description: "Tu fais davantage confiance au marché qu’à l’État.",
-    icon: "../src/badges/liberal.png",
+    icon: "../src/badges/liberal.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["state_vs_market"];
       return !!sc && (sc.right / (sc.left + sc.right || 1)) >= 0.75;
@@ -205,7 +206,7 @@ const rawBadges: Badge[] = [
     id: "reformiste_tranquille",
     label: "Réformiste tranquille",
     description: "Tu refuses les ruptures, mais veux améliorer les choses pas à pas.",
-    icon: "../src/badges/reformiste.png",
+    icon: "../src/badges/reformiste.svg",
     test: ({ axisScores }) => {
       const chg = axisScores["reform"];
       if (!chg) return false;
@@ -217,7 +218,7 @@ const rawBadges: Badge[] = [
     id: "spiritualiste",
     label: "Spiritualiste moderne",
     description: "Tu penses que la foi peut encore guider la société.",
-    icon: "../src/badges/spiritualiste.png",
+    icon: "../src/badges/spiritualiste.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["religion"];
       return !!sc && (sc.right / (sc.left + sc.right || 1)) >= 0.7;
@@ -227,7 +228,7 @@ const rawBadges: Badge[] = [
     id: "decisif",
     label: "Décisif·ve",
     description: "Tu n’as jamais répondu de façon neutre : chaque question t’a fait pencher d’un côté.",
-    icon: "../src/badges/decisif.png",
+    icon: "../src/badges/decisif.svg",
     test: ({ answers }) => {
       const all = Object.values(answers);
       return all.length > 0 && !all.includes(3);
@@ -237,7 +238,7 @@ const rawBadges: Badge[] = [
     id: "protecteur",
     label: "Protecteur·trice",
     description: "Tu donnes clairement la priorité à la sécurité sur les libertés individuelles.",
-    icon: "../src/badges/securite.png",
+    icon: "../src/badges/securite.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["freedom_vs_security"];
       if (!sc) return false;
@@ -248,7 +249,7 @@ const rawBadges: Badge[] = [
     id: "libre_par_principe",
     label: "Libre par principe",
     description: "Tu rejettes l’autorité, les règles imposées et la répression, au nom d’une liberté fondamentale.",
-    icon: "../src/badges/libertaire.png",
+    icon: "../src/badges/libertaire.svg",
     test: ({ axisScores }) => {
       const pow = axisScores["power"];
       const law = axisScores["freedom_vs_security"];
@@ -263,7 +264,7 @@ const rawBadges: Badge[] = [
     id: "collectiviste_social",
     label: "Collectiviste social",
     description: "Tu privilégies la solidarité, la redistribution et l'égalité économique.",
-    icon: "../src/badges/collectiviste.png",
+    icon: "../src/badges/collectiviste.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["property"];
       return !!sc && (sc.left / (sc.left + sc.right || 1)) >= 0.75;
@@ -273,7 +274,7 @@ const rawBadges: Badge[] = [
     id: "souverainiste",
     label: "Souverainiste",
     description: "Tu es attaché·e à l'indépendance nationale et à la souveraineté populaire.",
-    icon: "../src/badges/souverainiste.png",
+    icon: "../src/badges/souverainiste.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["sovereignty"];
       return !!sc && (sc.right / (sc.left + sc.right || 1)) >= 0.75;
@@ -283,7 +284,7 @@ const rawBadges: Badge[] = [
     id: "productiviste_vert",
     label: "Productiviste vert·e",
     description: "Tu combines foi en la croissance et sensibilité écologique.",
-    icon: "../src/badges/productiviste-vert.png",
+    icon: "../src/badges/productiviste-vert.svg",
     test: ({ axisScores }) => {
       const eco = axisScores["ecology"];
       const prog = axisScores["technology"];
@@ -298,7 +299,7 @@ const rawBadges: Badge[] = [
     id: "social_liberal",
     label: "Social-libéral·e",
     description: "Tu sembles équilibrer protection sociale et économie de marché.",
-    icon: "../src/badges/social-liberal.png",
+    icon: "../src/badges/social-liberal.svg",
     test: ({ axisScores }) => {
       const eco = axisScores["economic_goal"];
       const etat = axisScores["state_vs_market"];
@@ -312,7 +313,7 @@ const rawBadges: Badge[] = [
     id: "etat_stratege",
     label: "État-stratège",
     description: "Tu veux un État fort qui oriente l’économie et planifie l’avenir.",
-    icon: "../src/badges/etat.png",
+    icon: "../src/badges/etat.svg",
     test: ({ axisScores }) => {
       const sc = axisScores["state_vs_market"];
       return !!sc && sc.left / (sc.left + sc.right || 1) >= 0.75;
@@ -322,7 +323,7 @@ const rawBadges: Badge[] = [
     id: "egalitariste",
     label: "Égalitariste",
     description: "Tu valorises fortement l’égalité, qu’elle soit économique, sociale ou politique.",
-    icon: "../src/badges/egalite.png",
+    icon: "../src/badges/egalite.svg",
     test: ({ axisScores }) => {
       const eq = axisScores["property"];
       const soc = axisScores["progress"];
@@ -337,7 +338,7 @@ const rawBadges: Badge[] = [
     id: "conservateur_culturel",
     label: "Conservateur·trice",
     description: "Tu veux préserver les traditions et l’ordre moral.",
-    icon: "../src/badges/conservateur.png",
+    icon: "../src/badges/conservateur.svg",
     test: ({ axisScores }) => {
       const soc = axisScores["progress"];
       return !!soc && soc.right / (soc.left + soc.right || 1) >= 0.75;
@@ -347,7 +348,7 @@ const rawBadges: Badge[] = [
     id: "hesitant",
     label: "Hésitant·e",
     description: "Tu as répondu « Ni d’accord ni pas d’accord » à au moins 8 questions.",
-    icon: "../src/badges/hesitant.png",
+    icon: "../src/badges/hesitant.svg",
     test: ({ answers }) => {
       const count = Object.values(answers).filter((v) => v === 3).length;
       return count >= 8;
@@ -357,7 +358,7 @@ const rawBadges: Badge[] = [
     id: "decentralisateur",
     label: "Démocrate direct·e",
     description: "Tu veux que les citoyens décident plus directement, sans tout déléguer aux élus. (Démocratie ≥ 75 % côté participatif)",
-    icon: "../src/badges/decentralisation.png",
+    icon: "../src/badges/decentralisation.svg",
     test: ({ axisScores }) => {
       const pow = axisScores["democracy"];
       return !!pow && pow.left / (pow.left + pow.right || 1) >= 0.75;
@@ -367,7 +368,7 @@ const rawBadges: Badge[] = [
     id: "progressiste_moral",
     label: "Progressiste moral",
     description: "Tu remets en question les normes traditionnelles sur les mœurs, la famille ou la religion.",
-    icon: "../src/badges/progressiste-moral.png",
+    icon: "../src/badges/progressiste-moral.svg",
     test: ({ axisScores }) => {
       const soc = axisScores["progress"];
       return !!soc && soc.left / (soc.left + soc.right || 1) >= 0.75;
@@ -377,7 +378,7 @@ const rawBadges: Badge[] = [
     id: "dissident_tranquille",
     label: "Dissident·e tranquille",
     description: "Tu rejettes l’ordre établi, sans provocation ni radicalité.",
-    icon: "../src/badges/dissident.png",
+    icon: "../src/badges/dissident.svg",
     test: ({ axisScores }) => {
       const pow = axisScores["power"];
       const soc = axisScores["progress"];
@@ -392,7 +393,7 @@ const rawBadges: Badge[] = [
     id: "constructiviste",
     label: "Constructiviste",
     description: "Tu penses que les règles sociales, économiques et politiques sont faites pour être repensées.",
-    icon: "../src/badges/constructiviste.png",
+    icon: "../src/badges/constructiviste.svg",
     test: ({ axisScores }) => {
       const soc = axisScores["progress"];
       const propriete = axisScores["property"];
@@ -407,7 +408,7 @@ const rawBadges: Badge[] = [
     id: "anarchiste",
     label: "Anarchiste",
     description: "Tu veux abolir les chefs, les ordres venus d’en haut et toute domination verticale. (Anarchisme ≥ 85 %)",
-    icon: "../src/badges/anarchiste.png",
+    icon: "../src/badges/anarchiste.svg",
     test: ({ axisScores }) => {
       const pow = axisScores["power"];
       if (!pow) return false;
@@ -419,7 +420,7 @@ const rawBadges: Badge[] = [
     id: "pro_europeen",
     label: "Européen·ne convaincu·e",
     description: "Tu considères l’Union européenne comme un projet politique légitime et porteur d’avenir.",
-    icon: "../src/badges/europe.png",
+    icon: "../src/badges/europe.svg",
     test: ({ answers }) => {
       const idx = answers["q91"];
       return idx === 0 || idx === 1;
@@ -429,7 +430,7 @@ const rawBadges: Badge[] = [
     id: "pro_lgbt",
     label: "Allié·e",
     description: "Tu défends sans ambiguïté les droits et libertés des personnes LGBTQ+.",
-    icon: "../src/badges/lgbt.png",
+    icon: "../src/badges/lgbt.svg",
     test: ({ answers }) => {
       const idx = answers["q92"];
       return idx === 0;
@@ -439,7 +440,7 @@ const rawBadges: Badge[] = [
     id: "eugeniste_pragmatique",
     label: "Médecine génomique",
     description: "Tu juges légitime la sélection génétique quand elle évite une maladie grave à un enfant.",
-    icon: "../src/badges/eugenisme.png",
+    icon: "../src/badges/eugenisme.svg",
     test: ({ answers }) => {
       return answers["q93"] <= 1;
     },
@@ -448,7 +449,7 @@ const rawBadges: Badge[] = [
     id: "legaliseur",
     label: "Pro-légalisation",
     description: "Tu défends la légalisation des drogues au nom de la liberté individuelle et du bon sens.",
-    icon: "../src/badges/legaliseur.png",
+    icon: "../src/badges/legaliseur.svg",
     test: ({ answers }) => {
       return answers["q94"] <= 1;
     },
@@ -458,7 +459,7 @@ const rawBadges: Badge[] = [
     id: "cosmonaute",
     label: "Cosmonaute convaincu·e",
     description: "Tu vois dans l’espace une chance, une nécessité, ou un horizon pour l’humanité.",
-    icon: "../src/badges/cosmonaute.png",
+    icon: "../src/badges/cosmonaute.svg",
     test: ({ answers }) => {
       return answers["q95"] <= 1;
     },
@@ -467,7 +468,7 @@ const rawBadges: Badge[] = [
     id: "rationaliste_pur",
     label: "Rationaliste pur·e",
     description: "Tu crois que seule la raison scientifique doit guider les décisions collectives.",
-    icon: "../src/badges/rationaliste.png",
+    icon: "../src/badges/rationaliste.svg",
     test: ({ answers }) => {
       return answers["q96"] <= 1;
     },
@@ -476,77 +477,77 @@ const rawBadges: Badge[] = [
     id: "anti_censure_absolue",
     label: "Anti-censure absolue",
     description: "Pour toi, la liberté d’expression inclut le droit de choquer.",
-    icon: "../src/badges/anti-censure.png",
+    icon: "../src/badges/anti-censure.svg",
     test: ({ answers }) => answers["q76a"] <= 1,
   },
   {
     id: "chasseur_de_fakes",
     label: "Chasseur·se d’infox",
     description: "Limiter la désinformation est, pour toi, une nécessité.",
-    icon: "../src/badges/fact-check.png",
+    icon: "../src/badges/fact-check.svg",
     test: ({ answers }) => answers["q76b"] <= 1,
   },
   {
     id: "oeil_de_camera",
     label: "Œil de caméra",
     description: "Tu fais confiance à la vidéosurveillance pour prévenir la délinquance.",
-    icon: "../src/badges/videosurveillance.png",
+    icon: "../src/badges/videosurveillance.svg",
     test: ({ answers }) => answers["q79"] <= 1,
   },
   {
     id: "hors_champ",
     label: "Hors-champ",
     description: "Tu refuses l’État d’urgence permanent et la société sous caméras.",
-    icon: "../src/badges/hors-champ.png",
+    icon: "../src/badges/hors-champ.svg",
     test: ({ answers }) => answers["q79"] >= 5 && answers["q80"] >= 5,
   },
   {
     id: "restrictionniste",
     label: "Restrictionniste",
     description: "Tu veux durcir l’accueil et prioriser l’aide nationale.",
-    icon: "../src/badges/restrictionniste.png",
+    icon: "../src/badges/restrictionniste.svg",
     test: ({ answers }) => answers["q50"] <= 1 && answers["q52"] <= 1,
   },
   {
     id: "referendumiste",
     label: "Référendumiste",
     description: "Tu veux soumettre les lois majeures au vote direct.",
-    icon: "../src/badges/referendum.png",
+    icon: "../src/badges/referendum.svg",
     test: ({ answers }) => answers["q29"] <= 1,
   },
   {
     id: "elitiste",
     label: "Confiance aux experts",
     description: "Tu préfères que les grandes décisions soient prises par des représentants entourés d’experts plutôt que par vote direct.",
-    icon: "../src/badges/elite.png",
+    icon: "../src/badges/elite.svg",
     test: ({ answers }) => answers["q33"] <= 1,
   },
   {
     id: "action_directe",
     label: "Action directe",
     description: "Pour toi, les ruptures et mobilisations radicales peuvent être nécessaires.",
-    icon: "../src/badges/action-directe.png",
+    icon: "../src/badges/action-directe.svg",
     test: ({ answers }) => answers["q35"] <= 1 || answers["q40"] <= 1,
   },
   {
     id: "anticarceral",
     label: "Anticarcéral",
     description: "Tu privilégies la réparation et les alternatives à la prison.",
-    icon: "../src/badges/anticarceral.png",
+    icon: "../src/badges/anticarceral.svg",
     test: ({ answers }) => answers["q67"] <= 1 && answers["q68"] <= 1,
   },
   {
     id: "euro_sceptique",
     label: "Euro-sceptique",
     description: "Tu doutes fortement du projet politique de l’UE.",
-    icon: "../src/badges/eurosceptique.png",
+    icon: "../src/badges/eurosceptique.svg",
     test: ({ answers }) => answers["q91"] >= 5,
   },
   {
     id: "bastion_du_proprietaire",
     label: "Gardien du patrimoine",
     description: "Tu vois dans la propriété privée un rempart essentiel des libertés. (Propriété ≥ 75 %)",
-    icon: "../src/badges/bastion-proprietaire.png",
+    icon: "../src/badges/bastion-proprietaire.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["property"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -558,7 +559,7 @@ const rawBadges: Badge[] = [
     id: "capitaine_dindustrie",
     label: "Bâtisseur de richesse",
     description: "Tu fais confiance aux investisseurs et entrepreneurs pour tirer l’économie. (Finalité éco ≥ 75 % à droite)",
-    icon: "../src/badges/capitaine-industrie.png",
+    icon: "../src/badges/capitaine-industrie.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["economic_goal"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -570,7 +571,7 @@ const rawBadges: Badge[] = [
     id: "voix_du_parlement",
     label: "Foi en l’Assemblée",
     description: "Tu crois qu’élire des représentants pour décider au nom de tous est la meilleure garantie d’une démocratie efficace. (Démocratie ≥ 75 % côté parlementariste)",
-    icon: "../src/badges/voix-parlement.png",
+    icon: "../src/badges/voix-parlement.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["democracy"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -582,7 +583,7 @@ const rawBadges: Badge[] = [
     id: "sentinelle_de_lordre",
     label: "Sentinelle de l’ordre",
     description: "La peine doit protéger et dissuader avant tout. (Justice ≥ 75 % côté répressif)",
-    icon: "../src/badges/sentinelle-ordre.png",
+    icon: "../src/badges/sentinelle-ordre.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["justice"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -593,7 +594,7 @@ const rawBadges: Badge[] = [
     id: "artisan_du_travail",
     label: "Dignité par l’effort",
     description: "Tu considères que le travail est une valeur centrale, donnant sens, reconnaissance et dignité à chacun. (Travail ≥ 75 % côté travailliste)",
-    icon: "../src/badges/artisan-travail.png",
+    icon: "../src/badges/artisan-travail.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["work"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -605,7 +606,7 @@ const rawBadges: Badge[] = [
     id: "promethee_productiviste",
     label: "Apôtre de l’abondance",
     description: "Pour toi, produire et croître sont les meilleurs moyens de relever les défis écologiques, sans sacrifier le confort ni l’élan humain. (Écologie ≥ 75 % côté productiviste)",
-    icon: "../src/badges/promethee-productiviste.png",
+    icon: "../src/badges/promethee-productiviste.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["ecology"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -616,7 +617,7 @@ const rawBadges: Badge[] = [
     id: "porte_flambeau_revolution",
     label: "Porte-flambeau de la révolution",
     description: "Tu portes haut l’étendard du changement radical, prêt·e à renverser l’ordre établi pour bâtir un nouvel horizon. (Changement social ≥ 75 % côté révolution)",
-    icon: "../src/badges/porte-flambeau-revolution.png",
+    icon: "../src/badges/porte-flambeau-revolution.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["reform"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -627,7 +628,7 @@ const rawBadges: Badge[] = [
     id: "gardien_de_la_laicite",
     label: "Gardien de la laïcité",
     description: "Tu défends une séparation stricte entre religion et vie publique, pour garantir l’égalité de tous, croyants ou non. (Religion ≥ 75 % côté laïcisme)",
-    icon: "../src/badges/gardien-laicite.png",
+    icon: "../src/badges/gardien-laicite.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["religion"]; if (!ax) return false;
       const total = ax.left + ax.right || 1;
@@ -638,7 +639,7 @@ const rawBadges: Badge[] = [
     id: "proprietaire_de_ses_jours",
     label: "Propriétaire de ses jours",
     description: "Chaque jour est le tien, modelé selon tes envies et ton rythme, loin des horaires imposés.",
-    icon: "../src/badges/proprietaire-jours.png",
+    icon: "../src/badges/proprietaire-jours.svg",
     test: ({ axisScores }) => {
       const ax = axisScores["work"];
       if (!ax) return false;

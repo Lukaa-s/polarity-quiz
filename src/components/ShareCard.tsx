@@ -177,13 +177,13 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               <div className="flex" style={{ gap: 26, flex: 1, minWidth: 0 }}>
                 {shownBadges.map((b) => (
                   <div key={b.id} className="flex flex-col items-center" style={{ width: 132 }}>
+                    {/* Tampon SVG : cadre intégré au dessin, aucun rognage. */}
                     {b.icon && (
                       <img
                         src={b.icon}
                         alt=""
                         width={84}
                         height={84}
-                        style={{ borderRadius: "50%" }}
                       />
                     )}
                     <span

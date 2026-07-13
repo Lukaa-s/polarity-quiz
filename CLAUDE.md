@@ -14,7 +14,7 @@ npm run build            # Production build
 npm run preview          # Serve the production build locally
 npm run typecheck        # tsc --noEmit (strict)
 npm run test             # Vitest (data-sync test suite)
-npm run optimize:badges  # Re-compress src/badges/*.png via sharp (512px, ≤150 KB)
+npm run generate:stamps  # Regenerate src/badges/*.svg from scripts/stamps/defs/
 npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-icon.png via sharp
 ```
 
@@ -47,7 +47,7 @@ npm run generate:share-assets  # Regenerate public/og-image.png + apple-touch-ic
 
 - `test({ answers, axisScores })` — **`axisScores` is keyed by axis id** (see comment in the Badge type)
 - All tests must return a real boolean and guard against missing axes/empty answers
-- Badge PNGs in `src/badges/` are optimized (512px, ≤150 KB each); run `npm run optimize:badges` after adding one
+- **Badge icons are generated SVG “stamps”** (`src/badges/*.svg`), not static assets. Grammar: the FRAME encodes how the badge is earned (round = axis position, square = single-question stance, losange = answer style) and the INK encodes the side (red = left pole, blue = right pole, black = meta/mixed). One def per badge in `scripts/stamps/defs/<icon-name>.mjs` (shared template in `scripts/stamps/lib.mjs`); `npm run generate:stamps` rebuilds `src/badges/*.svg`. Visual QA: `node scripts/stamps/render.mjs <name>|--all` rasterizes previews to `scripts/stamps/preview/` (gitignored) — always LOOK at the preview after editing a def. Icons are displayed uncropped (no rounded-full mask): the stamp frame is part of the drawing.
 - **Rarity**: `ESTIMATED_RARITY` in `badges.tsx` is a hand-estimated **fallback**. Real rarity is measured via GoatCounter: `trackBadgesUnlocked()` (analytics.ts) fires `/events/badges-computed` (denominator) + `/events/badge-<id>` per unlocked badge at completion; `src/utils/badgeStats.ts` reads the public counters (`/counter/<path>.json`, 12 h localStorage cache, `pq_badge_stats_v1`) and `useLiveBadgeRarities()` overlays them on the badges passed to ResultEnhanced/ShareCard. Requires the GoatCounter setting **« Allow using the visitor counter »** (until enabled, the endpoint answers 403 and estimates are shown). Pure helpers locked by `badge-stats.test.ts`.
 
 ### Data Files

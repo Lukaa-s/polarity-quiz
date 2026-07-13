@@ -1050,11 +1050,13 @@ export default function ResultEnhanced({
                         animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
                       }}
                     >
-                      <span className="block w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 hover:scale-105">
+                      {/* Tampon SVG : le cadre fait partie du dessin, pas de
+                          rognage circulaire ni d'anneau rapporté. */}
+                      <span className="block w-24 h-24 sm:w-28 sm:h-28 transition-transform duration-200 hover:scale-105">
                         <img
                           src={badge.icon}
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                           loading="lazy"
                         />
                       </span>
@@ -1501,11 +1503,11 @@ export default function ResultEnhanced({
                                   animation: disableAnimations ? 'none' : `popIn 0.4s ease-out ${idx * 0.1}s both`,
                                 }}
                               >
-                                <span className="block w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-1 ring-rule bg-paper transition-transform duration-200 hover:scale-105">
+                                <span className="block w-24 h-24 sm:w-28 sm:h-28 transition-transform duration-200 hover:scale-105">
                                   <img
                                     src={badge.icon}
                                     alt=""
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-contain"
                                     loading="lazy"
                                   />
                                 </span>

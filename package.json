@@ -7,7 +7,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "optimize:badges": "node scripts/optimize-badges.mjs",
+    "generate:stamps": "node scripts/generate-stamps.mjs",
     "generate:share-assets": "node scripts/generate-share-assets.mjs"
   },
   "dependencies": {
