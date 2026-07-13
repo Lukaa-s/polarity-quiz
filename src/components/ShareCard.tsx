@@ -92,34 +92,34 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
 
         {/* Héros : les clivages les plus tranchés — les mots des pôles,
             la matière du test, pas un score de compatibilité. */}
-        <div style={{ paddingTop: 32, paddingBottom: 24 }}>
+        <div style={{ paddingTop: 22, paddingBottom: 16 }}>
           <div
             className="font-body font-semibold text-ink2"
-            style={{ fontSize: 22, letterSpacing: "0.16em", textTransform: "uppercase" }}
+            style={{ fontSize: 21, letterSpacing: "0.16em", textTransform: "uppercase" }}
           >
             {t("sharecard.sharpest")}
           </div>
-          <div style={{ marginTop: 6 }}>
+          <div style={{ marginTop: 2 }}>
             {sharpest.map((g) => (
               <div
                 key={g.id}
                 className="flex items-baseline justify-between"
-                style={{ gap: 24, paddingTop: 12, paddingBottom: 12, borderBottom: "1px solid #EDE9DE" }}
+                style={{ gap: 24, paddingTop: 8, paddingBottom: 8, borderBottom: "1px solid #EDE9DE" }}
               >
                 <div style={{ minWidth: 0 }}>
                   <div
                     className="font-display font-semibold"
-                    style={{ fontSize: 42, lineHeight: 1.08, color: g.dominantColor }}
+                    style={{ fontSize: 36, lineHeight: 1.08, color: g.dominantColor }}
                   >
                     {g.dominantLabel}
                   </div>
-                  <div className="font-body text-ink2" style={{ fontSize: 20, marginTop: 4 }}>
+                  <div className="font-body text-ink2" style={{ fontSize: 18, marginTop: 2 }}>
                     {g.shortLabel} · {t("sharecard.vs", { pole: g.otherLabel })}
                   </div>
                 </div>
                 <span
                   className="font-display font-semibold tabular-nums"
-                  style={{ fontSize: 40, whiteSpace: "nowrap", color: g.dominantColor }}
+                  style={{ fontSize: 34, whiteSpace: "nowrap", color: g.dominantColor }}
                 >
                   {g.dominantPct} %
                 </span>
@@ -128,7 +128,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
           </div>
           {/* La figure la plus proche passe en signature. */}
           {hero && (
-            <div className="font-body text-ink2" style={{ fontSize: 23, marginTop: 16 }}>
+            <div className="font-body text-ink2" style={{ fontSize: 21, marginTop: 10 }}>
               {t("sharecard.closest", { name: hero.name, score: hero.similarity })}
             </div>
           )}
@@ -136,8 +136,8 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
         <div style={{ height: 1, backgroundColor: "#D8D2C4" }} />
 
         {/* Les 14 axes : jauges compactes en 2 colonnes */}
-        <div style={{ paddingTop: 24, paddingBottom: 8 }}>
-          <div className="flex items-center justify-between" style={{ paddingBottom: 18 }}>
+        <div style={{ paddingTop: 18, paddingBottom: 6 }}>
+          <div className="flex items-center justify-between" style={{ paddingBottom: 12 }}>
             <span
               className="font-body font-semibold text-ink2"
               style={{ fontSize: 20, letterSpacing: "0.16em", textTransform: "uppercase" }}
@@ -155,7 +155,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               columnGap: 44,
-              rowGap: 17,
+              rowGap: 12,
             }}
           >
             {gauges.map((g) => {
@@ -165,7 +165,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
               const dominantColor = g.pctLeft >= g.pctRight ? LEFT_COLOR : RIGHT_COLOR;
               return (
               <div key={g.id}>
-                <div className="flex items-baseline justify-between" style={{ marginBottom: 4 }}>
+                <div className="flex items-baseline justify-between" style={{ marginBottom: 2 }}>
                   <span className="font-body font-semibold text-ink" style={{ fontSize: 21 }}>
                     {g.shortLabel}
                   </span>
@@ -201,8 +201,8 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
         {/* Badges (uniquement s'il y en a) */}
         {shownBadges.length > 0 && (
           <>
-            <div style={{ height: 1, backgroundColor: "#D8D2C4", marginTop: 20 }} />
-            <div className="flex items-center" style={{ gap: 28, paddingTop: 22 }}>
+            <div style={{ height: 1, backgroundColor: "#D8D2C4", marginTop: 14 }} />
+            <div className="flex items-center" style={{ gap: 28, paddingTop: 16 }}>
               <span
                 className="font-body font-semibold text-ink2"
                 style={{ fontSize: 20, letterSpacing: "0.16em", textTransform: "uppercase", flexShrink: 0 }}
