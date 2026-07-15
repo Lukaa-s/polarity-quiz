@@ -13,6 +13,10 @@ export type ShareCardGauge = {
   shortLabel: string;
   leftLabel: string;
   rightLabel: string;
+  /** Phrase-valeur vouvoyée du pôle (claim) — même voix que l'écran de
+      résultats : la carte s'adresse à la personne testée (« Vous redoutez… »). */
+  leftClaim: string;
+  rightClaim: string;
   pctLeft: number;
   pctRight: number;
 };
@@ -48,7 +52,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
         ...g,
         dominantPct: Math.max(g.pctLeft, g.pctRight),
         dominantLabel: side === "left" ? g.leftLabel : g.rightLabel,
-        otherLabel: side === "left" ? g.rightLabel : g.leftLabel,
+        dominantClaim: side === "left" ? g.leftClaim : g.rightClaim,
         dominantColor: side === "left" ? LEFT_COLOR : RIGHT_COLOR,
       };
     })
@@ -90,7 +94,7 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
         </div>
         <div style={{ height: 2, backgroundColor: "#23201A" }} />
 
-        {/* Héros : les clivages les plus tranchés — les mots des pôles,
+        {/* Héros : les convictions les plus fortes — les mots des pôles,
             la matière du test, pas un score de compatibilité. */}
         <div style={{ paddingTop: 22, paddingBottom: 16 }}>
           <div
@@ -113,8 +117,11 @@ export default function ShareCard({ top3, gauges, badges }: ShareCardProps) {
                   >
                     {g.dominantLabel}
                   </div>
-                  <div className="font-body text-ink2" style={{ fontSize: 18, marginTop: 2 }}>
-                    {g.shortLabel} · {t("sharecard.vs", { pole: g.otherLabel })}
+                  {/* Ce que le pôle dit du partageur, pas ce à quoi il s'oppose :
+                      la phrase-valeur porte le sens, le thème est déjà dans la
+                      grille des 14 axes plus bas. */}
+                  <div className="font-body text-ink" style={{ fontSize: 19, marginTop: 3 }}>
+                    {g.dominantClaim}
                   </div>
                 </div>
                 <span

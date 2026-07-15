@@ -26,7 +26,7 @@ import type { Locale } from "./strings";
 
 // ── Formes des overlays (tous les champs sont optionnels : partiel toléré) ────
 type QuestionOverlay = { id: string; text?: string; explanation?: string };
-type PoleOverlay = { label?: string; response?: string };
+type PoleOverlay = { label?: string; claim?: string; response?: string };
 type AxisOverlay = {
   axis?: string;
   question?: string;
@@ -72,11 +72,13 @@ export function localizeAxes(locale: Locale): Axis[] {
       left: {
         ...a.left,
         label: o.left?.label ?? a.left.label,
+        claim: o.left?.claim ?? a.left.claim,
         response: o.left?.response ?? a.left.response,
       },
       right: {
         ...a.right,
         label: o.right?.label ?? a.right.label,
+        claim: o.right?.claim ?? a.right.claim,
         response: o.right?.response ?? a.right.response,
       },
     };

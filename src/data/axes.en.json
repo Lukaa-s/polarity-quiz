@@ -4,10 +4,12 @@
     "question": "Should established norms be challenged?",
     "left": {
       "label": "Progressivism",
+      "claim": "You want inherited norms to be challenged.",
       "response": "A just society cannot remain frozen in its traditions. Certain norms once considered natural — around the place of women, minorities, or family structure — can today entrench inequality. Questioning these frameworks lets everyone find their place in a changing world. For progressives, developments like marriage equality, the recognition of gender identity, or education reform show a society's capacity to improve by opening itself to greater equality and freedom."
     },
     "right": {
       "label": "Conservatism",
+      "claim": "You hold on to the anchors that keep society together.",
       "response": "Established norms are the product of a long history: they guarantee stability and pass on a shared moral framework. Change that comes too fast — whether it means rethinking family roles, national traditions, or authority in schools — risks destabilizing the social fabric and creating new tensions. For conservatives, progress does not mean erasing the past, but evolving it carefully, while keeping the reference points that hold a society together."
     }
   },
@@ -16,10 +18,12 @@
     "question": "How should power be exercised in society?",
     "left": {
       "label": "Anarchism",
+      "claim": "You distrust any power that cannot justify itself.",
       "response": "Power is never neutral and should always be open to challenge. Anarchism advocates a horizontal organization of society, built on free cooperation and individual responsibility. Rather than a centralized state, it favors self-management within communities, associations, or workplaces. For its supporters, less hierarchy means more freedom and fewer abuses of power."
     },
     "right": {
       "label": "Statism",
+      "claim": "You count on a strong state to guarantee the common order.",
       "response": "The state is the guarantor of justice and social cohesion. A strong central authority ensures security, regulates the economy, and protects citizens against individual excesses or private power. In this view, institutions — whether the army, the justice system, or public health — must stand above particular interests in order to preserve order and the common good."
     }
   },
@@ -28,10 +32,12 @@
     "question": "Should the state steer the economy or step back?",
     "left": {
       "label": "Interventionism",
+      "claim": "You want the state to rein in the market and its excesses.",
       "response": "The state must rein in the market to prevent its excesses. By investing in strategic sectors like energy, transport, or healthcare, it protects the collective interest and preserves common goods. Regulation limits abuse, prevents monopolies, and reduces inequality. For supporters of public intervention, policies such as a minimum wage, nationalizations, or public services are essential tools for guaranteeing social justice."
     },
     "right": {
       "label": "Economic Liberalism",
+      "claim": "You trust the market more than the bureaucracy.",
       "response": "The market works best when it's free. Competition drives innovation, lower prices, and individual responsibility. Too much state intervention slows growth, creates bureaucracy, and discourages initiative. In this view, the state should limit itself to setting the rules of the game and guaranteeing security, justice, and infrastructure, while leaving businesses and citizens free to decide their own exchanges."
     }
   },
@@ -40,10 +46,12 @@
     "question": "Should we change our way of life to protect the planet?",
     "left": {
       "label": "Radical Ecologism",
+      "claim": "You would give up comfort for the planet's sake.",
       "response": "Facing the climate crisis requires a deep rethink of our model of society. Cutting emissions is not enough: we need to rethink how we produce, travel, and consume, even if it means giving up some material comfort. Eating local, flying less, or reducing car use are seen as necessary steps to avoid ecological and social collapse. The change must be global, not merely technological."
     },
     "right": {
       "label": "Productivism",
+      "claim": "You bet on innovation rather than degrowth.",
       "response": "Ecological challenges must be met without holding back human development. Innovation, clean energy, and green growth offer more effective solutions than degrowth or restrictions. Investing in research, carbon-capture technologies, or nuclear power would make it possible to reconcile economic progress with environmental protection. There's no need to upend our way of life if progress can make production more sustainable."
     }
   },
@@ -52,10 +60,12 @@
     "question": "What should the economy be for?",
     "left": {
       "label": "Anti-Capitalism",
+      "claim": "You want an economy that shares rather than hoards.",
       "response": "The economy should exist to meet everyone's needs, not to accumulate capital. When profit becomes its only compass, it produces injustice: wages squeezed to inflate dividends, resources overexploited, recurring financial crises that hit the most vulnerable first. For anti-capitalists, tools like cooperatives, the social and solidarity economy, or tax-funded free services show that another logic is possible. The goal isn't to produce ever more, but to share what's produced more fairly and put people and the living world back at the center of economic choices."
     },
     "right": {
       "label": "Entrepreneurial Capitalism",
+      "claim": "You believe the drive to build moves society forward.",
       "response": "Starting a business, investing, taking risks, and succeeding: this is the engine that drives society forward and raises everyone's standard of living. The market economy rewards those who innovate, work hard, and meet a real need, and that reward pushes everyone to do better. For its supporters, history shows that private initiative has lifted hundreds of millions of people out of poverty, from the industrial revolutions to today's tech start-ups. The pursuit of profit is not a flaw but a useful signal: it steers resources toward what creates value, as long as competition stays fair."
     }
   },
@@ -64,10 +74,12 @@
     "question": "Who should own businesses and housing?",
     "left": {
       "label": "Collectivism",
+      "claim": "You want the essentials owned by all, not by a few.",
       "response": "When a minority owns most of the land, businesses, and housing, everyone else ends up dependent, forced to rent their labor or their home from those who hold the capital. For collectivists, truly essential goods — housing, water, energy, major means of production — should be controlled collectively, or by the people who keep them running day to day. Forms like worker cooperatives, social housing, or public ownership of infrastructure aim to prevent rent-seeking from taking hold and to ensure that wealth benefits everyone rather than a handful of owners."
     },
     "right": {
       "label": "Propertarianism",
+      "claim": "You defend the right to own, to build and to pass on.",
       "response": "The right to own, buy, sell, and pass on one's belongings is a fundamental freedom, inseparable from individual responsibility. Without guaranteed private property, there is neither an incentive to maintain what one owns, nor legal certainty to invest for the long term. For propertarians, access to property — a home, a business, a plot of land — is also a path to autonomy and social mobility, letting each person build an estate and pass it on. The state's main role should be to protect that right and enforce contracts, rather than redistribute or socialize property."
     }
   },
@@ -76,10 +88,12 @@
     "question": "Who should decide in a democracy?",
     "left": {
       "label": "Participatory Democracy",
+      "claim": "You want a say more often than once every five years.",
       "response": "Democracy shouldn't be reduced to a vote every five years followed by a long stretch of delegation. Between elections, citizens should keep real power: citizen-initiated referendums, participatory budgets, citizens' assemblies chosen by lot, oversight and recall of elected officials. For participationists, these tools bring decisions closer to the people they affect, narrow the gap between the governed and those who govern, and rebuild trust in public life. Experiments like the Citizens' Convention for Climate or local participatory budgets show that informed citizens can debate and settle complex issues."
     },
     "right": {
       "label": "Parliamentarism",
+      "claim": "You prefer representatives who decide and answer for it.",
       "response": "Democracy rests on electing representatives tasked with deciding on the people's behalf, then answering to voters for their choices. Putting every decision to a direct vote risks making public action slow, unstable, and vulnerable to the passions of the moment or to disinformation. For parliamentarists, full-time elected officials, backed by experts and debating over time, make more coherent decisions — including unpopular but necessary ones. The strength of this model lies in the quality of parliamentary debate, the separation of powers, and the regular judgment of the ballot box."
     }
   },
@@ -88,10 +102,12 @@
     "question": "Should justice punish or repair?",
     "left": {
       "label": "Restorative Justice",
+      "claim": "You want justice that repairs rather than casts out.",
       "response": "Punishment alone doesn't make a society safer or fairer. Effective justice starts by understanding the causes of an offense, repairing the harm done to the victim, and giving the offender a genuine second chance. For advocates of restorative justice, bare imprisonment — cutting a person off from every bond and prospect — often fuels reoffending. It's better to invest in prevention, social support, training, and alternative sentences like community service or victim-offender mediation. The ultimate goal is reintegration, which serves everyone better than lasting exclusion."
     },
     "right": {
       "label": "Retributive Justice",
+      "claim": "You expect clear punishments, actually enforced.",
       "response": "Without clear, enforced sanctions, the law loses all authority and victims go unrecognized. Justice's first duty is to protect society, deter offending, and draw a firm line between what is allowed and what isn't. For advocates of a firmer line, certain and sufficiently severe sentences, a swift response, and real enforcement of penalties are the conditions for safety and trust in institutions. Firmness doesn't rule out rehabilitation, but it starts with respecting the rules and protecting law-abiding citizens."
     }
   },
@@ -100,10 +116,12 @@
     "question": "Should a country put its own laws above all else?",
     "left": {
       "label": "Internationalism",
+      "claim": "You believe in cooperation beyond borders.",
       "response": "The great challenges of our century — climate, pandemics, taxing multinationals, armed conflict — ignore borders and can't be handled by any one country alone. For internationalists, cooperation between nations and shared rules, for instance within the European Union, the UN, or climate agreements, work better than national retreat. Agreeing to share a portion of sovereignty brings collective protection, a common market, or the joint defense of human rights in return. This outlook values solidarity beyond national borders and holds that peoples' interests are often better served together than apart."
     },
     "right": {
       "label": "Sovereigntism",
+      "claim": "You want laws made at home, not above it.",
       "response": "Every people should be free to decide its own laws, borders, and model of society, without having rules imposed by bodies it doesn't control. For sovereigntists, democracy only makes sense within a national framework, where a people united by a shared history and language can hold its leaders to account. Transferring power to supranational organizations moves decisions further from citizens and weakens their ability to choose their own future. Defending sovereignty means preserving economic independence, control of borders, and command over collective choices."
     }
   },
@@ -112,10 +130,12 @@
     "question": "Should religion influence public life?",
     "left": {
       "label": "Secularism",
+      "claim": "You insist on a state strictly neutral toward religion.",
       "response": "To guarantee equality between believers of different faiths and non-believers alike, the state must remain strictly neutral on religious matters. Religion belongs to conscience and the private sphere: everyone is free to believe or not, but no doctrine should be imposed through law, public schools, or shared institutions. For secularists, this separation protects both the freedom to worship and the freedom not to, and prevents a religious majority from imposing its norms on everyone. A neutral public sphere is seen as the condition for peaceful coexistence in a diverse society."
     },
     "right": {
       "label": "Political Spiritualism",
+      "claim": "You see spiritual heritage as a shared anchor to embrace.",
       "response": "Religious traditions have shaped a society's culture, law, and morality, and continue to offer valuable bearings, particularly on the meaning of life, solidarity, or human dignity. For those who hold this view, trying to erase religion entirely from public life impoverishes the social bond and deprives citizens of a source of cohesion and shared values. Recognizing the place of religion — in the calendar, in heritage, in moral debate — doesn't preclude tolerance: it means owning a spiritual inheritance rather than banishing it entirely to the private sphere."
     }
   },
@@ -124,10 +144,12 @@
     "question": "Should the system be transformed or adapted?",
     "left": {
       "label": "Revolutionism",
+      "claim": "You believe in clean breaks, not small fixes.",
       "response": "Some injustices are so deeply rooted in economic and political structures that no partial fix will correct them. For revolutionaries, hoping to transform a system that itself produces inequality by tweaking it at the margins only pushes back real change indefinitely. Sometimes a clean break with the existing order — through a broad social movement or an institutional refounding — is needed to rebuild on new, more equal foundations. This position holds that history's major advances, from universal suffrage to social rights, have usually been won through ruptures and shows of collective force, not through simple adjustments."
     },
     "right": {
       "label": "Reformism",
+      "claim": "You would rather improve step by step than overturn it all.",
       "response": "Lasting change is built gradually, through negotiated, evaluated reforms rather than abrupt breaks with unpredictable consequences. For reformists, trying to overturn everything at once risks chaos, violence, and often a worse outcome than the starting point, as many revolutions have shown. It's better to improve the existing system step by step, relying on compromise, democratic debate, and experimentation. This approach values stability, prudence, and the ability to course-correct: advancing steadily, preserving what works, rather than betting everything on a great upheaval with uncertain promises."
     }
   },
@@ -136,10 +158,12 @@
     "question": "Should work structure our lives?",
     "left": {
       "label": "Anti-Productivism",
+      "claim": "You refuse to let work be the measure of a life.",
       "response": "Work shouldn't be the absolute center of existence, nor the measure of a person's worth. For anti-productivists, the obsession with productivity and growth wears down both people and the planet, at the expense of free time, social bonds, and unpaid activities like caregiving, culture, activism, or family life. We could aim for a society that works less but better, through shorter working hours, job-sharing, or measures like a universal basic income. The goal is to free up time and meaning, and to recognize that many valuable activities don't come with a paycheck."
     },
     "right": {
       "label": "Workism",
+      "claim": "You believe in merit and the value of work.",
       "response": "Work remains a pillar of personal fulfillment and collective life: it lets people contribute to society, build skills, realize their potential, and earn their income honestly. For its supporters, effort and merit should be rewarded, and full employment remains a central goal, since prolonged unemployment undermines both the economy and people's dignity. This view champions the value of work against dependency on assistance, while recognizing the importance of decent conditions and fair pay. Working also means taking part in a shared project and funding, through one's contributions, the solidarity everyone benefits from."
     }
   },
@@ -148,10 +172,12 @@
     "question": "How should individual freedom and collective protection be balanced?",
     "left": {
       "label": "Defense of Freedoms",
+      "claim": "You refuse to trade your freedoms for security.",
       "response": "Individual freedom should come first, even when it complicates the authorities' job. For civil libertarians, every restriction — mass surveillance, data profiling, expanded ID checks, prolonged states of emergency — should remain the exception, tightly limited and temporary, because powers granted in the name of security rarely get rolled back. History shows that fear is often used to justify lasting inroads on fundamental rights. It's better to accept a degree of risk inherent to a free society than to sacrifice privacy, freedom of expression, or the presumption of innocence. Protection should never be built at the cost of a surveillance society."
     },
     "right": {
       "label": "Securitarianism",
+      "claim": "For you, security is the first of all freedoms.",
       "response": "Security is the first of all freedoms: without protection from violence, terrorism, or crime, other rights remain theoretical. For those who hold this view, it's legitimate for the community to accept certain restrictions — video surveillance, intelligence gathering, tighter checks — when they help prevent tragedies and guarantee public order. Those who obey the law have nothing to fear from these measures, whose primary aim is to protect citizens and deter threats. The balance here tips toward collective responsibility: a state able to guarantee everyone's safety is the condition for a peaceful society."
     }
   },
@@ -160,10 +186,12 @@
     "question": "Is technology an opportunity or a risk for society?",
     "left": {
       "label": "Techno-Skepticism",
+      "claim": "You fear technology that imposes itself without debate.",
       "response": "Technical progress is not neutral and deserves scrutiny before it's adopted. For techno-skeptics, innovations like artificial intelligence, facial recognition, or mass data collection can widen inequality, destroy jobs, threaten privacy, and concentrate immense power in the hands of a few companies. Automation rarely benefits those it displaces, and some technologies raise major ethical questions. Without banning progress outright, the point is to subject it to democratic debate, the precautionary principle, and strict regulation, so that technology serves society rather than imposing itself on it."
     },
     "right": {
       "label": "Techno-Optimism",
+      "claim": "You see innovation as our best answer to hard problems.",
       "response": "Technological innovation is one of the main drivers of better living conditions: medicine, access to information, productivity, new sources of energy. For techno-optimists, holding back progress out of excessive caution means giving up solutions to major problems, from cancer to climate change, and letting other countries take the lead. The fears raised by each wave of innovation, from the printing press to the internet, have often proven overblown, while the benefits have been immense. Rather than curbing research, it's better to encourage its rapid development and support the transitions it brings, trusting in humanity's capacity to adapt."
     }
   }

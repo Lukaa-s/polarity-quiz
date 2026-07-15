@@ -583,7 +583,7 @@ export default function ResultEnhanced({
   };
 
   // Pourcentages par axe + tri par netteté de la position : alimente la
-  // réglette de chaque axe et le bloc « clivages les plus tranchés ».
+  // réglette de chaque axe et le bloc « convictions les plus fortes ».
   const axisReadings = useMemo(
     () =>
       axes.map((a) => {
@@ -599,7 +599,7 @@ export default function ResultEnhanced({
           dominantSide,
           dominantPct: Math.max(pctLeft, pctRight),
           dominantLabel: dominantSide === "left" ? a.left.label : a.right.label,
-          otherLabel: dominantSide === "left" ? a.right.label : a.left.label,
+          dominantClaim: dominantSide === "left" ? a.left.claim : a.right.claim,
         };
       }),
     [axes, poleScores]
@@ -643,7 +643,7 @@ export default function ResultEnhanced({
       .sort((a, b) => a.distance - b.distance);
   }, [poleScores, explorerMode, questions, localizedProfiles]);
 
-  // Accroche du message de partage : clivage le plus net + figure la plus
+  // Accroche du message de partage : conviction la plus forte + figure la plus
   // proche. Absente en mode explorateur (pas de classement) → les helpers de
   // shareResults retombent sur le message générique.
   const shareHook = useMemo(() => {
@@ -671,6 +671,8 @@ export default function ResultEnhanced({
           shortLabel: shortById[a.id] ?? a.axis,
           leftLabel: a.left.label,
           rightLabel: a.right.label,
+          leftClaim: a.left.claim,
+          rightClaim: a.right.claim,
           pctLeft,
           pctRight: 100 - pctLeft,
         };
@@ -954,7 +956,7 @@ export default function ResultEnhanced({
             </div>
           </div>
 
-          {/* Clivages les plus tranchés : la matière du test ouvre les
+          {/* Convictions les plus fortes : la matière du test ouvre les
               résultats — pas un score de compatibilité. */}
           <div className="mb-8 bg-paper2 rounded-md p-5 border border-rule">
             <h3 className="text-lg sm:text-xl font-semibold text-ink mb-1">
@@ -980,8 +982,13 @@ export default function ResultEnhanced({
                     >
                       {r.dominantLabel}
                     </div>
+                    {/* Ce que la position dit de vous (phrase-valeur du pôle),
+                        puis l'axe en repère discret — pas « face à » l'autre pôle. */}
+                    <div className="text-sm text-ink mt-1 leading-snug">
+                      {r.dominantClaim}
+                    </div>
                     <div className="text-xs text-ink2 mt-1 leading-normal">
-                      {r.axis.axis} · {t("result.sharpest.vs", { pole: r.otherLabel })}
+                      {r.axis.axis}
                     </div>
                   </div>
                   <span

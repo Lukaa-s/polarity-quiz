@@ -45,6 +45,17 @@ describe("questions.json ↔ axisexplaination", () => {
     const ids = questions.map((q) => q.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("chaque pôle porte sa phrase-valeur vouvoyée (claim)", () => {
+    for (const a of ideologicalAxes) {
+      for (const side of ["left", "right"] as const) {
+        const pole = a[side];
+        expect(pole.claim?.trim().length ?? 0, `${a.id}.${side}.claim`).toBeGreaterThan(0);
+        // Une ligne sur la carte de partage 1080px (cf. axisexplaination.tsx).
+        expect(pole.claim.length, `${a.id}.${side}.claim trop longue`).toBeLessThanOrEqual(70);
+      }
+    }
+  });
 });
 
 describe("scoring", () => {

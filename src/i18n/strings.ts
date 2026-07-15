@@ -223,11 +223,10 @@ const fr = {
   "result.share.namePlaceholder": "Anonyme",
   "result.share.nameHint": "Visible par toute personne ayant le lien.",
 
-  // ── Résultats : clivages les plus tranchés ────────────────────────────────
-  "result.sharpest.title": "Vos clivages les plus tranchés",
+  // ── Résultats : convictions les plus fortes ───────────────────────────────
+  "result.sharpest.title": "Vos convictions les plus fortes",
   "result.sharpest.hint":
     "Les trois idées sur lesquelles vos réponses penchent le plus nettement d'un côté.",
-  "result.sharpest.vs": "face à : {pole}",
   // Description complète d'un axe pour les lecteurs d'écran (la réglette
   // n'affiche visuellement que le pourcentage dominant).
   "result.axis.sr": "{axis} : {left} {pctLeft} % · {right} {pctRight} %",
@@ -247,9 +246,9 @@ const fr = {
   "footer.methodology": "Méthodologie",
 
   // ── Résultats : relais de partage (fin de lecture) ────────────────────────
-  "result.shareCta.title": "À qui le tour ?",
+  "result.shareCta.title": "Qui vous connaît vraiment ?",
   "result.shareCta.text":
-    "Envoyez votre résultat à une personne qui pense bien vous connaître — et voyez si elle aurait deviné.",
+    "Envoyez votre résultat à la personne qui vous connaît le mieux — et voyez si elle l'avait vu venir.",
 
   // ── Résultats : soutien + relance ─────────────────────────────────────────
   "result.support.text":
@@ -315,10 +314,11 @@ const fr = {
     "Ce test ne cherche pas à vous coller une étiquette, mais à vous aider à comprendre où vous vous situez sur différents axes.",
 
   // ── Carte de partage (image exportée) ─────────────────────────────────────
-  "sharecard.sharpest": "Mes clivages les plus tranchés",
-  "sharecard.vs": "face à : {pole}",
+  // Rubriques neutres façon journal : les phrases-valeurs vouvoient la
+  // personne testée, la carte ne dit ni « mes » ni « je ».
+  "sharecard.sharpest": "Convictions les plus fortes",
   "sharecard.closest": "Figure la plus proche : {name} · {score}/100",
-  "sharecard.axes": "Mes 14 axes",
+  "sharecard.axes": "Les 14 axes",
   "sharecard.left": "gauche",
   "sharecard.right": "droite",
   "sharecard.badges": "Badges",
@@ -328,12 +328,12 @@ const fr = {
   "share.text.named":
     "Découvrez les résultats politiques de {name} sur Polarity Quiz ! 🗳️",
   "share.text.anon": "Découvrez mes résultats politiques sur Polarity Quiz ! 🗳️",
-  // Variantes « accroche » : utilisées quand les résultats fournissent le
-  // clivage le plus net et la figure la plus proche (voir ShareHook).
+  // Variantes « accroche » : utilisées quand les résultats fournissent la
+  // conviction la plus forte et la figure la plus proche (voir ShareHook).
   "share.text.hook.named":
-    "Le profil politique de {name} — clivage le plus net : « {pole} » ({pct} %), figure la plus proche : {figure}. Et vous, vous êtes où ? 🗳️",
+    "Le profil politique de {name} — conviction la plus forte : « {pole} » ({pct} %), figure la plus proche : {figure}. Et vous, vous êtes où ? 🗳️",
   "share.text.hook.anon":
-    "101 questions plus tard : mon clivage le plus net est « {pole} » ({pct} %) et ma figure la plus proche est {figure}. Et vous, vous êtes où ? 🗳️",
+    "101 questions plus tard : ma conviction la plus forte est « {pole} » ({pct} %) et ma figure la plus proche est {figure}. Et vous, vous êtes où ? 🗳️",
   "share.webTitle": "Polarity Quiz - Résultats",
 };
 
@@ -541,11 +541,10 @@ const en: Record<StringKey, string> = {
   "result.share.namePlaceholder": "Anonymous",
   "result.share.nameHint": "Visible to anyone with the link.",
 
-  // ── Results: sharpest divides ─────────────────────────────────────────────
-  "result.sharpest.title": "Your sharpest divides",
+  // ── Results: strongest convictions ────────────────────────────────────────
+  "result.sharpest.title": "Your strongest convictions",
   "result.sharpest.hint":
     "The three ideas where your answers lean most clearly to one side.",
-  "result.sharpest.vs": "versus: {pole}",
   "result.axis.sr": "{axis}: {left} {pctLeft}% · {right} {pctRight}%",
 
   // ── Results: landmarks (closest figures) ──────────────────────────────────
@@ -563,9 +562,9 @@ const en: Record<StringKey, string> = {
   "footer.methodology": "Methodology",
 
   // ── Results: share relay (end of reading) ─────────────────────────────────
-  "result.shareCta.title": "Whose turn now?",
+  "result.shareCta.title": "Who really knows you?",
   "result.shareCta.text":
-    "Send your result to someone who thinks they know you well — and see if they would have guessed.",
+    "Send your result to the person who knows you best — and see if they saw it coming.",
 
   // ── Results: support + restart ────────────────────────────────────────────
   "result.support.text":
@@ -630,10 +629,9 @@ const en: Record<StringKey, string> = {
     "This test does not seek to pin a label on you, but to help you understand where you stand on different axes.",
 
   // ── Share card (exported image) ───────────────────────────────────────────
-  "sharecard.sharpest": "My sharpest divides",
-  "sharecard.vs": "versus: {pole}",
+  "sharecard.sharpest": "Strongest convictions",
   "sharecard.closest": "Closest figure: {name} · {score}/100",
-  "sharecard.axes": "My 14 axes",
+  "sharecard.axes": "The 14 axes",
   "sharecard.left": "left",
   "sharecard.right": "right",
   "sharecard.badges": "Badges",
@@ -643,9 +641,9 @@ const en: Record<StringKey, string> = {
   "share.text.named": "Check out {name}'s political results on Polarity Quiz! 🗳️",
   "share.text.anon": "Check out my political results on Polarity Quiz! 🗳️",
   "share.text.hook.named":
-    "{name}'s political profile — sharpest divide: “{pole}” ({pct}%), closest figure: {figure}. Where do you stand? 🗳️",
+    "{name}'s political profile — strongest conviction: “{pole}” ({pct}%), closest figure: {figure}. Where do you stand? 🗳️",
   "share.text.hook.anon":
-    "101 questions later: my sharpest divide is “{pole}” ({pct}%) and my closest political figure is {figure}. Where do you stand? 🗳️",
+    "101 questions later: my strongest conviction is “{pole}” ({pct}%) and my closest political figure is {figure}. Where do you stand? 🗳️",
   "share.webTitle": "Polarity Quiz - Results",
 };
 

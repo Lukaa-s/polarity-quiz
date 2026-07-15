@@ -137,8 +137,8 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 /**
- * Accroche facultative injectée dans le message pré-rempli : le clivage le
- * plus net et la figure la plus proche donnent au destinataire une raison
+ * Accroche facultative injectée dans le message pré-rempli : la conviction la
+ * plus forte et la figure la plus proche donnent au destinataire une raison
  * d'ouvrir le lien (« Et vous, vous êtes où ? ») là où le message générique
  * n'en donnait aucune.
  */

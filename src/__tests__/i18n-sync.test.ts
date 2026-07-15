@@ -38,7 +38,8 @@ describe("overlay questions.en.json", () => {
 });
 
 describe("overlay axes.en.json", () => {
-  const en = axesEn as Record<string, { axis: string; left: { label: string }; right: { label: string } }>;
+  type PoleEn = { label: string; claim: string };
+  const en = axesEn as Record<string, { axis: string; left: PoleEn; right: PoleEn }>;
 
   it("couvre EXACTEMENT les ids d'axes", () => {
     expect(new Set(Object.keys(en))).toEqual(AXIS_IDS);
@@ -49,6 +50,15 @@ describe("overlay axes.en.json", () => {
       expect(a.axis?.trim().length ?? 0, `${id}.axis`).toBeGreaterThan(0);
       expect(a.left?.label?.trim().length ?? 0, `${id}.left.label`).toBeGreaterThan(0);
       expect(a.right?.label?.trim().length ?? 0, `${id}.right.label`).toBeGreaterThan(0);
+    }
+  });
+
+  it("fournit la phrase-valeur (claim) pour chaque pôle", () => {
+    for (const [id, a] of Object.entries(en)) {
+      for (const side of ["left", "right"] as const) {
+        expect(a[side]?.claim?.trim().length ?? 0, `${id}.${side}.claim`).toBeGreaterThan(0);
+        expect(a[side].claim.length, `${id}.${side}.claim trop longue`).toBeLessThanOrEqual(70);
+      }
     }
   });
 });
