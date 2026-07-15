@@ -107,6 +107,12 @@ export default function Footer() {
           >
             {t("footer.privacy")}
           </button>
+          <span className="text-ink/30">•</span>
+          {/* Page statique (public/methodologie.html), servie hors SPA — le
+              maillage interne compte pour son référencement. */}
+          <a href="/methodologie" className="underline hover:text-ink/90 transition">
+            {t("footer.methodology")}
+          </a>
         </div>
         <p className="mt-2 text-ink/70">
           {t("footer.copyright", { year: new Date().getFullYear() })}

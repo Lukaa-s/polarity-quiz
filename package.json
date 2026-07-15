@@ -8,7 +8,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "generate:stamps": "node scripts/generate-stamps.mjs",
-    "generate:share-assets": "node scripts/generate-share-assets.mjs"
+    "generate:share-assets": "node scripts/generate-share-assets.mjs",
+    "stats": "node scripts/marketing-stats.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

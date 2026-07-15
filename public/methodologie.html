@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#F6F3EC" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Méthodologie — comment Polarity Quiz calcule votre positionnement politique</title>
+  <meta name="description" content="101 questions, 14 axes, 22 personnalités de référence : comment le test de positionnement politique Polarity Quiz est construit, ce qu'il mesure, et ses limites assumées." />
+  <link rel="canonical" href="https://polarity-quiz.fr/methodologie" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Polarity Quiz" />
+  <meta property="og:title" content="La méthodologie de Polarity Quiz" />
+  <meta property="og:description" content="Comment le test de positionnement politique Polarity Quiz est construit : questions, axes, pondération, personnalités de référence — et ses limites assumées." />
+  <meta property="og:url" content="https://polarity-quiz.fr/methodologie" />
+  <meta property="og:image" content="https://polarity-quiz.fr/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "La méthodologie de Polarity Quiz",
+    "description": "Comment le test de positionnement politique Polarity Quiz est construit : questions, axes, pondération, personnalités de référence — et ses limites assumées.",
+    "inLanguage": "fr",
+    "author": { "@type": "Organization", "name": "Polarity Quiz" },
+    "publisher": { "@type": "Organization", "name": "Polarity Quiz", "url": "https://polarity-quiz.fr/" },
+    "mainEntityOfPage": "https://polarity-quiz.fr/methodologie"
+  }
+  </script>
+  <style>
+    /* Système éditorial « Scrutin » — mêmes tokens que l'application. */
+    :root {
+      --paper: #F6F3EC; --paper2: #EDE9DE; --paper3: #E3DDCE;
+      --ink: #23201A; --ink2: #5E594F; --rule: #D8D2C4;
+      --left: #C62828; --right: #1565C0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--paper); color: var(--ink);
+      font-family: "Libre Franklin", ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.0625rem; line-height: 1.65;
+    }
+    header, main, footer { max-width: 42rem; margin: 0 auto; padding: 0 1.25rem; }
+    header { padding-top: 2.5rem; }
+    .brand { font-family: "Fraunces", ui-serif, Georgia, serif; font-weight: 600; text-decoration: none; color: var(--ink); font-size: 1.125rem; }
+    .kicker { color: var(--ink2); font-size: .8125rem; text-transform: uppercase; letter-spacing: .08em; margin: 2.5rem 0 .5rem; }
+    h1 { font-family: "Fraunces", ui-serif, Georgia, serif; font-weight: 700; font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.15; margin-bottom: 1rem; }
+    h2 { font-family: "Fraunces", ui-serif, Georgia, serif; font-weight: 600; font-size: 1.375rem; margin: 2.5rem 0 .75rem; }
+    p, ul, ol { margin-bottom: 1rem; color: var(--ink); }
+    .lead { font-size: 1.1875rem; color: var(--ink2); }
+    ul, ol { padding-left: 1.25rem; }
+    li { margin-bottom: .375rem; }
+    a { color: var(--ink); text-underline-offset: 3px; }
+    hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .9375rem; margin-bottom: 1rem; }
+    th, td { text-align: left; padding: .5rem .625rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    th { font-weight: 600; }
+    .pole-l { color: var(--left); font-weight: 500; }
+    .pole-r { color: var(--right); font-weight: 500; }
+    .cta {
+      display: inline-block; background: var(--ink); color: var(--paper);
+      text-decoration: none; padding: .75rem 1.5rem; border-radius: .5rem;
+      font-weight: 600; margin: .5rem 0 1rem;
+    }
+    .note { background: var(--paper2); border: 1px solid var(--rule); border-radius: .75rem; padding: 1rem 1.25rem; font-size: .9375rem; color: var(--ink2); }
+    footer { padding: 2.5rem 1.25rem 3rem; color: var(--ink2); font-size: .875rem; border-top: 1px solid var(--rule); margin-top: 3rem; }
+    footer a { color: var(--ink2); }
+  </style>
+  <script data-goatcounter="https://polarity-quiz.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="/">← Polarity Quiz</a>
+    <p class="kicker">Méthodologie</p>
+    <h1>Comment ce test de positionnement politique est construit</h1>
+    <p class="lead">Un test politique n'est jamais neutre : il choisit des questions, des axes et une façon de compter. Voici les choix de Polarity Quiz, exposés pour que vous puissiez les juger — et les contester.</p>
+  </header>
+  <main>
+    <h2>101 questions, une échelle à 7 positions</h2>
+    <p>Le test comporte 101 affirmations. Pour chacune, vous choisissez parmi sept réponses, de « Tout à fait d'accord » à « Pas du tout d'accord », avec une position neutre au centre. Sept positions plutôt que quatre ou cinq : les nuances (« plutôt d'accord », « plutôt pas d'accord ») portent une vraie information, et le neutre est une réponse légitime, pas un échec.</p>
+    <p>L'ordre des questions est mélangé chaque jour (de façon déterministe : tout le monde voit le même ordre le même jour), pour que l'enchaînement ne suggère pas de « bonne » réponse. L'ordre n'a aucun effet sur le calcul.</p>
+
+    <h2>14 axes calibrés sur les clivages français</h2>
+    <p>Chaque question alimente un seul axe, avec un poids qui reflète son caractère plus ou moins discriminant. Les 14 axes opposent chacun deux pôles :</p>
+    <table>
+      <tr><th>Pôle <span class="pole-l">rouge</span></th><th>Pôle <span class="pole-r">bleu</span></th></tr>
+      <tr><td class="pole-l">Progressisme</td><td class="pole-r">Conservatisme</td></tr>
+      <tr><td class="pole-l">Anarchisme</td><td class="pole-r">Étatisme</td></tr>
+      <tr><td class="pole-l">Interventionnisme</td><td class="pole-r">Libéralisme économique</td></tr>
+      <tr><td class="pole-l">Écologisme radical</td><td class="pole-r">Productivisme</td></tr>
+      <tr><td class="pole-l">Anticapitalisme</td><td class="pole-r">Capitalisme entrepreneurial</td></tr>
+      <tr><td class="pole-l">Collectivisme</td><td class="pole-r">Propriétarisme</td></tr>
+      <tr><td class="pole-l">Participationnisme</td><td class="pole-r">Parlementarisme</td></tr>
+      <tr><td class="pole-l">Justice réparatrice</td><td class="pole-r">Pénalisme répressif</td></tr>
+      <tr><td class="pole-l">Internationalisme</td><td class="pole-r">Souverainisme</td></tr>
+      <tr><td class="pole-l">Laïcisme</td><td class="pole-r">Spiritualisme politique</td></tr>
+      <tr><td class="pole-l">Révolutionnisme</td><td class="pole-r">Réformisme</td></tr>
+      <tr><td class="pole-l">Anti-productivisme</td><td class="pole-r">Travaillisme</td></tr>
+      <tr><td class="pole-l">Défense des libertés</td><td class="pole-r">Sécuritarisme</td></tr>
+      <tr><td class="pole-l">Technoscepticisme</td><td class="pole-r">Techno-optimisme</td></tr>
+    </table>
+    <p>Le rouge et le bleu sont strictement fonctionnels (pôle « de gauche » / pôle « de droite » de chaque axe) : aucun des deux pôles n'est présenté comme préférable.</p>
+
+    <h2>Le calcul, sans mystère</h2>
+    <ol>
+      <li>Chaque réponse distribue des points linéairement entre les deux pôles de son axe : plus vous êtes d'accord avec une affirmation, plus le pôle qu'elle porte en reçoit.</li>
+      <li>Les affirmations formulées « côté bleu » sont inversées avant comptage, pour que l'accord ne favorise pas mécaniquement un camp.</li>
+      <li>Sur chaque axe, le résultat est affiché comme un curseur avec un seul pourcentage, du côté dominant. Un « Étatisme 64 % » signifie : vos réponses sur cet axe penchent à 64 % côté étatisme.</li>
+    </ol>
+
+    <h2>Les 22 personnalités de référence</h2>
+    <p>À la fin du test, vos réponses sont comparées à celles de 22 personnalités politiques, chacune codée question par question à partir de ses positions publiques : votes, programmes, déclarations, décisions en responsabilité. La proximité affichée est l'écart moyen entre vos positions et les leurs, axe par axe — une aide à la lecture, pas une mesure scientifique exacte.</p>
+    <p>Certains profils historiques sont consultables dans l'annuaire mais exclus du classement des proximités : la comparaison n'aurait pas de sens et serait indécente.</p>
+
+    <h2>Les limites, assumées</h2>
+    <ul>
+      <li><strong>Le codage des personnalités est une interprétation.</strong> Résumer une carrière politique en 101 réponses demande des arbitrages ; ils sont contestables, et les profils sont recalibrés quand des retours argumentés le justifient.</li>
+      <li><strong>Le choix des questions est un choix.</strong> D'autres clivages seraient défendables. Si un clivage vous semble manquer, dites-le.</li>
+      <li><strong>Un test n'est pas une identité.</strong> Le résultat photographie vos réponses d'un jour, pas ce que vous êtes.</li>
+      <li><strong>Les questions laissées sans réponse comptent comme neutres</strong> — une simplification connue, préférée à l'exclusion silencieuse de l'axe concerné.</li>
+    </ul>
+
+    <h2>Vos réponses ne quittent pas votre navigateur</h2>
+    <p>Le test fonctionne sans compte et sans serveur de résultats : tout est calculé localement, dans votre navigateur. Aucune réponse n'est transmise ni stockée ailleurs que chez vous. La mesure d'audience (GoatCounter) est anonyme, sans cookie, et compte des événements agrégés — jamais des réponses. Le seul moment où vos résultats voyagent, c'est si <em>vous</em> décidez de partager votre lien.</p>
+
+    <hr />
+    <p class="note">Polarity Quiz est développé par un développeur solo, sans financement, sans publicité et sans parti derrière. Le test est gratuit et le restera. Voir aussi : <a href="/alternative-politiscales">en quoi ce test diffère de PolitiScales</a>.</p>
+    <p style="text-align:center; margin-top:2rem;">
+      <a class="cta" href="/">Faire le test (101 questions, ~15 min)</a>
+    </p>
+  </main>
+  <footer>
+    <p><a href="/">Polarity Quiz</a> · <a href="/alternative-politiscales">Alternative à PolitiScales</a> — © 2026 Polarity Quiz</p>
+  </footer>
+</body>
+</html>

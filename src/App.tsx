@@ -181,6 +181,9 @@ const App: React.FC = () => {
         setSharedResultsName(decodedResults.name);
         setSubmitted(true);
         setIsViewingSharedResults(true);
+        // Boucle virale, maillon « ouverture » : partages émis (share-*) →
+        // liens ouverts (ici) → tests relancés (shared-to-test).
+        trackEvent('shared_results_opened', '/events/shared-results-opened');
       } else {
         console.error('[Shared Results] Failed to decode results from URL');
       }
@@ -469,6 +472,8 @@ const App: React.FC = () => {
               </div>
               <button
                 onClick={() => {
+                  // Boucle virale, maillon « conversion » (cf. shared-results-opened).
+                  trackEvent('shared_to_test', '/events/shared-to-test');
                   // Nettoyer l'URL et recommencer
                   window.history.replaceState({}, '', window.location.pathname);
                   setIsViewingSharedResults(false);
