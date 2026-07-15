@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import type { Badge } from "../data/badges";
 import { evaluateBadges } from "../utils/badges";
-import { TrashIcon, UserGroupIcon, ArrowDownTrayIcon, ShareIcon, CheckIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { TrashIcon, UserGroupIcon, LinkIcon, ShareIcon, CheckIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { generateShareURL, copyToClipboard, getTwitterShareURL, getWhatsAppShareURL, getFacebookShareURL, getDiscordShareURL, shareViaWebAPI, sanitizeShareName } from "../utils/shareResults";
 import { trackShare, trackEvent } from "../utils/analytics";
 import { useLocale } from "../i18n/LocaleContext";
@@ -231,6 +231,10 @@ export default function ResultEnhanced({
   const [disableAnimations, setDisableAnimations] = useState(false);
   const [selectedPoliticalProfile, setSelectedPoliticalProfile] = useState<string | null>(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  // Prénom facultatif saisi dans le menu de partage (vide = partage anonyme).
+  // Remplace les anciens confirm()/prompt() natifs qui bloquaient chaque
+  // partage derrière deux boîtes de dialogue.
+  const [shareName, setShareName] = useState("");
   const [linkCopied, setLinkCopied] = useState(false);
   const [saveName, setSaveName] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
@@ -353,8 +357,11 @@ export default function ResultEnhanced({
     );
   };
 
-  // Exporter l'image des résultats
-  const handleExportImage = async () => {
+  // Partager la carte image — le canal de partage PRINCIPAL (l'image circule
+  // là où un lien reste ignoré) : feuille de partage native sur mobile,
+  // téléchargement sur desktop. `origin` suffixe l'événement GoatCounter
+  // ("" = en-tête, "-footer" = bloc de fin) comme pour les canaux lien.
+  const handleExportImage = async (origin = "") => {
     setIsExporting(true);
 
     // Désactiver les animations pour avoir un rendu instantané complet
@@ -475,6 +482,7 @@ export default function ResultEnhanced({
       if (navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: t("result.export.shareTitle") });
+          trackShare(`image${origin}`);
           return;
         } catch (err) {
           if ((err as DOMException).name === "AbortError") return; // annulé par l'utilisateur
@@ -488,6 +496,7 @@ export default function ResultEnhanced({
       link.href = url;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
+      trackShare(`image-download${origin}`);
     } catch (error) {
       console.error("Erreur lors de l'export:", error);
       // Message détaillé : sans lui, impossible de diagnostiquer les pannes
@@ -506,79 +515,67 @@ export default function ResultEnhanced({
     setShowShareMenu(!showShareMenu);
   };
 
-  // Demander un nom optionnel avec avertissement de confidentialité
-  const promptForShareName = (): string | undefined => {
-    const userWantsName = confirm(t("result.shareName.confirm"));
-
-    if (!userWantsName) {
-      return undefined; // Partage anonyme
-    }
-
-    const name = prompt(t("result.shareName.prompt"));
-
-    // Si l'utilisateur annule ou entre une chaîne vide, partager anonymement.
-    // Le nom est borné et nettoyé (il finit dans une URL publique).
-    return sanitizeShareName(name);
-  };
-
-  const handleCopyLink = async () => {
-    const name = promptForShareName();
+  // `origin` suffixe l'événement GoatCounter ("" = menu du haut, "-footer" =
+  // bloc de fin de résultats) pour mesurer l'apport de chaque emplacement.
+  // Le nom est borné et nettoyé (il finit dans une URL publique).
+  const handleCopyLink = async (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
     const success = await copyToClipboard(shareURL);
 
     if (success) {
-      trackShare('copy-link');
+      trackShare(`copy-link${origin}`);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     }
   };
 
-  const handleShareTwitter = () => {
-    const name = promptForShareName();
+  const handleShareTwitter = (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
-    trackShare('twitter');
-    window.open(getTwitterShareURL(shareURL, name, locale), '_blank', 'noopener,noreferrer');
+    trackShare(`twitter${origin}`);
+    window.open(getTwitterShareURL(shareURL, name, locale, shareHook), '_blank', 'noopener,noreferrer');
   };
 
-  const handleShareWhatsApp = () => {
-    const name = promptForShareName();
+  const handleShareWhatsApp = (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
-    trackShare('whatsapp');
-    window.open(getWhatsAppShareURL(shareURL, name, locale), '_blank', 'noopener,noreferrer');
+    trackShare(`whatsapp${origin}`);
+    window.open(getWhatsAppShareURL(shareURL, name, locale, shareHook), '_blank', 'noopener,noreferrer');
   };
 
-  const handleShareFacebook = () => {
-    const name = promptForShareName();
+  const handleShareFacebook = (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
-    trackShare('facebook');
+    trackShare(`facebook${origin}`);
     window.open(getFacebookShareURL(shareURL), '_blank', 'noopener,noreferrer');
   };
 
-  const handleShareDiscord = async () => {
-    const name = promptForShareName();
+  const handleShareDiscord = async (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
-    const discordMessage = getDiscordShareURL(shareURL, name, locale);
+    const discordMessage = getDiscordShareURL(shareURL, name, locale, shareHook);
     const success = await copyToClipboard(discordMessage);
 
     if (success) {
-      trackShare('discord');
+      trackShare(`discord${origin}`);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     }
   };
 
-  const handleShareNative = async () => {
-    const name = promptForShareName();
+  const handleShareNative = async (origin = "") => {
+    const name = sanitizeShareName(shareName);
     const shareURL = generateShareURL(currentAnswers, name);
-    const success = await shareViaWebAPI(shareURL, name, locale);
+    const success = await shareViaWebAPI(shareURL, name, locale, shareHook);
 
     if (success) {
-      trackShare('native');
+      trackShare(`native${origin}`);
     } else {
       // Fallback : copier le lien si Web Share API non supportée
       const fallbackSuccess = await copyToClipboard(shareURL);
       if (fallbackSuccess) {
-        trackShare('copy-link');
+        trackShare(`copy-link${origin}`);
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000);
       }
@@ -645,6 +642,16 @@ export default function ResultEnhanced({
       .map((p) => ({ ...p, distance: calculateDistance(p) }))
       .sort((a, b) => a.distance - b.distance);
   }, [poleScores, explorerMode, questions, localizedProfiles]);
+
+  // Accroche du message de partage : clivage le plus net + figure la plus
+  // proche. Absente en mode explorateur (pas de classement) → les helpers de
+  // shareResults retombent sur le message générique.
+  const shareHook = useMemo(() => {
+    const sharpest = sharpestReadings[0];
+    const closest = sortedReferenceProfiles[0];
+    if (!sharpest || !closest) return undefined;
+    return { pole: sharpest.dominantLabel, pct: sharpest.dominantPct, figure: closest.name };
+  }, [sharpestReadings, sortedReferenceProfiles]);
 
   // Données de la carte de partage exportable (format fixe 1080×1350, cf.
   // ShareCard.tsx) : top 3 des personnalités, jauges compactes, badges.
@@ -796,29 +803,27 @@ export default function ResultEnhanced({
             {/* data-export-exclude : ces boutons n'ont pas de sens dans l'image
                 exportée (le bouton Télécharger vide y apparaissait figé). */}
             <div className="flex gap-2 relative" data-export-exclude ref={shareMenuRef}>
-              {/* Bouton Télécharger */}
+              {/* Action principale : partager la carte IMAGE (feuille native sur
+                  mobile, téléchargement sur desktop). Le lien est secondaire. */}
               <button
-                onClick={handleExportImage}
+                onClick={() => handleExportImage()}
                 disabled={isExporting}
-                /* Sur mobile le libellé est masqué (icône seule) : sans aria-label
-                   le bouton n'a aucun nom accessible. */
                 aria-label={isExporting ? t("result.export.inProgress") : t("result.export.aria")}
-                className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                className="btn-ink flex items-center gap-2 px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
-                <ArrowDownTrayIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">{isExporting ? t("result.export.loading") : t("result.export.download")}</span>
+                <ShareIcon className="w-5 h-5" />
+                <span>{isExporting ? t("result.export.loading") : t("result.export.download")}</span>
               </button>
 
-              {/* Bouton Partager */}
+              {/* Secondaire : options lien (copie en un clic, réseaux) */}
               <button
                 onClick={handleShare}
                 aria-haspopup="menu"
                 aria-expanded={showShareMenu}
-                className="btn-ink flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+                className="btn-outline flex items-center gap-2 px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
               >
-                <ShareIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">{t("result.share.button")}</span>
-                <span className="sm:hidden">{t("result.share.button")}</span>
+                <LinkIcon className="w-5 h-5" />
+                <span>{t("result.share.button")}</span>
               </button>
 
               {/* Menu de partage (dropdown) */}
@@ -830,7 +835,7 @@ export default function ResultEnhanced({
 
                   {/* Copier le lien */}
                   <button
-                    onClick={handleCopyLink}
+                    onClick={() => handleCopyLink()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left"
                   >
                     {linkCopied ? (
@@ -851,7 +856,7 @@ export default function ResultEnhanced({
 
                   {/* Twitter/X */}
                   <button
-                    onClick={handleShareTwitter}
+                    onClick={() => handleShareTwitter()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
@@ -865,7 +870,7 @@ export default function ResultEnhanced({
 
                   {/* WhatsApp */}
                   <button
-                    onClick={handleShareWhatsApp}
+                    onClick={() => handleShareWhatsApp()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
@@ -879,7 +884,7 @@ export default function ResultEnhanced({
 
                   {/* Discord */}
                   <button
-                    onClick={handleShareDiscord}
+                    onClick={() => handleShareDiscord()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
@@ -893,7 +898,7 @@ export default function ResultEnhanced({
 
                   {/* Facebook */}
                   <button
-                    onClick={handleShareFacebook}
+                    onClick={() => handleShareFacebook()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="currentColor" viewBox="0 0 24 24">
@@ -907,7 +912,7 @@ export default function ResultEnhanced({
 
                   {/* Partage natif (SMS, Telegram, etc.) */}
                   <button
-                    onClick={handleShareNative}
+                    onClick={() => handleShareNative()}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper3 transition text-left border-t border-ink/10"
                   >
                     <svg className="w-5 h-5 text-ink/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -918,6 +923,24 @@ export default function ResultEnhanced({
                       <p className="text-xs text-ink/60">{t("result.share.nativeSub")}</p>
                     </div>
                   </button>
+
+                  {/* Prénom facultatif, APRÈS les actions : il personnalise le
+                      message mais ne doit jamais ressembler à une étape
+                      obligatoire — copier le lien reste un seul clic. */}
+                  <div className="p-3 border-t border-ink/10">
+                    <label className="block">
+                      <span className="text-xs font-medium text-ink2">{t("result.share.nameLabel")}</span>
+                      <input
+                        type="text"
+                        value={shareName}
+                        onChange={(e) => setShareName(e.target.value)}
+                        maxLength={40}
+                        placeholder={t("result.share.namePlaceholder")}
+                        className="mt-1 w-full rounded-md border border-rule bg-paper px-2.5 py-1.5 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-ink"
+                      />
+                    </label>
+                    <p className="mt-1 text-[11px] text-ink/50">{t("result.share.nameHint")}</p>
+                  </div>
 
                   {/* Bouton fermer */}
                   <button
@@ -1143,6 +1166,46 @@ export default function ResultEnhanced({
                 })}
               </div>
             )}
+          </div>
+
+          {/* Relais de partage : le moment chaud est la fin de lecture (badges
+              parcourus, bouton Partager du haut hors écran). Événements
+              GoatCounter suffixés -footer pour mesurer l'apport du bloc. */}
+          <div className="mt-10 pt-8 border-t border-rule text-center" data-export-exclude>
+            <h2 className="text-lg sm:text-xl font-semibold text-ink mb-1">
+              {t("result.shareCta.title")}
+            </h2>
+            <p className="text-sm text-ink2 mb-4 [text-wrap:balance]">
+              {t("result.shareCta.text")}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {/* L'image d'abord ici aussi : c'est elle qui circule. */}
+              <button
+                onClick={() => handleExportImage("-footer")}
+                disabled={isExporting}
+                className="btn-ink px-5 py-2.5 text-sm font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+              >
+                {isExporting ? t("result.export.loading") : t("result.export.download")}
+              </button>
+              <button
+                onClick={() => handleShareWhatsApp("-footer")}
+                className="btn-outline px-5 py-2.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+              >
+                WhatsApp
+              </button>
+              <button
+                onClick={() => handleCopyLink("-footer")}
+                className="btn-outline px-5 py-2.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+              >
+                {linkCopied ? t("result.share.copied") : t("result.share.copyLink")}
+              </button>
+              <button
+                onClick={() => handleShareNative("-footer")}
+                className="btn-outline px-5 py-2.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-paper2 focus-visible:ring-ink"
+              >
+                {t("result.share.native")}
+              </button>
+            </div>
           </div>
 
           {/* Soutien : le test est gratuit et sans pub ; l'appui au moment où

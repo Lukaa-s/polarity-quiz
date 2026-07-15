@@ -137,11 +137,30 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 /**
+ * Accroche facultative injectée dans le message pré-rempli : le clivage le
+ * plus net et la figure la plus proche donnent au destinataire une raison
+ * d'ouvrir le lien (« Et vous, vous êtes où ? ») là où le message générique
+ * n'en donnait aucune.
+ */
+export type ShareHook = {
+  pole: string;
+  pct: number;
+  figure: string;
+};
+
+/**
  * Génère le texte de partage pour les réseaux sociaux (localisé).
  * Le `locale` par défaut reste « fr » : les appelants historiques (et les liens
- * générés côté FR) ne changent pas de comportement.
+ * générés côté FR) ne changent pas de comportement. Sans `hook`, le message
+ * générique historique est conservé.
  */
-export function getShareText(name?: string, locale: Locale = "fr"): string {
+export function getShareText(name?: string, locale: Locale = "fr", hook?: ShareHook): string {
+  if (hook) {
+    const vars = { pole: hook.pole, pct: String(hook.pct), figure: hook.figure };
+    return name
+      ? translate(locale, "share.text.hook.named", { ...vars, name })
+      : translate(locale, "share.text.hook.anon", vars);
+  }
   return name
     ? translate(locale, "share.text.named", { name })
     : translate(locale, "share.text.anon");
@@ -150,16 +169,16 @@ export function getShareText(name?: string, locale: Locale = "fr"): string {
 /**
  * Génère l'URL de partage Twitter/X
  */
-export function getTwitterShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
-  const text = getShareText(name, locale);
+export function getTwitterShareURL(shareURL: string, name?: string, locale: Locale = "fr", hook?: ShareHook): string {
+  const text = getShareText(name, locale, hook);
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareURL)}`;
 }
 
 /**
  * Génère l'URL de partage WhatsApp
  */
-export function getWhatsAppShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
-  const text = `${getShareText(name, locale)} ${shareURL}`;
+export function getWhatsAppShareURL(shareURL: string, name?: string, locale: Locale = "fr", hook?: ShareHook): string {
+  const text = `${getShareText(name, locale, hook)} ${shareURL}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
@@ -173,8 +192,8 @@ export function getFacebookShareURL(shareURL: string): string {
 /**
  * Génère l'URL de partage Discord
  */
-export function getDiscordShareURL(shareURL: string, name?: string, locale: Locale = "fr"): string {
-  const text = getShareText(name, locale);
+export function getDiscordShareURL(shareURL: string, name?: string, locale: Locale = "fr", hook?: ShareHook): string {
+  const text = getShareText(name, locale, hook);
   // Discord n'a pas d'URL de partage direct, on copie juste le message formaté
   return `${text}\n${shareURL}`;
 }
@@ -182,7 +201,7 @@ export function getDiscordShareURL(shareURL: string, name?: string, locale: Loca
 /**
  * Utilise l'API Web Share native (mobile principalement)
  */
-export async function shareViaWebAPI(shareURL: string, name?: string, locale: Locale = "fr"): Promise<boolean> {
+export async function shareViaWebAPI(shareURL: string, name?: string, locale: Locale = "fr", hook?: ShareHook): Promise<boolean> {
   if (!navigator.share) {
     return false; // API non supportée
   }
@@ -190,7 +209,7 @@ export async function shareViaWebAPI(shareURL: string, name?: string, locale: Lo
   try {
     await navigator.share({
       title: translate(locale, "share.webTitle"),
-      text: getShareText(name, locale),
+      text: getShareText(name, locale, hook),
       url: shareURL,
     });
     return true;

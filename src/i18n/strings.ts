@@ -196,10 +196,10 @@ const fr = {
 
   // ── Résultats : en-tête + export image ────────────────────────────────────
   "result.heading": "Vos résultats",
-  "result.export.download": "Télécharger",
+  "result.export.download": "Partager l'image",
   "result.export.loading": "Export…",
   "result.export.inProgress": "Export en cours…",
-  "result.export.aria": "Télécharger l'image de mes résultats",
+  "result.export.aria": "Partager l'image de mes résultats",
   "result.export.notFound": "Erreur : élément non trouvé",
   "result.export.error":
     "Erreur lors de l'export de l'image.\n\nDétail technique : {detail}",
@@ -207,10 +207,10 @@ const fr = {
   "result.export.fileName": "mon-profil-politique.png",
 
   // ── Résultats : menu de partage ───────────────────────────────────────────
-  "result.share.button": "Partager",
-  "result.share.menuTitle": "Partager mes résultats",
+  "result.share.button": "Lien",
+  "result.share.menuTitle": "Partager le lien",
   "result.share.copyLink": "Copier le lien",
-  "result.share.copyLinkSub": "Partager directement",
+  "result.share.copyLinkSub": "Vos résultats en version interactive",
   "result.share.copied": "Lien copié !",
   "result.share.twitterSub": "Tweeter mes résultats",
   "result.share.whatsappSub": "Envoyer sur WhatsApp",
@@ -219,10 +219,9 @@ const fr = {
   "result.share.native": "Partager…",
   "result.share.nativeSub": "SMS, Telegram, etc.",
   "result.share.close": "Fermer",
-  "result.shareName.confirm":
-    "Voulez-vous ajouter votre nom aux résultats partagés ?\n\n⚠️ ATTENTION : Si vous ajoutez un nom, il sera visible par toute personne ayant accès au lien.\n\nCliquez sur « OK » pour ajouter un nom, ou « Annuler » pour partager anonymement.",
-  "result.shareName.prompt":
-    "Entrez le nom à afficher dans les résultats partagés :\n\n⚠️ Ce nom sera visible dans l'URL et par toute personne consultant le lien.",
+  "result.share.nameLabel": "Votre prénom (facultatif)",
+  "result.share.namePlaceholder": "Anonyme",
+  "result.share.nameHint": "Visible par toute personne ayant le lien.",
 
   // ── Résultats : clivages les plus tranchés ────────────────────────────────
   "result.sharpest.title": "Vos clivages les plus tranchés",
@@ -243,6 +242,14 @@ const fr = {
   "result.badges.hint": "Touchez un badge pour afficher sa signification.",
   "result.badges.empty": "Aucun badge pour l'instant. Réessayez avec d'autres réponses.",
   "result.badges.rarity": "~{rarity} % des profils",
+
+  // ── Pied de page : lien vers la page statique méthodologie ────────────────
+  "footer.methodology": "Méthodologie",
+
+  // ── Résultats : relais de partage (fin de lecture) ────────────────────────
+  "result.shareCta.title": "À qui le tour ?",
+  "result.shareCta.text":
+    "Envoyez votre résultat à une personne qui pense bien vous connaître — et voyez si elle aurait deviné.",
 
   // ── Résultats : soutien + relance ─────────────────────────────────────────
   "result.support.text":
@@ -321,6 +328,12 @@ const fr = {
   "share.text.named":
     "Découvrez les résultats politiques de {name} sur Polarity Quiz ! 🗳️",
   "share.text.anon": "Découvrez mes résultats politiques sur Polarity Quiz ! 🗳️",
+  // Variantes « accroche » : utilisées quand les résultats fournissent le
+  // clivage le plus net et la figure la plus proche (voir ShareHook).
+  "share.text.hook.named":
+    "Le profil politique de {name} — clivage le plus net : « {pole} » ({pct} %), figure la plus proche : {figure}. Et vous, vous êtes où ? 🗳️",
+  "share.text.hook.anon":
+    "101 questions plus tard : mon clivage le plus net est « {pole} » ({pct} %) et ma figure la plus proche est {figure}. Et vous, vous êtes où ? 🗳️",
   "share.webTitle": "Polarity Quiz - Résultats",
 };
 
@@ -501,10 +514,10 @@ const en: Record<StringKey, string> = {
 
   // ── Results: heading + image export ───────────────────────────────────────
   "result.heading": "Your results",
-  "result.export.download": "Download",
+  "result.export.download": "Share the image",
   "result.export.loading": "Exporting…",
   "result.export.inProgress": "Export in progress…",
-  "result.export.aria": "Download the image of my results",
+  "result.export.aria": "Share the image of my results",
   "result.export.notFound": "Error: element not found",
   "result.export.error":
     "Error while exporting the image.\n\nTechnical detail: {detail}",
@@ -512,10 +525,10 @@ const en: Record<StringKey, string> = {
   "result.export.fileName": "my-political-profile.png",
 
   // ── Results: share menu ───────────────────────────────────────────────────
-  "result.share.button": "Share",
-  "result.share.menuTitle": "Share my results",
+  "result.share.button": "Link",
+  "result.share.menuTitle": "Share the link",
   "result.share.copyLink": "Copy the link",
-  "result.share.copyLinkSub": "Share directly",
+  "result.share.copyLinkSub": "Your results as an interactive page",
   "result.share.copied": "Link copied!",
   "result.share.twitterSub": "Tweet my results",
   "result.share.whatsappSub": "Send on WhatsApp",
@@ -524,10 +537,9 @@ const en: Record<StringKey, string> = {
   "result.share.native": "Share…",
   "result.share.nativeSub": "SMS, Telegram, etc.",
   "result.share.close": "Close",
-  "result.shareName.confirm":
-    "Do you want to add your name to the shared results?\n\n⚠️ WARNING: If you add a name, it will be visible to anyone who has access to the link.\n\nClick “OK” to add a name, or “Cancel” to share anonymously.",
-  "result.shareName.prompt":
-    "Enter the name to show in the shared results:\n\n⚠️ This name will be visible in the URL and to anyone who opens the link.",
+  "result.share.nameLabel": "Your first name (optional)",
+  "result.share.namePlaceholder": "Anonymous",
+  "result.share.nameHint": "Visible to anyone with the link.",
 
   // ── Results: sharpest divides ─────────────────────────────────────────────
   "result.sharpest.title": "Your sharpest divides",
@@ -546,6 +558,14 @@ const en: Record<StringKey, string> = {
   "result.badges.hint": "Tap a badge to reveal its meaning.",
   "result.badges.empty": "No badge yet. Try again with different answers.",
   "result.badges.rarity": "~{rarity} % of profiles",
+
+  // ── Footer: link to the static methodology page (French-only page) ───────
+  "footer.methodology": "Methodology",
+
+  // ── Results: share relay (end of reading) ─────────────────────────────────
+  "result.shareCta.title": "Whose turn now?",
+  "result.shareCta.text":
+    "Send your result to someone who thinks they know you well — and see if they would have guessed.",
 
   // ── Results: support + restart ────────────────────────────────────────────
   "result.support.text":
@@ -622,6 +642,10 @@ const en: Record<StringKey, string> = {
   // ── Share text (pre-filled social messages) ───────────────────────────────
   "share.text.named": "Check out {name}'s political results on Polarity Quiz! 🗳️",
   "share.text.anon": "Check out my political results on Polarity Quiz! 🗳️",
+  "share.text.hook.named":
+    "{name}'s political profile — sharpest divide: “{pole}” ({pct}%), closest figure: {figure}. Where do you stand? 🗳️",
+  "share.text.hook.anon":
+    "101 questions later: my sharpest divide is “{pole}” ({pct}%) and my closest political figure is {figure}. Where do you stand? 🗳️",
   "share.webTitle": "Polarity Quiz - Results",
 };
 
